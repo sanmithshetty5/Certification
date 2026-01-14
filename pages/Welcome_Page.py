@@ -174,8 +174,12 @@ with r1c1:
         </div>
     </div>
     """, unsafe_allow_html=True)
-    if st.button("Open Certification Tracker", use_container_width=True):
+    if st.button(
+    "Open Certification Tracker",
+    key="btn_open_tracker",
+    use_container_width=True):
         st.switch_page("pages/Data_Entry.py")
+
 
 
 with r1c2:
@@ -191,7 +195,10 @@ with r1c2:
         </div>
     </div>
     """, unsafe_allow_html=True)
-    if st.button("Open Certification Tracker", use_container_width=True):
+    if st.button(
+    "Open Certification Tracker",
+    key="btn_open_analytics",
+    use_container_width=True):
         st.switch_page("pages/2_Realtime_Analysis.py")
 
 
@@ -213,8 +220,12 @@ with r2c1:
         </div>
     </div>
     """, unsafe_allow_html=True)
-    st.button("Explore AI Insights 🔒", disabled=True, use_container_width=True)
-
+    st.button(
+    "Explore AI Insights 🔒",
+    key="btn_ai_insight",
+    disabled=True,
+    use_container_width=True)
+    
 with r2c2:
     st.markdown("""
     <div class="card">
@@ -228,7 +239,12 @@ with r2c2:
         </div>
     </div>
     """, unsafe_allow_html=True)
-    st.button("View Help Guide", disabled=True, use_container_width=True)
+    st.button(
+    "View Help Guide",
+    key="btn_help",
+    disabled=True,
+    use_container_width=True)
+    
 
 # -------------------------------
 # FOOTER
