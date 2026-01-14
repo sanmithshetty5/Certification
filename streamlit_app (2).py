@@ -20,7 +20,7 @@ st.set_page_config(
 # -----------------------------------------
 # Snowflake Session
 # -----------------------------------------
-session = get_active_session()
+session = get_snowflake_session()
 
 # -----------------------------------------
 # Session State Initialization
