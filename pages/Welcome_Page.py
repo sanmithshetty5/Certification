@@ -75,8 +75,8 @@ st.markdown("""
 
 /* CTA Button */
 .black-btn > button {
-    background-color: #ffffff !important;
-    color: #020617 !important;
+    background-color: #020617 !important;
+    color: #ffffff !important;
     border: 2px solid #020617 !important;
     border-radius: 10px;
     font-weight: 600;
@@ -85,8 +85,8 @@ st.markdown("""
 
 /* Hover */
 .black-btn > button:hover {
-    background-color: #ffffff !important;
-    color: #020617 !important;
+    background-color: #020617 !important;
+    color: #ffffff !important;
 }
 
 /* Footer tip */
