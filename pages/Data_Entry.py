@@ -22,54 +22,87 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* App Background */
+/* =========================
+   Global App Background
+========================= */
 body {
-    background-color: #0B1220;
+    background-color: #F8FAFC;
+    color: #0F172A;
 }
 
-/* Main container spacing */
+/* Main container */
 .block-container {
     padding-top: 1.5rem;
+    padding-bottom: 2rem;
 }
 
-/* Cards */
+/* =========================
+   Card Layout (Enterprise)
+========================= */
 .card {
-    background-color: #111827;
-    padding: 1.25rem;
-    border-radius: 14px;
-    border: 1px solid #1F2937;
-    margin-bottom: 1.2rem;
+    background-color: #FFFFFF;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+    margin-bottom: 1.4rem;
 }
 
-/* Headings */
+/* =========================
+   Headings
+========================= */
 h1, h2, h3 {
-    color: #F9FAFB;
+    color: #0F172A;
     font-weight: 600;
 }
 
-/* Labels & text */
+/* =========================
+   Labels & Text
+========================= */
 label, .stMarkdown {
-    color: #CBD5E1 !important;
+    color: #334155 !important;
     font-size: 0.9rem;
+    font-weight: 500;
 }
 
-/* Inputs */
+/* =========================
+   Inputs
+========================= */
 input, textarea, select {
-    background-color: #020617 !important;
-    color: #E5E7EB !important;
-    border: 1px solid #334155 !important;
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
+    border: 1px solid #CBD5E1 !important;
     border-radius: 8px !important;
+    padding: 0.45rem 0.6rem;
 }
 
 /* Input focus */
 input:focus, textarea:focus, select:focus {
-    border-color: #3B82F6 !important;
-    box-shadow: 0 0 0 1px #3B82F6;
+    border-color: #2563EB !important;
+    box-shadow: 0 0 0 1px #2563EB;
+    outline: none;
 }
 
-/* Buttons */
+/* =========================
+   Primary Button (Save / Add)
+========================= */
+.stButton > button[kind="primary"] {
+    background-color: #16A34A !important;  /* GREEN */
+    color: #FFFFFF !important;
+    border-radius: 10px;
+    height: 3rem;
+    font-weight: 600;
+    border: none;
+}
+
+.stButton > button[kind="primary"]:hover {
+    background-color: #15803D !important;
+}
+
+/* =========================
+   Secondary Buttons
+========================= */
 .stButton > button {
-    background-color: #3B82F6;
+    background-color: #2563EB;
     color: white;
     border-radius: 10px;
     height: 3rem;
@@ -78,23 +111,48 @@ input:focus, textarea:focus, select:focus {
 }
 
 .stButton > button:hover {
-    background-color: #2563EB;
+    background-color: #1D4ED8;
 }
 
-/* Success / Error */
+/* =========================
+   Cancel Button (Red)
+========================= */
+button:has(span:contains("Cancel")) {
+    background-color: #DC2626 !important;
+}
+
+button:has(span:contains("Cancel")):hover {
+    background-color: #B91C1C !important;
+}
+
+/* =========================
+   Alerts
+========================= */
 .stAlert-success {
-    background-color: #052E16;
-    color: #22C55E;
+    background-color: #ECFDF5;
+    color: #065F46;
+    border: 1px solid #A7F3D0;
 }
 
 .stAlert-error {
-    background-color: #450A0A;
-    color: #EF4444;
+    background-color: #FEF2F2;
+    color: #991B1B;
+    border: 1px solid #FECACA;
 }
 
-/* Divider */
+/* =========================
+   Divider
+========================= */
 hr {
-    border: 1px solid #1F2937;
+    border: 1px solid #E5E7EB;
+}
+
+/* =========================
+   Sidebar
+========================= */
+section[data-testid="stSidebar"] {
+    background-color: #FFFFFF;
+    border-right: 1px solid #E5E7EB;
 }
 
 </style>
