@@ -17,20 +17,86 @@ st.set_page_config(
 )
 
 # -----------------------------------------
-# Custom CSS (UI ONLY)
+# Enhanced Professional UI Theme (COLORS ONLY)
 # -----------------------------------------
 st.markdown("""
 <style>
-body { background-color: #0E1117; }
-.block-container { padding-top: 1.5rem; }
-.card {
-    background-color: #161B22;
-    padding: 1.25rem;
-    border-radius: 12px;
-    margin-bottom: 1rem;
+
+/* App Background */
+body {
+    background-color: #0B1220;
 }
-label, .stMarkdown { color: #9CA3AF !important; }
-.stButton>button { border-radius: 8px; height: 3rem; }
+
+/* Main container spacing */
+.block-container {
+    padding-top: 1.5rem;
+}
+
+/* Cards */
+.card {
+    background-color: #111827;
+    padding: 1.25rem;
+    border-radius: 14px;
+    border: 1px solid #1F2937;
+    margin-bottom: 1.2rem;
+}
+
+/* Headings */
+h1, h2, h3 {
+    color: #F9FAFB;
+    font-weight: 600;
+}
+
+/* Labels & text */
+label, .stMarkdown {
+    color: #CBD5E1 !important;
+    font-size: 0.9rem;
+}
+
+/* Inputs */
+input, textarea, select {
+    background-color: #020617 !important;
+    color: #E5E7EB !important;
+    border: 1px solid #334155 !important;
+    border-radius: 8px !important;
+}
+
+/* Input focus */
+input:focus, textarea:focus, select:focus {
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 1px #3B82F6;
+}
+
+/* Buttons */
+.stButton > button {
+    background-color: #3B82F6;
+    color: white;
+    border-radius: 10px;
+    height: 3rem;
+    font-weight: 600;
+    border: none;
+}
+
+.stButton > button:hover {
+    background-color: #2563EB;
+}
+
+/* Success / Error */
+.stAlert-success {
+    background-color: #052E16;
+    color: #22C55E;
+}
+
+.stAlert-error {
+    background-color: #450A0A;
+    color: #EF4444;
+}
+
+/* Divider */
+hr {
+    border: 1px solid #1F2937;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
