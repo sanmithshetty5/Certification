@@ -26,7 +26,7 @@ for key in [
 # -----------------------------------------
 # Snowflake Session
 # -----------------------------------------
-session = get_active_session()
+session = get_snowflake_session()
 
 # -----------------------------------------
 # Load Data
