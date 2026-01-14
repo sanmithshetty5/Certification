@@ -23,140 +23,143 @@ st.markdown("""
 <style>
 
 /* =========================
-   Global App Background
+   GLOBAL
 ========================= */
 body {
-    background-color: #F8FAFC;
-    color: #0F172A;
+    background-color: #F5F7FB;
+    color: #1F2937;
+    font-family: "Inter", sans-serif;
 }
 
-/* Main container */
 .block-container {
-    padding-top: 1.5rem;
+    padding-top: 1.25rem;
     padding-bottom: 2rem;
+    max-width: 1400px;
 }
 
 /* =========================
-   Card Layout (Enterprise)
-========================= */
-.card {
-    background-color: #FFFFFF;
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid #E5E7EB;
-    margin-bottom: 1.4rem;
-}
-
-/* =========================
-   Headings
-========================= */
-h1, h2, h3 {
-    color: #0F172A;
-    font-weight: 600;
-}
-
-/* =========================
-   Labels & Text
-========================= */
-label, .stMarkdown {
-    color: #334155 !important;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-/* =========================
-   Inputs
-========================= */
-input, textarea, select {
-    background-color: #FFFFFF !important;
-    color: #0F172A !important;
-    border: 1px solid #CBD5E1 !important;
-    border-radius: 8px !important;
-    padding: 0.45rem 0.6rem;
-}
-
-/* Input focus */
-input:focus, textarea:focus, select:focus {
-    border-color: #2563EB !important;
-    box-shadow: 0 0 0 1px #2563EB;
-    outline: none;
-}
-
-/* =========================
-   Primary Button (Save / Add)
-========================= */
-.stButton > button[kind="primary"] {
-    background-color: #16A34A !important;  /* GREEN */
-    color: #FFFFFF !important;
-    border-radius: 10px;
-    height: 3rem;
-    font-weight: 600;
-    border: none;
-}
-
-.stButton > button[kind="primary"]:hover {
-    background-color: #15803D !important;
-}
-
-/* =========================
-   Secondary Buttons
-========================= */
-.stButton > button {
-    background-color: #2563EB;
-    color: white;
-    border-radius: 10px;
-    height: 3rem;
-    font-weight: 600;
-    border: none;
-}
-
-.stButton > button:hover {
-    background-color: #1D4ED8;
-}
-
-/* =========================
-   Cancel Button (Red)
-========================= */
-button:has(span:contains("Cancel")) {
-    background-color: #DC2626 !important;
-}
-
-button:has(span:contains("Cancel")):hover {
-    background-color: #B91C1C !important;
-}
-
-/* =========================
-   Alerts
-========================= */
-.stAlert-success {
-    background-color: #ECFDF5;
-    color: #065F46;
-    border: 1px solid #A7F3D0;
-}
-
-.stAlert-error {
-    background-color: #FEF2F2;
-    color: #991B1B;
-    border: 1px solid #FECACA;
-}
-
-/* =========================
-   Divider
-========================= */
-hr {
-    border: 1px solid #E5E7EB;
-}
-
-/* =========================
-   Sidebar
+   SIDEBAR (Like Image 2)
 ========================= */
 section[data-testid="stSidebar"] {
     background-color: #FFFFFF;
     border-right: 1px solid #E5E7EB;
 }
 
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] label {
+    color: #374151 !important;
+}
+
+/* =========================
+   CARDS
+========================= */
+.card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+/* =========================
+   HEADINGS
+========================= */
+h1, h2, h3 {
+    color: #111827;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 1.25rem;
+}
+
+/* =========================
+   LABELS
+========================= */
+label {
+    color: #6B7280 !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+/* =========================
+   INPUTS (Flat & Clean)
+========================= */
+input, textarea, select {
+    background-color: #FFFFFF !important;
+    color: #111827 !important;
+    border: 1px solid #D1D5DB !important;
+    border-radius: 6px !important;
+    padding: 0.45rem 0.6rem !important;
+    box-shadow: none !important;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #2563EB !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.stButton > button {
+    height: 2.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+}
+
+/* Save / Add (Green) */
+.stButton > button[kind="primary"] {
+    background-color: #22C55E !important;
+    color: #FFFFFF !important;
+}
+
+.stButton > button[kind="primary"]:hover {
+    background-color: #16A34A !important;
+}
+
+/* Cancel (Red) */
+button:has(span:contains("Cancel")) {
+    background-color: #EF4444 !important;
+    color: white !important;
+}
+
+button:has(span:contains("Cancel")):hover {
+    background-color: #DC2626 !important;
+}
+
+/* =========================
+   ALERTS
+========================= */
+.stAlert-success {
+    background-color: #ECFDF5;
+    border: 1px solid #A7F3D0;
+    color: #065F46;
+}
+
+.stAlert-error {
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #991B1B;
+}
+
+/* =========================
+   DIVIDERS
+========================= */
+hr {
+    border: none;
+    border-top: 1px solid #E5E7EB;
+}
+
 </style>
 """, unsafe_allow_html=True)
+
 
 # -----------------------------------------
 # Snowflake Session
