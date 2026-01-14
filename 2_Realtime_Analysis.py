@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from snowflake.snowpark.context import get_active_session
+from snowflake.snowpark.context import get_snowflake_session
 
 # -----------------------------------------
 # Page Config
@@ -26,7 +26,9 @@ for key in [
 # -----------------------------------------
 # Snowflake Session
 # -----------------------------------------
-session = get_snowflake_session()
+cnx = st.connection("snowflake")
+session = cnx.session()
+
 
 # -----------------------------------------
 # Load Data
