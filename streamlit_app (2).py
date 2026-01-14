@@ -4,9 +4,8 @@
 import streamlit as st
 import re
 from datetime import datetime, date
-from snowflake.snowpark.context import get_active_session
-from snowflake.snowpark import Row
 import pandas as pd
+from snowflake.snowpark import Row
 
 # -----------------------------------------
 # Page Config
@@ -18,7 +17,7 @@ st.set_page_config(
 )
 
 # -----------------------------------------
-# Snowflake Session
+# Snowflake Session (Streamlit Cloud)
 # -----------------------------------------
 cnx = st.connection("snowflake")
 session = cnx.session()
@@ -100,7 +99,6 @@ def autofill_employee_name(emp_id):
     ).to_pandas()
     return df.iloc[0]["EMP Name"] if not df.empty else ""
 
-
 # -----------------------------------------
 # Sidebar – Search
 # -----------------------------------------
@@ -148,7 +146,6 @@ with st.sidebar:
             st.session_state.record = result.iloc[0].to_dict()
             st.toast("Record loaded successfully", icon="✅")
 
-
 # -----------------------------------------
 # Reset state on EMP ID change + autofill
 # -----------------------------------------
@@ -161,12 +158,10 @@ if st.session_state.last_emp_id != emp_id:
     st.session_state.autofill_emp_name = autofill_employee_name(emp_id)
     st.session_state.last_emp_id = emp_id
 
-
 # -----------------------------------------
 # Header
 # -----------------------------------------
 st.markdown("# 🎓 Certification Tracker")
-
 
 # -----------------------------------------
 # Employee Information
@@ -185,27 +180,18 @@ with st.expander("👤 Employee Information", expanded=True):
         st.error("Employee name must contain only letters")
         st.stop()
 
-
 # -----------------------------------------
 # Enrolment & Planning
 # -----------------------------------------
 with st.expander("📅 Enrolment & Planning", expanded=True):
-    month_options = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ]
-
-    year_options = [
-        str(y)[:] for y in range(date.today().year - 5, date.today().year + 5)
-    ]
+    month_options = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+    year_options = [str(y) for y in range(date.today().year - 5, date.today().year + 5)]
 
     enrol_month = st.selectbox("Enrolment Month", month_options)
     enrol_year = st.selectbox("Enrolment Year (YYYY)", year_options)
 
     enrolment_month = f"{enrol_month}-{enrol_year}"
-
     planned_date = st.date_input("Planned Certification Date", date.today())
-
 
 # -----------------------------------------
 # Badge Progress
@@ -218,9 +204,7 @@ with st.expander("🏅 Badge Progress"):
     badge3 = st.selectbox("Badge 3 Status", badge_opts)
     badge4 = st.selectbox("Badge 4 Status", badge_opts)
     badge5 = st.selectbox("Badge 5 Status", badge_opts)
-
     cert_prep = st.selectbox("CertPrepOD Course", badge_opts)
-
 
 # -----------------------------------------
 # Courses & Practice
@@ -229,7 +213,6 @@ with st.expander("📚 Courses & Practice"):
     level_opts = ("Completed", "Not Started")
     level_up = st.selectbox("Level Up Courses", level_opts)
     trial_exam = st.selectbox("Trial Exams", level_opts)
-
 
 # -----------------------------------------
 # Account & Organization Details
@@ -240,20 +223,12 @@ with st.expander("🏢 Account & Organization Details", expanded=True):
     vertical = st.text_input("Vertical / SL")
     batch = st.text_input("Batch")
 
-
 # -----------------------------------------
 # Completion & Payment
 # -----------------------------------------
 with st.expander("💰 Completion & Payment", expanded=True):
     completed = st.checkbox("Certification Completed?")
-
-    actual_date = (
-        st.date_input(
-            "Actual Date of Completion",
-            max_value=date.today()
-        )
-        if completed else None
-    )
+    actual_date = st.date_input("Actual Date of Completion", max_value=date.today()) if completed else None
 
     snowpro_opts = ("Completed", "Failed") if completed else ("Incomplete",)
     snowpro = st.selectbox("SnowPro Certified", snowpro_opts)
@@ -263,13 +238,11 @@ with st.expander("💰 Completion & Payment", expanded=True):
         ("Voucher Received", "Voucher Applied", "Own Payment")
     )
 
-
 # -----------------------------------------
 # Comment
 # -----------------------------------------
 with st.expander("📝 Additional Comments"):
     comment = st.text_area("Comment")
-
 
 # -----------------------------------------
 # Prepare Payload
@@ -299,12 +272,11 @@ def prepare_payload():
         "Comment": comment
     }
 
-
 # -----------------------------------------
 # Action Bar
 # -----------------------------------------
 st.divider()
-a1, a2 ,a3 = st.columns([3, 1,1])
+a1, a2, a3 = st.columns([3,1,1])
 
 with a1:
     if st.session_state.edit_mode:
@@ -315,11 +287,10 @@ with a1:
                 st.session_state.save_completed = False
     else:
         if st.button("Add New Certification", type="primary", use_container_width=True):
-            if validate_mandatory_fields(emp_id, emp_name):
-                if validate_emp_name_consistency(emp_id, emp_name):
-                    st.session_state.pending_data = prepare_payload()
-                    st.session_state.pending_action = "insert"
-                    st.session_state.save_completed = False
+            if validate_mandatory_fields(emp_id, emp_name) and validate_emp_name_consistency(emp_id, emp_name):
+                st.session_state.pending_data = prepare_payload()
+                st.session_state.pending_action = "insert"
+                st.session_state.save_completed = False
 
 with a2:
     if st.button("Cancel", use_container_width=True):
@@ -327,68 +298,47 @@ with a2:
         st.session_state.pending_action = None
         st.session_state.save_completed = None
 
-
-# -----------------------------------------
-# DELETE BUTTON (EDIT MODE ONLY)
-# -----------------------------------------
 with a3:
     if st.session_state.edit_mode:
-        confirm_delete = st.checkbox("Confirm Delete")
-        if confirm_delete:
+        if st.checkbox("Confirm Delete"):
             if st.button("🗑️ Delete", use_container_width=True):
-                
                 session.sql(f"""
                     DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
                     WHERE "EMP ID" = '{emp_id}'
                       AND "Certification" = '{certification}'
                 """).collect()
-
-                st.success("✅ Record deleted successfully")
-
-                # Clear state after delete
-                st.session_state.record = {}
+                st.success("✅ Record deleted")
                 st.session_state.edit_mode = False
-                st.session_state.pending_data = None
-                st.session_state.pending_action = None
+                st.session_state.record = {}
+
 # -----------------------------------------
 # Confirmation & Save
 # -----------------------------------------
 if st.session_state.pending_data:
     st.subheader("🔍 Review Before Saving")
-    st.dataframe(
-        pd.DataFrame([st.session_state.pending_data]),
-        use_container_width=True
-    )
+    st.dataframe(pd.DataFrame([st.session_state.pending_data]), use_container_width=True)
 
-    if st.button(
-        "✅ Confirm & Save",
-        disabled=st.session_state.save_completed is True
-    ):
+    if st.button("✅ Confirm & Save", disabled=st.session_state.save_completed is True):
         if st.session_state.pending_action == "insert":
             session.create_dataframe(
                 [Row(**st.session_state.pending_data)]
             ).write.mode("append").save_as_table(
                 "USE_CASE.CERTIFICATION.NEW_CERTIFICATION"
             )
-
             st.session_state.edit_mode = True
             st.session_state.record = st.session_state.pending_data
-
         else:
-            set_parts = [
-                f'"{k}" = \'{v}\'' if v is not None else f'"{k}" = NULL'
+            updates = [
+                f'"{k}" = \'{v}\'' if v else f'"{k}" = NULL'
                 for k, v in st.session_state.pending_data.items()
                 if k not in ["EMP ID", "Certification"]
             ]
-
-            session.sql(
-                f"""
+            session.sql(f"""
                 UPDATE USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-                SET {", ".join(set_parts)}
+                SET {", ".join(updates)}
                 WHERE "EMP ID" = '{emp_id}'
                   AND "Certification" = '{certification}'
-                """
-            ).collect()
+            """).collect()
 
         st.success("✅ Data saved successfully")
         st.session_state.save_completed = True
