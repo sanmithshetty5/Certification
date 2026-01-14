@@ -16,95 +16,91 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# -----------------------------------------
-# Light Professional UI Theme (COLORS ONLY)
-# -----------------------------------------
 st.markdown("""
 <style>
 
-/* App background */
+/* ---------- PAGE ---------- */
 body {
-    background-color: #F8FAFC;
+    background-color: #F4F6F8;
+    color: #0F172A;
 }
 
-/* Main container */
 .block-container {
-    padding-top: 1.5rem;
+    padding: 2rem 3rem;
 }
 
-/* Cards */
-.card {
+/* ---------- SIDEBAR ---------- */
+section[data-testid="stSidebar"] {
     background-color: #FFFFFF;
-    padding: 1.25rem;
-    border-radius: 12px;
-    border: 1px solid #E5E7EB;
-    margin-bottom: 1.2rem;
+    border-right: 1px solid #E6E8EB;
 }
 
-/* Headings */
+/* ---------- HEADERS ---------- */
 h1, h2, h3 {
-    color: #111827;
+    color: #0F172A;
     font-weight: 600;
 }
 
-/* Labels */
+/* ---------- CARDS ---------- */
+.card {
+    background-color: #FFFFFF;
+    border: 1px solid #E6E8EB;
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+/* ---------- LABELS ---------- */
 label, .stMarkdown {
-    color: #374151 !important;
-    font-size: 0.9rem;
+    color: #475569 !important;
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
-/* Inputs */
+/* ---------- INPUTS ---------- */
 input, textarea, select {
-    background-color: #FFFFFF !important;
-    color: #111827 !important;
-    border: 1px solid #D1D5DB !important;
-    border-radius: 8px !important;
+    background-color: #F9FAFB !important;
+    color: #0F172A !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 6px !important;
 }
 
-/* Input focus */
 input:focus, textarea:focus, select:focus {
     border-color: #2563EB !important;
     box-shadow: 0 0 0 1px #2563EB;
 }
 
-/* Primary button (Add / Update) */
+/* ---------- BUTTONS ---------- */
 .stButton > button {
-    background-color: #16A34A;
-    color: white;
-    border-radius: 10px;
-    height: 3rem;
+    border-radius: 8px;
+    height: 2.8rem;
     font-weight: 600;
-    border: none;
 }
 
-.stButton > button:hover {
+/* Add / Update */
+.stButton > button[kind="primary"] {
+    background-color: #16A34A;
+    color: white;
+}
+
+.stButton > button[kind="primary"]:hover {
     background-color: #15803D;
 }
 
-/* Cancel & Delete buttons */
-button[kind="secondary"] {
-    background-color: #DC2626 !important;
-    color: white !important;
+/* Cancel / Delete */
+.stButton > button:not([kind="primary"]) {
+    background-color: #DC2626;
+    color: white;
 }
 
-button[kind="secondary"]:hover {
-    background-color: #B91C1C !important;
+.stButton > button:not([kind="primary"]):hover {
+    background-color: #B91C1C;
 }
 
-/* Success & Error alerts */
-.stAlert-success {
-    background-color: #ECFDF5;
-    color: #166534;
-}
-
-.stAlert-error {
-    background-color: #FEF2F2;
-    color: #991B1B;
-}
-
-/* Divider */
+/* ---------- REMOVE UGLY DEFAULT SPACING ---------- */
 hr {
-    border: 1px solid #E5E7EB;
+    border: none;
+    border-top: 1px solid #E6E8EB;
 }
 
 </style>
