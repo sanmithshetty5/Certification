@@ -75,7 +75,7 @@ st.markdown("""
 
 /* CTA Button */
 .black-btn > button {
-    background-color: #fffff !important;
+    background-color: #ffffff !important;
     color: #020617 !important;
     border: 2px solid #020617 !important;
     border-radius: 10px;
