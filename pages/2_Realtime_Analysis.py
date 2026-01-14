@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from snowflake.snowpark.context import get_snowflake_session
+
 
 # -----------------------------------------
 # Page Config
