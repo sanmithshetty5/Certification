@@ -174,8 +174,8 @@ with r1c1:
         </div>
     </div>
     """, unsafe_allow_html=True)
-        if st.button("Open Certification Tracker", use_container_width=True):
-            st.switch_page("pages/Data_Entry.py")
+    if st.button("Open Certification Tracker", use_container_width=True):
+        st.switch_page("pages/Data_Entry.py")
 
 
 with r1c2:
