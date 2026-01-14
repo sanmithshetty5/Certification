@@ -17,7 +17,7 @@ st.set_page_config(
 )
 
 # -----------------------------------------
-# Custom CSS (Professional Dark UI)
+# Custom CSS (UI ONLY)
 # -----------------------------------------
 st.markdown("""
 <style>
@@ -25,11 +25,10 @@ body { background-color: #0E1117; }
 .block-container { padding-top: 1.5rem; }
 .card {
     background-color: #161B22;
-    padding: 1.2rem;
+    padding: 1.25rem;
     border-radius: 12px;
     margin-bottom: 1rem;
 }
-h3 { color: #E5E7EB; }
 label, .stMarkdown { color: #9CA3AF !important; }
 .stButton>button { border-radius: 8px; height: 3rem; }
 </style>
@@ -42,7 +41,7 @@ cnx = st.connection("snowflake")
 session = cnx.session()
 
 # -----------------------------------------
-# Session State Initialization
+# Session State Initialization (UNCHANGED)
 # -----------------------------------------
 for key in [
     "edit_mode",
@@ -64,10 +63,10 @@ def cert_date_to_str(val):
 
 def validate_mandatory_fields(emp_id, emp_name):
     if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
-        st.error("Employee ID must be exactly 10 digits.")
+        st.error("❌ Employee ID must be exactly 10 digits.")
         return False
-    if not emp_name.strip():
-        st.error("Employee Name is mandatory.")
+    if not emp_name or emp_name.strip() == "":
+        st.error("❌ Employee Name is mandatory.")
         return False
     return True
 
@@ -77,9 +76,10 @@ def validate_emp_name_consistency(emp_id, emp_name):
         FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
         WHERE "EMP ID" = '{emp_id}'
     """).to_pandas()
-    if not df.empty and df.iloc[0]["EMP Name"].lower() != emp_name.lower():
-        st.error("EMP ID already exists with a different name.")
-        return False
+    if not df.empty:
+        if df.iloc[0]["EMP Name"].lower() != emp_name.lower():
+            st.error("❌ EMP ID exists with different name.")
+            return False
     return True
 
 def autofill_employee_name(emp_id):
@@ -93,7 +93,7 @@ def autofill_employee_name(emp_id):
     return df.iloc[0]["EMP Name"] if not df.empty else ""
 
 # -----------------------------------------
-# Sidebar – Search (RESTORED)
+# Sidebar – Search (UNCHANGED LOGIC)
 # -----------------------------------------
 with st.sidebar:
     st.markdown("## 🔍 Search Employee")
@@ -114,11 +114,9 @@ with st.sidebar:
 
     certification = st.selectbox("Certification", certifications)
 
-    st.divider()
-
     if st.button("Search", type="primary", use_container_width=True):
         if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
-            st.error("Enter a valid 10-digit Employee ID")
+            st.error("Enter valid 10-digit EMP ID")
             st.stop()
 
         result = session.sql(f"""
@@ -131,18 +129,21 @@ with st.sidebar:
         if result.empty:
             st.session_state.edit_mode = False
             st.session_state.record = {}
-            st.toast("No record found. Add new certification.", icon="➕")
+            st.toast("No record found. Add new.", icon="➕")
         else:
             st.session_state.edit_mode = True
             st.session_state.record = result.iloc[0].to_dict()
-            st.toast("Record loaded successfully", icon="✅")
+            st.toast("Record loaded", icon="✅")
 
 # -----------------------------------------
-# Reset on EMP ID change
+# Reset on EMP ID change (UNCHANGED)
 # -----------------------------------------
 if st.session_state.last_emp_id != emp_id:
     st.session_state.record = {}
     st.session_state.edit_mode = False
+    st.session_state.pending_data = None
+    st.session_state.pending_action = None
+    st.session_state.save_completed = None
     st.session_state.autofill_emp_name = autofill_employee_name(emp_id)
     st.session_state.last_emp_id = emp_id
 
@@ -152,42 +153,62 @@ if st.session_state.last_emp_id != emp_id:
 st.markdown("## 🎓 Certification Tracker")
 
 # -----------------------------------------
-# Employee + Certification
+# Employee + Certification (UI ONLY)
 # -----------------------------------------
 st.markdown('<div class="card">', unsafe_allow_html=True)
 c1, c2, c3 = st.columns([1, 2, 2])
+
 emp_id = c1.text_input("Employee ID", value=emp_id)
 emp_name = c2.text_input(
     "Employee Name",
-    value=st.session_state.record.get("EMP Name") or st.session_state.autofill_emp_name or ""
+    value=(
+        st.session_state.record.get("EMP Name")
+        or st.session_state.autofill_emp_name
+        or ""
+    )
 )
 certification = c3.selectbox("Certification Track", certifications)
 st.markdown('</div>', unsafe_allow_html=True)
 
 # -----------------------------------------
-# Planning & Completion
+# Enrolment & Planning (UNCHANGED LOGIC)
 # -----------------------------------------
-st.markdown('<div class="card">', unsafe_allow_html=True)
-p1, p2 = st.columns(2)
+month_opts = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+year_opts = [str(y) for y in range(date.today().year - 5, date.today().year + 5)]
 
-with p1:
-    month = st.selectbox("Enrolment Month", ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"])
-    year = st.selectbox("Enrolment Year", [str(y) for y in range(date.today().year-5, date.today().year+5)])
+st.markdown('<div class="card">', unsafe_allow_html=True)
+m1, m2 = st.columns(2)
+
+with m1:
+    enrol_month = st.selectbox("Enrolment Month", month_opts)
+    enrol_year = st.selectbox("Enrolment Year", year_opts)
     planned_date = st.date_input("Planned Certification Date", date.today())
 
-with p2:
+with m2:
     completed = st.checkbox("Certification Completed?")
-    actual_date = st.date_input("Actual Completion Date", max_value=date.today()) if completed else None
-    snowpro = st.selectbox("SnowPro Status", ("Completed","Failed") if completed else ("Incomplete",))
-    voucher_status = st.selectbox("Voucher Status", ("Voucher Received","Voucher Applied","Own Payment"))
+    actual_date = st.date_input(
+        "Actual Completion Date",
+        max_value=date.today()
+    ) if completed else None
+
+    snowpro = st.selectbox(
+        "SnowPro Certified",
+        ("Completed","Failed") if completed else ("Incomplete",)
+    )
+
+    voucher_status = st.selectbox(
+        "Voucher Status",
+        ("Voucher Received","Voucher Applied","Own Payment")
+    )
 st.markdown('</div>', unsafe_allow_html=True)
 
 # -----------------------------------------
-# Badges
+# Badge Progress (UNCHANGED LOGIC)
 # -----------------------------------------
 st.markdown('<div class="card">', unsafe_allow_html=True)
 b1, b2, b3 = st.columns(3)
 badge_opts = ("Completed","In-Progress")
+
 badge1 = b1.selectbox("Badge 1", badge_opts)
 badge4 = b1.selectbox("Badge 4", badge_opts)
 badge2 = b2.selectbox("Badge 2", badge_opts)
@@ -197,29 +218,122 @@ cert_prep = b3.selectbox("CertPrepOD", badge_opts)
 st.markdown('</div>', unsafe_allow_html=True)
 
 # -----------------------------------------
-# Action Bar (Confirm Delete RESTORED)
+# Courses & Organization (UNCHANGED)
+# -----------------------------------------
+st.markdown('<div class="card">', unsafe_allow_html=True)
+l, r = st.columns(2)
+
+with l:
+    level_up = st.selectbox("Level Up Courses", ("Completed","Not Started"))
+    trial_exam = st.selectbox("Trial Exams", ("Completed","Not Started"))
+
+with r:
+    account = st.text_input("Account")
+    account_spoc = st.text_input("Account SPOC")
+    vertical = st.text_input("Vertical / SL")
+    batch = st.text_input("Batch")
+st.markdown('</div>', unsafe_allow_html=True)
+
+# -----------------------------------------
+# Comment
+# -----------------------------------------
+comment = st.text_area("Comment", height=100)
+
+# -----------------------------------------
+# Prepare Payload (UNCHANGED)
+# -----------------------------------------
+def prepare_payload():
+    return {
+        "EMP ID": emp_id,
+        "EMP Name": emp_name,
+        "Enrolment Month": f"{enrol_month}-{enrol_year}",
+        "Certification": certification,
+        "Badge 1 Status": badge1,
+        "Badge 2 Status": badge2,
+        "Badge 3 Status": badge3,
+        "Badge 4 Status": badge4,
+        "Badge 5 Status": badge5,
+        "CertPrepOD Course": cert_prep,
+        "Level Up Courses": level_up,
+        "# Trial Exams": trial_exam,
+        "Account": account,
+        "Account SPOC": account_spoc,
+        "Vertical / SL": vertical,
+        "Batch": batch,
+        "Planned Certification date": cert_date_to_str(planned_date),
+        "Actual Date of completion": cert_date_to_str(actual_date),
+        "Voucher Status": voucher_status,
+        "SnowPro Certified": snowpro,
+        "Comment": comment
+    }
+
+# -----------------------------------------
+# Action Bar (ORIGINAL LOGIC RESTORED)
 # -----------------------------------------
 st.divider()
 a1, a2, a3 = st.columns([3,1,1])
 
 with a1:
-    label = "Update Record" if st.session_state.edit_mode else "Add New Certification"
-    if st.button(label, type="primary", use_container_width=True):
-        if validate_mandatory_fields(emp_id, emp_name):
-            st.success("Ready to save")
+    if st.session_state.edit_mode:
+        if st.button("Update Record", type="primary", use_container_width=True):
+            if validate_mandatory_fields(emp_id, emp_name):
+                st.session_state.pending_data = prepare_payload()
+                st.session_state.pending_action = "update"
+                st.session_state.save_completed = False
+    else:
+        if st.button("Add New Certification", type="primary", use_container_width=True):
+            if validate_mandatory_fields(emp_id, emp_name) and validate_emp_name_consistency(emp_id, emp_name):
+                st.session_state.pending_data = prepare_payload()
+                st.session_state.pending_action = "insert"
+                st.session_state.save_completed = False
 
 with a2:
-    st.button("Cancel", use_container_width=True)
+    if st.button("Cancel", use_container_width=True):
+        st.session_state.pending_data = None
+        st.session_state.pending_action = None
+        st.session_state.save_completed = None
 
 with a3:
     if st.session_state.edit_mode:
-        confirm = st.checkbox("Confirm Delete")
-        if confirm and st.button("🗑 Delete", use_container_width=True):
+        if st.checkbox("Confirm Delete"):
+            if st.button("🗑 Delete", use_container_width=True):
+                session.sql(f"""
+                    DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+                    WHERE "EMP ID" = '{emp_id}'
+                      AND "Certification" = '{certification}'
+                """).collect()
+                st.success("Record deleted")
+                st.session_state.edit_mode = False
+                st.session_state.record = {}
+
+# -----------------------------------------
+# Confirm & Save (UNCHANGED – THIS IS KEY)
+# -----------------------------------------
+if st.session_state.pending_data:
+    st.subheader("🔍 Review Before Saving")
+    st.dataframe(pd.DataFrame([st.session_state.pending_data]), use_container_width=True)
+
+    if st.button("✅ Confirm & Save", disabled=st.session_state.save_completed):
+        if st.session_state.pending_action == "insert":
+            session.create_dataframe(
+                [Row(**st.session_state.pending_data)]
+            ).write.mode("append").save_as_table(
+                "USE_CASE.CERTIFICATION.NEW_CERTIFICATION"
+            )
+        else:
+            updates = [
+                f'"{k}" = \'{v}\'' if v else f'"{k}" = NULL'
+                for k, v in st.session_state.pending_data.items()
+                if k not in ["EMP ID", "Certification"]
+            ]
             session.sql(f"""
-                DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+                UPDATE USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+                SET {", ".join(updates)}
                 WHERE "EMP ID" = '{emp_id}'
                   AND "Certification" = '{certification}'
             """).collect()
-            st.success("Record deleted")
-            st.session_state.edit_mode = False
-            st.session_state.record = {}
+
+        st.success("✅ Data saved successfully")
+        st.session_state.save_completed = True
+        st.session_state.pending_data = None
+        st.session_state.pending_action = None
