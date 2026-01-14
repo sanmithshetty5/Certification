@@ -17,59 +17,59 @@ st.set_page_config(
 )
 
 # -----------------------------------------
-# Enhanced Professional UI Theme (COLORS ONLY)
+# Light Professional UI Theme (COLORS ONLY)
 # -----------------------------------------
 st.markdown("""
 <style>
 
-/* App Background */
+/* App background */
 body {
-    background-color: #0B1220;
+    background-color: #F8FAFC;
 }
 
-/* Main container spacing */
+/* Main container */
 .block-container {
     padding-top: 1.5rem;
 }
 
 /* Cards */
 .card {
-    background-color: #111827;
+    background-color: #FFFFFF;
     padding: 1.25rem;
-    border-radius: 14px;
-    border: 1px solid #1F2937;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
     margin-bottom: 1.2rem;
 }
 
 /* Headings */
 h1, h2, h3 {
-    color: #F9FAFB;
+    color: #111827;
     font-weight: 600;
 }
 
-/* Labels & text */
+/* Labels */
 label, .stMarkdown {
-    color: #CBD5E1 !important;
+    color: #374151 !important;
     font-size: 0.9rem;
 }
 
 /* Inputs */
 input, textarea, select {
-    background-color: #020617 !important;
-    color: #E5E7EB !important;
-    border: 1px solid #334155 !important;
+    background-color: #FFFFFF !important;
+    color: #111827 !important;
+    border: 1px solid #D1D5DB !important;
     border-radius: 8px !important;
 }
 
 /* Input focus */
 input:focus, textarea:focus, select:focus {
-    border-color: #3B82F6 !important;
-    box-shadow: 0 0 0 1px #3B82F6;
+    border-color: #2563EB !important;
+    box-shadow: 0 0 0 1px #2563EB;
 }
 
-/* Buttons */
+/* Primary button (Add / Update) */
 .stButton > button {
-    background-color: #3B82F6;
+    background-color: #16A34A;
     color: white;
     border-radius: 10px;
     height: 3rem;
@@ -78,23 +78,33 @@ input:focus, textarea:focus, select:focus {
 }
 
 .stButton > button:hover {
-    background-color: #2563EB;
+    background-color: #15803D;
 }
 
-/* Success / Error */
+/* Cancel & Delete buttons */
+button[kind="secondary"] {
+    background-color: #DC2626 !important;
+    color: white !important;
+}
+
+button[kind="secondary"]:hover {
+    background-color: #B91C1C !important;
+}
+
+/* Success & Error alerts */
 .stAlert-success {
-    background-color: #052E16;
-    color: #22C55E;
+    background-color: #ECFDF5;
+    color: #166534;
 }
 
 .stAlert-error {
-    background-color: #450A0A;
-    color: #EF4444;
+    background-color: #FEF2F2;
+    color: #991B1B;
 }
 
 /* Divider */
 hr {
-    border: 1px solid #1F2937;
+    border: 1px solid #E5E7EB;
 }
 
 </style>
