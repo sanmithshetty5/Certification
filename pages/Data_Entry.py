@@ -22,139 +22,79 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* =========================
-   GLOBAL
-========================= */
+/* App Background */
 body {
-    background-color: #F5F7FB;
-    color: #1F2937;
-    font-family: "Inter", sans-serif;
+    background-color: #0B1220;
 }
 
+/* Main container spacing */
 .block-container {
-    padding-top: 1.25rem;
-    padding-bottom: 2rem;
-    max-width: 1400px;
+    padding-top: 1.5rem;
 }
 
-/* =========================
-   SIDEBAR (Like Image 2)
-========================= */
-section[data-testid="stSidebar"] {
-    background-color: #FFFFFF;
-    border-right: 1px solid #E5E7EB;
-}
-
-section[data-testid="stSidebar"] h1,
-section[data-testid="stSidebar"] h2,
-section[data-testid="stSidebar"] h3,
-section[data-testid="stSidebar"] label {
-    color: #374151 !important;
-}
-
-/* =========================
-   CARDS
-========================= */
+/* Cards */
 .card {
-    background-color: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 10px;
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 1.25rem;
+    background-color: #111827;
+    padding: 1.25rem;
+    border-radius: 14px;
+    border: 1px solid #1F2937;
+    margin-bottom: 1.2rem;
 }
 
-/* =========================
-   HEADINGS
-========================= */
+/* Headings */
 h1, h2, h3 {
-    color: #111827;
+    color: #F9FAFB;
     font-weight: 600;
 }
 
-h2 {
-    font-size: 1.25rem;
+/* Labels & text */
+label, .stMarkdown {
+    color: #CBD5E1 !important;
+    font-size: 0.9rem;
 }
 
-/* =========================
-   LABELS
-========================= */
-label {
-    color: #6B7280 !important;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-}
-
-/* =========================
-   INPUTS (Flat & Clean)
-========================= */
+/* Inputs */
 input, textarea, select {
-    background-color: #FFFFFF !important;
-    color: #111827 !important;
-    border: 1px solid #D1D5DB !important;
-    border-radius: 6px !important;
-    padding: 0.45rem 0.6rem !important;
-    box-shadow: none !important;
+    background-color: #020617 !important;
+    color: #E5E7EB !important;
+    border: 1px solid #334155 !important;
+    border-radius: 8px !important;
 }
 
+/* Input focus */
 input:focus, textarea:focus, select:focus {
-    border-color: #2563EB !important;
-    outline: none !important;
-    box-shadow: none !important;
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 1px #3B82F6;
 }
 
-/* =========================
-   BUTTONS
-========================= */
+/* Buttons */
 .stButton > button {
-    height: 2.75rem;
-    border-radius: 8px;
+    background-color: #3B82F6;
+    color: white;
+    border-radius: 10px;
+    height: 3rem;
     font-weight: 600;
     border: none;
 }
 
-/* Save / Add (Green) */
-.stButton > button[kind="primary"] {
-    background-color: #22C55E !important;
-    color: #FFFFFF !important;
+.stButton > button:hover {
+    background-color: #2563EB;
 }
 
-.stButton > button[kind="primary"]:hover {
-    background-color: #16A34A !important;
-}
-
-/* Cancel (Red) */
-button:has(span:contains("Cancel")) {
-    background-color: #EF4444 !important;
-    color: white !important;
-}
-
-button:has(span:contains("Cancel")):hover {
-    background-color: #DC2626 !important;
-}
-
-/* =========================
-   ALERTS
-========================= */
+/* Success / Error */
 .stAlert-success {
-    background-color: #ECFDF5;
-    border: 1px solid #A7F3D0;
-    color: #065F46;
+    background-color: #052E16;
+    color: #22C55E;
 }
 
 .stAlert-error {
-    background-color: #FEF2F2;
-    border: 1px solid #FECACA;
-    color: #991B1B;
+    background-color: #450A0A;
+    color: #EF4444;
 }
 
-/* =========================
-   DIVIDERS
-========================= */
+/* Divider */
 hr {
-    border: none;
-    border-top: 1px solid #E5E7EB;
+    border: 1px solid #1F2937;
 }
 
 </style>
