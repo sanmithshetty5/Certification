@@ -16,91 +16,85 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# -----------------------------------------
+# Enhanced Professional UI Theme (COLORS ONLY)
+# -----------------------------------------
 st.markdown("""
 <style>
 
-/* ---------- PAGE ---------- */
+/* App Background */
 body {
-    background-color: #F4F6F8;
-    color: #0F172A;
+    background-color: #0B1220;
 }
 
+/* Main container spacing */
 .block-container {
-    padding: 2rem 3rem;
+    padding-top: 1.5rem;
 }
 
-/* ---------- SIDEBAR ---------- */
-section[data-testid="stSidebar"] {
-    background-color: #FFFFFF;
-    border-right: 1px solid #E6E8EB;
-}
-
-/* ---------- HEADERS ---------- */
-h1, h2, h3 {
-    color: #0F172A;
-    font-weight: 600;
-}
-
-/* ---------- CARDS ---------- */
+/* Cards */
 .card {
-    background-color: #FFFFFF;
-    border: 1px solid #E6E8EB;
-    border-radius: 10px;
+    background-color: #111827;
     padding: 1.25rem;
-    margin-bottom: 1.25rem;
+    border-radius: 14px;
+    border: 1px solid #1F2937;
+    margin-bottom: 1.2rem;
 }
 
-/* ---------- LABELS ---------- */
-label, .stMarkdown {
-    color: #475569 !important;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-/* ---------- INPUTS ---------- */
-input, textarea, select {
-    background-color: #F9FAFB !important;
-    color: #0F172A !important;
-    border: 1px solid #CBD5E1 !important;
-    border-radius: 6px !important;
-}
-
-input:focus, textarea:focus, select:focus {
-    border-color: #2563EB !important;
-    box-shadow: 0 0 0 1px #2563EB;
-}
-
-/* ---------- BUTTONS ---------- */
-.stButton > button {
-    border-radius: 8px;
-    height: 2.8rem;
+/* Headings */
+h1, h2, h3 {
+    color: #F9FAFB;
     font-weight: 600;
 }
 
-/* Add / Update */
-.stButton > button[kind="primary"] {
-    background-color: #16A34A;
+/* Labels & text */
+label, .stMarkdown {
+    color: #CBD5E1 !important;
+    font-size: 0.9rem;
+}
+
+/* Inputs */
+input, textarea, select {
+    background-color: #020617 !important;
+    color: #E5E7EB !important;
+    border: 1px solid #334155 !important;
+    border-radius: 8px !important;
+}
+
+/* Input focus */
+input:focus, textarea:focus, select:focus {
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 1px #3B82F6;
+}
+
+/* Buttons */
+.stButton > button {
+    background-color: #3B82F6;
     color: white;
-}
-
-.stButton > button[kind="primary"]:hover {
-    background-color: #15803D;
-}
-
-/* Cancel / Delete */
-.stButton > button:not([kind="primary"]) {
-    background-color: #DC2626;
-    color: white;
-}
-
-.stButton > button:not([kind="primary"]):hover {
-    background-color: #B91C1C;
-}
-
-/* ---------- REMOVE UGLY DEFAULT SPACING ---------- */
-hr {
+    border-radius: 10px;
+    height: 3rem;
+    font-weight: 600;
     border: none;
-    border-top: 1px solid #E6E8EB;
+}
+
+.stButton > button:hover {
+    background-color: #2563EB;
+}
+
+/* Success / Error */
+.stAlert-success {
+    background-color: #052E16;
+    color: #22C55E;
+}
+
+.stAlert-error {
+    background-color: #450A0A;
+    color: #EF4444;
+}
+
+/* Divider */
+hr {
+    border: 1px solid #1F2937;
 }
 
 </style>
