@@ -1626,15 +1626,18 @@ st.markdown("""
         font-family: 'Inter', sans-serif;
     }
 
-    /* 2. Container Cards (The White Boxes with Borders) */
-    [data-testid="stVerticalBlockBorderWrapper"] {
-        background-color: #FFFFFF;
-        border: 1.5px solid #1E293B; /* Visible Grey Border */
-        border-radius: 8px;
-        padding: 2rem; /* Internal spacing */
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Subtle Shadow */
-        margin-bottom: 20px;
-    }
+   /* STREAMLIT CLOUD + SNOWFLAKE SAFE CONTAINER BORDER FIX */
+div[data-testid="stVerticalBlock"] > div:has(> div[data-testid="stVerticalBlockBorderWrapper"]),
+div[data-testid="stVerticalBlockBorderWrapper"],
+div[data-testid="stVerticalBlock"] {
+    background-color: #FFFFFF !important;
+    border: 1.5px solid #1E293B !important;
+    border-radius: 8px !important;
+    padding: 2rem !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    margin-bottom: 20px !important;
+}
+
 
     /* 3. WIDGET LABELS (The "Headers" above inputs) - CRITICAL FIX */
     .stTextInput label, .stSelectbox label, .stDateInput label, .stTextArea label {
