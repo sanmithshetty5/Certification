@@ -217,16 +217,17 @@ if st.session_state.last_emp_id != emp_id:
 # -----------------------------------------
 # Header
 # -----------------------------------------
-st.markdown(
-    """
-    <div class="app-logo">
-        <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/logo.png">
-    </div>
-    """,
-    unsafe_allow_html=True
-)
 
-st.title("🎓 Certification Tracker")
+title_col, logo_col = st.columns([8, 1])
+
+with title_col:
+    st.title("🎓 Certification Tracker")
+
+with logo_col:
+    st.image(
+        "https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/logo.png",
+        width=80
+    )
 st.markdown("---")
 
 # -----------------------------------------
