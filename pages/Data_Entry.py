@@ -1814,7 +1814,9 @@ st.markdown("---")
 # -----------------------------------------
 # Using border=True creates the container, CSS styles it as a card
 with st.container(border=True):
-    
+    st.markdown('<div class="section-header">👤 Employee Details</div>', unsafe_allow_html=True)
+    c1, c2, c3 = st.columns([1, 2, 2])
+
     with c1:
         emp_id = st.text_input("Employee ID", value=emp_id)
     with c2:
