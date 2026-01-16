@@ -151,6 +151,26 @@ div.stButton > button:disabled span {
 # -------------------------------
 # HEADER
 # -------------------------------
+
+# -------------------------------
+# TOP LOGO CONTAINER
+# -------------------------------
+with st.container():
+    col1, col2 = st.columns([1, 1])
+
+    with col1:
+        st.image(
+            "pages/logo.png",
+            width=180
+        )
+
+    with col2:
+        st.image(
+            "pages/snowflake_logo.png",
+            width=180
+        )
+
+
 st.markdown("""
 <div>
     <div class="welcome-title">
