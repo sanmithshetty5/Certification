@@ -212,7 +212,7 @@ if st.session_state.last_emp_id != emp_id:
 # Header
 # -----------------------------------------
 
-title_col, logo_col = st.columns([8, 1])
+title_col, logo_col = st.columns([6, 3])
 
 with title_col:
     st.title("🎓 Certification Tracker")
