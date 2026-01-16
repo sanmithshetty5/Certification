@@ -1678,6 +1678,12 @@ st.markdown("""
     [data-testid="stForm"] {
         background-color: transparent;
     }
+
+        /* 3. HEADINGS (Fixes 'Certification Tracker' visibility) */
+    h1, h2, h3, h4, h5, h6, h1 span, h2 span, h3 span {
+        color: #0F172A !important; /* Force Dark Navy Color */
+        font-weight: 700 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
