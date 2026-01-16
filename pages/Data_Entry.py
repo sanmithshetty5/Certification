@@ -780,7 +780,6 @@
 #             st.session_state.save_completed = True
 #         except Exception as e:
 #             st.error(f"Error: {e}")
-
 # -----------------------------------------
 # Imports
 # -----------------------------------------
@@ -804,90 +803,66 @@ st.set_page_config(
 # -----------------------------------------
 st.markdown("""
 <style>
-    /* 1. Main Background - Light Gray for Contrast */
-    .stApp {
-        background-color: #F1F5F9; /* Slate-100 */
-    }
+/* 1. Page Background - Clean Light Grey */
+.stApp {
+    background-color: #F1F5F9;
+    font-family: 'Inter', sans-serif;
+}
 
-    /* 2. Remove default top padding */
-    .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 3rem;
-    }
+/* 2. Containers (Cards) - White background with shadow */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1rem;
+}
 
-    /* 3. Card Styling (The White Boxes) */
-    [data-testid="stVerticalBlockBorderWrapper"] {
-        background-color: #FFFFFF;
-        border-radius: 12px;
-        padding: 20px;
-        border: 1px solid #E2E8F0; /* Slate-200 */
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        margin-bottom: 1rem;
-    }
+/* 3. Input Fields - FORCE White Background & Dark Text */
+input, select, textarea {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important; /* Dark text */
+    border: 1px solid #CBD5E1 !important;
+}
 
-    /* 4. Input Fields - Force White Background & Dark Text */
-    input[type="text"], input[type="number"], .stDateInput input, .stSelectbox div[data-baseweb="select"] {
-        background-color: #FFFFFF !important;
-        color: #1E293B !important; /* Dark Slate Text */
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 6px !important;
-    }
-    
-    /* Input Focus State */
-    input:focus, .stSelectbox div[data-baseweb="select"]:focus-within {
-        border-color: #3B82F6 !important; /* Blue border on focus */
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
-    }
+/* Fix for Streamlit's specific widget structures to ensure visibility */
+.stTextInput > div > div > input {
+    color: #0F172A !important;
+    background-color: #FFFFFF !important;
+}
+.stSelectbox > div > div > div {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
+}
+.stDateInput > div > div > input {
+    color: #0F172A !important;
+}
 
-    /* 5. Labels - Bold and Dark */
-    label p {
-        font-weight: 600 !important;
-        font-size: 0.9rem !important;
-        color: #475569 !important; /* Slate-600 */
-    }
-    
-    /* 6. Headers */
-    h1, h2, h3 {
-        color: #0F172A; /* Slate-900 */
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    .section-title {
-        color: #334155;
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 5px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .section-divider {
-        height: 2px;
-        background-color: #F1F5F9;
-        margin-bottom: 20px;
-        margin-top: 5px;
-    }
+/* 4. Headings */
+h1, h2, h3 {
+    color: #1E293B;
+    font-weight: 700;
+}
 
-    /* 7. Buttons */
-    .stButton > button {
-        border-radius: 6px;
-        font-weight: 600;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: all 0.2s;
-    }
-    
-    /* Primary Button override */
-    button[kind="primary"] {
-        background-color: #2563EB; /* Royal Blue */
-    }
-    button[kind="primary"]:hover {
-        background-color: #1D4ED8;
-    }
+/* 5. Custom Dividers for Sections */
+.section-header {
+    color: #334155;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    border-bottom: 2px solid #F1F5F9;
+    padding-bottom: 5px;
+}
 
+/* 6. Buttons */
+.stButton > button {
+    border-radius: 6px;
+    font-weight: 600;
+}
 </style>
 """, unsafe_allow_html=True)
+
 
 # -----------------------------------------
 # Snowflake Session
@@ -1209,325 +1184,3 @@ if st.session_state.pending_data:
             st.session_state.save_completed = True
             st.session_state.pending_data = None
             st.session_state.pending_action = None
-
-# # -----------------------------------------
-# # Imports
-# # -----------------------------------------
-# import streamlit as st
-# from datetime import date
-# import pandas as pd
-# from snowflake.snowpark import Row
-
-# # -----------------------------------------
-# # Page Config
-# # -----------------------------------------
-# st.set_page_config(
-#     page_title="Certification Tracker",
-#     page_icon="🎓",
-#     layout="wide",
-#     initial_sidebar_state="expanded"
-# )
-
-# # -----------------------------------------
-# # PREMIUM ENTERPRISE UI (CLEAN & SPACED)
-# # -----------------------------------------
-# st.markdown("""
-# <style>
-
-# /* Global */
-# .stApp {
-#     background: #F4F6FA;
-#     font-family: 'Inter', sans-serif;
-# }
-
-# .block-container {
-#     padding-top: 1.5rem;
-#     max-width: 1400px;
-# }
-
-# /* Typography */
-# h1 {
-#     font-size: 1.9rem;
-#     font-weight: 700;
-#     color: #0F172A;
-# }
-
-# /* Card Layout */
-# .section-card {
-#     background: #FFFFFF;
-#     border-radius: 14px;
-#     padding: 1.6rem 1.8rem;
-#     margin-bottom: 1.6rem;
-#     box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
-# }
-
-# .section-title {
-#     font-size: 1rem;
-#     font-weight: 600;
-#     color: #334155;
-#     margin-bottom: 1.4rem;
-# }
-
-# /* Inputs */
-# .stTextInput input,
-# .stSelectbox div[data-baseweb="select"],
-# .stDateInput input,
-# .stTextArea textarea {
-#     background: #F9FAFB;
-#     border-radius: 8px;
-#     border: 1px solid #E5E7EB;
-# }
-
-# .stTextInput input:focus,
-# .stSelectbox div[data-baseweb="select"]:focus-within,
-# .stTextArea textarea:focus {
-#     border-color: #6366F1;
-# }
-
-# /* Buttons */
-# .stButton button {
-#     border-radius: 8px;
-#     font-weight: 600;
-# }
-
-# .stButton button[kind="primary"] {
-#     background: #4F46E5;
-# }
-
-# /* Sidebar */
-# section[data-testid="stSidebar"] {
-#     background: linear-gradient(180deg, #0F172A, #020617);
-# }
-
-# section[data-testid="stSidebar"] * {
-#     color: #E5E7EB;
-# }
-
-# section[data-testid="stSidebar"] .stButton button {
-#     background: #4F46E5;
-# }
-
-# /* Dataframe */
-# [data-testid="stDataFrame"] {
-#     border-radius: 12px;
-#     overflow: hidden;
-# }
-
-# </style>
-# """, unsafe_allow_html=True)
-
-# # -----------------------------------------
-# # Snowflake Session
-# # -----------------------------------------
-# try:
-#     cnx = st.connection("snowflake")
-#     session = cnx.session()
-# except Exception:
-#     st.error("Snowflake connection not found.")
-#     st.stop()
-
-# # -----------------------------------------
-# # Session State
-# # -----------------------------------------
-# for k in [
-#     "edit_mode", "record", "pending_data",
-#     "pending_action", "last_emp_id",
-#     "save_completed", "autofill_emp_name"
-# ]:
-#     st.session_state.setdefault(k, None)
-
-# # -----------------------------------------
-# # Helpers
-# # -----------------------------------------
-# def cert_date_to_str(val):
-#     return val.strftime("%d-%m-%Y") if val else None
-
-# def validate_fields(emp_id, emp_name):
-#     if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
-#         st.error("Employee ID must be 10 digits")
-#         return False
-#     if not emp_name.strip():
-#         st.error("Employee Name is mandatory")
-#         return False
-#     return True
-
-# def autofill_name(emp_id):
-#     if not emp_id.isdigit() or len(emp_id) != 10:
-#         return ""
-#     df = session.sql(f"""
-#         SELECT DISTINCT "EMP Name"
-#         FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-#         WHERE "EMP ID"='{emp_id}'
-#     """).to_pandas()
-#     return df.iloc[0]["EMP Name"] if not df.empty else ""
-
-# # -----------------------------------------
-# # Sidebar Search
-# # -----------------------------------------
-# with st.sidebar:
-#     st.title("🔍 Search Portal")
-#     st.divider()
-
-#     emp_id = st.text_input("Employee ID")
-#     certifications = (
-#         "Advanced Analyst","Advanced Architect","Advanced Data Engineer",
-#         "Core","Associate","Speciality Gen AI","Speciality Native App",
-#         "Advanced Data Scientist","Speciality Snowpark"
-#     )
-#     certification = st.selectbox("Certification", certifications)
-
-#     if st.button("Find Record", type="primary", use_container_width=True):
-#         if not emp_id.isdigit() or len(emp_id) != 10:
-#             st.error("Invalid Employee ID")
-#             st.stop()
-
-#         df = session.sql(f"""
-#             SELECT * FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-#             WHERE "EMP ID"='{emp_id}' AND "Certification"='{certification}'
-#         """).to_pandas()
-
-#         if df.empty:
-#             st.session_state.edit_mode = False
-#             st.session_state.record = {}
-#             st.toast("New record", icon="🆕")
-#         else:
-#             st.session_state.edit_mode = True
-#             st.session_state.record = df.iloc[0].to_dict()
-#             st.toast("Record loaded", icon="✅")
-
-# # Reset on EMP ID change
-# if st.session_state.last_emp_id != emp_id:
-#     st.session_state.autofill_emp_name = autofill_name(emp_id)
-#     st.session_state.last_emp_id = emp_id
-
-# # -----------------------------------------
-# # Title
-# # -----------------------------------------
-# st.title("🎓 Certification Management")
-# st.caption("Manage employee certifications and progress")
-
-# # -----------------------------------------
-# # Candidate Profile
-# # -----------------------------------------
-# with st.container():
-#     st.markdown('<div class="section-card">', unsafe_allow_html=True)
-#     st.markdown('<div class="section-title">👤 Candidate Profile</div>', unsafe_allow_html=True)
-
-#     c1, c2, c3 = st.columns([1.2, 2.6, 1.4])
-#     emp_id = c1.text_input("Employee ID", emp_id)
-#     emp_name = c2.text_input(
-#         "Employee Name",
-#         st.session_state.record.get("EMP Name") or st.session_state.autofill_emp_name or ""
-#     )
-#     certification = c3.selectbox("Certification Track", certifications)
-
-#     st.markdown('</div>', unsafe_allow_html=True)
-
-# # -----------------------------------------
-# # Timeline & Status
-# # -----------------------------------------
-# with st.container():
-#     st.markdown('<div class="section-card">', unsafe_allow_html=True)
-#     st.markdown('<div class="section-title">🗓 Timeline & Status</div>', unsafe_allow_html=True)
-
-#     c1, c2, c3 = st.columns(3)
-
-#     with c1:
-#         enrol_month = st.selectbox("Month", ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"])
-#         enrol_year = st.selectbox("Year", [str(y) for y in range(date.today().year-5, date.today().year+5)])
-#         planned_date = st.date_input("Target Date", date.today())
-
-#     with c2:
-#         completed = st.toggle("Certification Completed?")
-#         actual_date = st.date_input("Completion Date", date.today()) if completed else None
-#         snowpro = st.selectbox("Result", ("Completed","Failed")) if completed else "Incomplete"
-
-#     with c3:
-#         voucher_status = st.selectbox("Voucher Status", ("Voucher Received","Voucher Applied","Own Payment"))
-
-#     st.markdown('</div>', unsafe_allow_html=True)
-
-# # -----------------------------------------
-# # Badges & Courses
-# # -----------------------------------------
-# with st.container():
-#     st.markdown('<div class="section-card">', unsafe_allow_html=True)
-#     st.markdown('<div class="section-title">🏅 Badges & Coursework</div>', unsafe_allow_html=True)
-
-#     badge_opts = ("Completed","In-Progress")
-#     b1,b2,b3,b4,b5 = st.columns(5)
-#     badge1 = b1.selectbox("Badge 1", badge_opts)
-#     badge2 = b2.selectbox("Badge 2", badge_opts)
-#     badge3 = b3.selectbox("Badge 3", badge_opts)
-#     badge4 = b4.selectbox("Badge 4", badge_opts)
-#     badge5 = b5.selectbox("Badge 5", badge_opts)
-
-#     st.divider()
-
-#     p1,p2,p3 = st.columns(3)
-#     cert_prep = p1.selectbox("CertPrepOD Course", badge_opts)
-#     level_up = p2.selectbox("Level Up Courses", ("Completed","Not Started"))
-#     trial_exam = p3.selectbox("Trial Exams", ("Completed","Not Started"))
-
-#     st.markdown('</div>', unsafe_allow_html=True)
-
-# # -----------------------------------------
-# # Department Details
-# # -----------------------------------------
-# with st.container():
-#     st.markdown('<div class="section-card">', unsafe_allow_html=True)
-#     st.markdown('<div class="section-title">🏢 Department Details</div>', unsafe_allow_html=True)
-
-#     o1,o2 = st.columns(2)
-#     account = o1.text_input("Account Name")
-#     account_spoc = o1.text_input("Account SPOC")
-#     vertical = o2.text_input("Vertical / SL")
-#     batch = o2.text_input("Batch ID")
-
-#     comment = st.text_area("Comments / Notes", height=90)
-
-#     st.markdown('</div>', unsafe_allow_html=True)
-
-# # -----------------------------------------
-# # Payload
-# # -----------------------------------------
-# def payload():
-#     return {
-#         "EMP ID": emp_id,
-#         "EMP Name": emp_name,
-#         "Certification": certification,
-#         "Enrolment Month": f"{enrol_month}-{enrol_year}",
-#         "Planned Certification date": cert_date_to_str(planned_date),
-#         "Actual Date of completion": cert_date_to_str(actual_date),
-#         "SnowPro Certified": snowpro,
-#         "Voucher Status": voucher_status,
-#         "Badge 1 Status": badge1,
-#         "Badge 2 Status": badge2,
-#         "Badge 3 Status": badge3,
-#         "Badge 4 Status": badge4,
-#         "Badge 5 Status": badge5,
-#         "CertPrepOD Course": cert_prep,
-#         "Level Up Courses": level_up,
-#         "# Trial Exams": trial_exam,
-#         "Account": account,
-#         "Account SPOC": account_spoc,
-#         "Vertical / SL": vertical,
-#         "Batch": batch,
-#         "Comment": comment
-#     }
-
-# # -----------------------------------------
-# # Actions
-# # -----------------------------------------
-# a1,a2,a3 = st.columns([1,1,4])
-
-# if a1.button("💾 Save", type="primary"):
-#     if validate_fields(emp_id, emp_name):
-#         session.create_dataframe([Row(**payload())]) \
-#             .write.mode("append") \
-#             .save_as_table("USE_CASE.CERTIFICATION.NEW_CERTIFICATION")
-#         st.success("Saved successfully")
-
-# if a2.button("❌ Cancel"):
-#     st.rerun()
-
