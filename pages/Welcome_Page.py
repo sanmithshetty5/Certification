@@ -147,7 +147,7 @@ st.markdown("""
         Welcome to the Employee Certification Portal 👋
     </div>
     <div class="subtitle">
-        This portal helps your organization track employee certifications, ensure compliance,
+        This portal helps to track employee certifications, ensure compliance,
         monitor readiness, and gain actionable insights across teams and departments.
     </div>
 </div>
