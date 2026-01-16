@@ -1820,22 +1820,19 @@ st.markdown('<div class="section-header">👤 Employee Details</div>', unsafe_al
 c1, c2, c3 = st.columns([1, 2, 2])
 # fields here stay EXACTLY the same
 
-st.markdown('</div>', unsafe_allow_html=True)
-
-
-    with c1:
-        emp_id = st.text_input("Employee ID", value=emp_id)
-    with c2:
-        emp_name = st.text_input(
-            "Employee Name",
-            value=(
-                st.session_state.record.get("EMP Name")
-                or st.session_state.autofill_emp_name
-                or ""
-            )
+with c1:
+    emp_id = st.text_input("Employee ID", value=emp_id)
+with c2:
+    emp_name = st.text_input(
+        "Employee Name",
+        value=(
+            st.session_state.record.get("EMP Name")
+            or st.session_state.autofill_emp_name
+            or ""
         )
-    with c3:
-        certification = st.selectbox("Certification Track", certifications, index=certifications.index(certification) if certification in certifications else 0)
+    )
+with c3:
+    certification = st.selectbox("Certification Track", certifications, index=certifications.index(certification) if certification in certifications else 0)
 st.markdown('</div>', unsafe_allow_html=True)
 
 # -----------------------------------------
