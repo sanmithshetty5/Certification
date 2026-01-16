@@ -210,12 +210,6 @@ st.markdown("""
     font-family: Inter, sans-serif;
 }
 
-# /* Sidebar */
-# section[data-testid="stSidebar"] {
-#     background-color: #;
-#     border-right: 1px solid #e5e7eb;
-# }
-
 /* Header */
 .page-title {
     font-size: 2.4rem;
@@ -254,9 +248,12 @@ st.markdown("""
 }
 
 /* -------------------------------
-   GLOBAL BUTTON OVERRIDE (SAME AS HOME)
+   GLOBAL BUTTON OVERRIDE (FIXED)
 --------------------------------*/
-div.stButton > button {
+
+/* NORMAL BUTTON + DOWNLOAD BUTTON */
+div.stButton > button,
+div.stDownloadButton > button {
     background-color: #030712 !important;
     color: #ffffff !important;
     border: 2px solid #030712 !important;
@@ -266,25 +263,33 @@ div.stButton > button {
     transition: all 0.25s ease-in-out !important;
 }
 
-div.stButton > button:hover {
+/* HOVER */
+div.stButton > button:hover,
+div.stDownloadButton > button:hover {
     background-color: #ffffff !important;
     color: #030712 !important;
 }
 
+/* FOCUS / ACTIVE */
 div.stButton > button:focus,
-div.stButton > button:active {
+div.stButton > button:active,
+div.stDownloadButton > button:focus,
+div.stDownloadButton > button:active {
     background-color: #ffffff !important;
     color: #030712 !important;
     outline: none !important;
     box-shadow: none !important;
 }
 
-div.stButton > button:disabled {
+/* DISABLED */
+div.stButton > button:disabled,
+div.stDownloadButton > button:disabled {
     background-color: #f1f5f9 !important;
     color: #94a3b8 !important;
     border: 2px solid #e2e8f0 !important;
     cursor: not-allowed !important;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
