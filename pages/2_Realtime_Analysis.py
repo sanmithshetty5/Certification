@@ -330,7 +330,6 @@
 # 💡 Tip: Use filters to explore certification insights across teams and time periods.
 # </div>
 # """, unsafe_allow_html=True)
-
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -347,7 +346,7 @@ st.set_page_config(
 )
 
 # -----------------------------------------
-# CLEAR PAGE STATE (Logic Preserved)
+# CLEAR PAGE STATE
 # -----------------------------------------
 for key in [
     "record",
@@ -518,7 +517,7 @@ df["Completed Flag"] = df["Actual Date of completion"].notna()
 # SIDEBAR FILTERS
 # -----------------------------------------
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/2991/2991148.png", width=50) # Optional Icon
+    st.image("https://cdn-icons-png.flaticon.com/512/2991/2991148.png", width=50) 
     st.markdown("### 🔎 Analytics Filters")
     st.markdown("<div style='margin-bottom: 20px; font-size: 0.9em; color: #64748b;'>Refine your data view</div>", unsafe_allow_html=True)
 
@@ -573,7 +572,7 @@ def export_charts_as_zip(data):
 
         for name, series in charts.items():
             fig, ax = plt.subplots(figsize=(7, 5))
-            series.plot(kind="bar", ax=ax, color='#4f46e5') # Added brand color to export
+            series.plot(kind="bar", ax=ax, color='#4f46e5') 
             ax.set_title(name.replace("_", " ").replace(".png", "").title())
             ax.set_xlabel("")
             ax.set_ylabel("Count")
@@ -628,7 +627,8 @@ def display_kpi(column, title, value, color_border="#4f46e5"):
 completion_rate = round(filtered_df["Completed Flag"].mean() * 100, 1) if not filtered_df.empty else 0
 
 display_kpi(col1, "Total Records", f"{len(filtered_df):,}")
-display_kpi(col2, "Unique Employees", f"{filtered_df['EMP ID"].nunique():,}")
+# FIXED LINE BELOW
+display_kpi(col2, "Unique Employees", f"{filtered_df['EMP ID'].nunique():,}")
 display_kpi(col3, "Completed Certs", f"{int(filtered_df['Completed Flag'].sum()):,}", color_border="#10b981") # Green
 
 # Special formatting for the 4th KPI to include progress bar
@@ -652,7 +652,6 @@ c1, c2 = st.columns([3, 2])
 with c1:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="chart-header">📚 Certifications Distribution</div>', unsafe_allow_html=True)
-    # Using st.bar_chart as requested, wrapped in our container
     st.bar_chart(filtered_df["Certification"].value_counts(), color="#4f46e5")
     st.markdown('</div>', unsafe_allow_html=True)
 
