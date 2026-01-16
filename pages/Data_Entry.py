@@ -1627,9 +1627,7 @@ st.markdown("""
     }
 
    /* STREAMLIT CLOUD + SNOWFLAKE SAFE CONTAINER BORDER FIX */
-div[data-testid="stVerticalBlock"] > div:has(> div[data-testid="stVerticalBlockBorderWrapper"]),
-div[data-testid="stVerticalBlockBorderWrapper"],
-div[data-testid="stVerticalBlock"] {
+div[data-testid="stVerticalBlock"] > div:has(> div[data-testid="stVerticalBlockBorderWrapper"]){
     background-color: #FFFFFF !important;
     border: 1.5px solid #1E293B !important;
     border-radius: 8px !important;
