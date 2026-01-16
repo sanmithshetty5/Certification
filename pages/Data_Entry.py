@@ -2068,11 +2068,11 @@ st.markdown("""
     .main .stSelectbox label, 
     .main .stDateInput label, 
     .main .stTextArea label,
-    .main .stCheckbox label p {
-        color: #1E293B !important;
+
+    .stCheckbox label p {
+        color: #1E293B !important; /* Dark Text */
         font-weight: 600 !important;
     }
-
     /* 6. SIDEBAR STYLING (Keep Sidebar Text Light if background is dark) */
     [data-testid="stSidebar"] {
         background-color: #0F172A; /* Optional: Force dark sidebar background */
