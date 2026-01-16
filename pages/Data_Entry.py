@@ -220,7 +220,7 @@ if st.session_state.last_emp_id != emp_id:
 st.markdown(
     """
     <div class="app-logo">
-        <img src="https://github.com/sanmithshetty5/Certification/edit/main/pages/logo.png">
+        <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/logo.png">
     </div>
     """,
     unsafe_allow_html=True
