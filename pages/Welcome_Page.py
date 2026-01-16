@@ -1,13 +1,16 @@
 import streamlit as st
 
+# --------------------------------
+# PAGE CONFIG
+# --------------------------------
 st.set_page_config(
     page_title="Welcome | Employee Certification Portal",
     layout="wide"
 )
 
-# -------------------------------
-# GLOBAL CSS – Enterprise UI
-# -------------------------------
+# --------------------------------
+# GLOBAL CSS
+# --------------------------------
 st.markdown("""
 <style>
 .stApp {
@@ -16,14 +19,14 @@ st.markdown("""
     font-family: Inter, sans-serif;
 }
 
-/* Top header container */
-.top-header {
+/* LOGO CONTAINER */
+.logo-container {
     background: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
-    padding: 1.2rem 2rem 1.6rem 2rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.4rem 2rem;
     margin-bottom: 2.5rem;
 }
-
 
 /* Header */
 .welcome-title {
@@ -61,27 +64,21 @@ st.markdown("""
     justify-content: space-between;
     transition: all 0.25s ease-in-out;
 }
-
 .card:hover {
     transform: translateY(-3px);
     box-shadow: 0px 14px 28px rgba(15,23,42,0.08);
 }
-
 .card h3 {
     font-size: 1.2rem;
     font-weight: 700;
-    margin-bottom: 0.8rem;
 }
-
 .card p {
     font-size: 0.95rem;
     color: #64748b;
-    line-height: 1.6;
 }
 
 /* Badge */
 .badge {
-    display: inline-block;
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.1em;
@@ -89,56 +86,23 @@ st.markdown("""
     border-radius: 999px;
     background: #e0f2fe;
     color: #0369a1;
-    margin-bottom: 1.4rem;
     text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 1.2rem;
 }
 
-/* -------------------------------
-   GLOBAL BUTTON OVERRIDE
---------------------------------*/
+/* Button override */
 div.stButton > button {
     background-color: #030712 !important;
     color: #ffffff !important;
-    border: 2px solid #030712 !important;
     border-radius: 10px !important;
     font-weight: 700 !important;
     padding: 0.75rem 1rem !important;
-    transition: all 0.25s ease-in-out !important;
 }
-
 div.stButton > button:hover {
     background-color: #ffffff !important;
     color: #030712 !important;
-}
-
-div.stButton > button:focus,
-div.stButton > button:active {
-    background-color: #ffffff !important;
-    color: #030712 !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-div.stButton > button:disabled {
-    background-color: #f1f5f9 !important;
-    color: #94a3b8 !important;
-    border: 2px solid #e2e8f0 !important;
-    cursor: not-allowed !important;
-}
-
-/* DISABLED */
-div.stButton > button:disabled {
-    background-color: #f1f5f9 !important;
-    border: 2px solid #e2e8f0 !important;
-}
-
-div.stButton > button:disabled span {
-    color: #94a3b8 !important;
-}
-
-/* Row spacing */
-.row-spacing {
-    margin-top: 3rem;
+    border: 2px solid #030712 !important;
 }
 
 /* Footer */
@@ -150,28 +114,15 @@ div.stButton > button:disabled span {
     font-size: 0.85rem;
     display: flex;
     justify-content: space-between;
-    align-items: center;
 }
 </style>
 """, unsafe_allow_html=True)
 
+# --------------------------------
+# LOGO CONTAINER (ONLY LOGOS)
+# --------------------------------
 with st.container():
-    st.markdown(
-        """
-        <style>
-        .logo-box {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 1.2rem 2rem;
-            margin-bottom: 2.5rem;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.markdown('<div class="logo-box">', unsafe_allow_html=True)
+    st.markdown('<div class="logo-container">', unsafe_allow_html=True)
 
     col1, col2 = st.columns([1, 1])
 
@@ -183,31 +134,25 @@ with st.container():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    
-    # Welcome text
-    st.markdown(
-        """
-        <div style="margin-top:2rem;">
-            <div class="welcome-title">
-                Welcome to the Employee Certification Portal 👋
-            </div>
-            <div class="subtitle">
-                This portal helps your organization track employee certifications,
-                ensure compliance, monitor readiness, and gain actionable insights
-                across Hexaware teams and Snowflake environments.
-            </div>
-        </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+# --------------------------------
+# WELCOME TEXT (OUTSIDE LOGO BOX)
+# --------------------------------
+st.markdown("""
+<div class="welcome-title">
+    Welcome to the Employee Certification Portal 👋
+</div>
+<div class="subtitle">
+    This portal helps your organization track employee certifications,
+    ensure compliance, monitor readiness, and gain actionable insights
+    across Hexaware teams and Snowflake environments.
+</div>
+""", unsafe_allow_html=True)
 
-# -------------------------------
+# --------------------------------
 # TRY THINGS OUT
-# -------------------------------
+# --------------------------------
 st.markdown('<div class="section-title">Try things out</div>', unsafe_allow_html=True)
 
-# -------- ROW 1 --------
 r1c1, r1c2 = st.columns(2, gap="large")
 
 with r1c1:
@@ -216,20 +161,13 @@ with r1c1:
         <div>
             <div class="badge">Getting Started</div>
             <h3>Add / Update Certification</h3>
-            <p>
-                Add new employees or update certification details including exams,
-                badges, issue dates, and completion status.
-            </p>
+            <p>Add new employees or update certification details.</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
-    if st.button(
-    "Open Certification Tracker",
-    key="btn_open_tracker",
-    use_container_width=True):
+
+    if st.button("Open Certification Tracker", use_container_width=True):
         st.switch_page("pages/Data_Entry.py")
-
-
 
 with r1c2:
     st.markdown("""
@@ -237,70 +175,20 @@ with r1c2:
         <div>
             <div class="badge">Insights</div>
             <h3>View Analytics Dashboard</h3>
-            <p>
-                Monitor certification KPIs, expiring certifications,
-                and team-level readiness in real time.
-            </p>
+            <p>Monitor certification KPIs and readiness.</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
-    if st.button(
-    "Open Certification Tracker",
-    key="btn_open_analytics",
-    use_container_width=True):
+
+    if st.button("Open Analytics", use_container_width=True):
         st.switch_page("pages/2_Realtime_Analysis.py")
 
-
-# -------- ROW 2 --------
-st.markdown('<div class="row-spacing"></div>', unsafe_allow_html=True)
-
-r2c1, r2c2 = st.columns(2, gap="large")
-
-with r2c1:
-    st.markdown("""
-    <div class="card">
-        <div>
-            <div class="badge">AI Powered</div>
-            <h3>AI Insight</h3>
-            <p>
-                Identify certification gaps, predict risk areas,
-                and receive AI-driven recommendations for action.
-            </p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    st.button(
-    "Explore AI Insights 🔒",
-    key="btn_ai_insight",
-    disabled=True,
-    use_container_width=True)
-    
-with r2c2:
-    st.markdown("""
-    <div class="card">
-        <div>
-            <div class="badge">Help</div>
-            <h3>How It Works</h3>
-            <p>
-                Learn the simple 3-step workflow to manage employee
-                certifications confidently across the organization.
-            </p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    st.button(
-    "View Help Guide",
-    key="btn_help",
-    disabled=True,
-    use_container_width=True)
-    
-
-# -------------------------------
+# --------------------------------
 # FOOTER
-# -------------------------------
+# --------------------------------
 st.markdown("""
 <div class="footer-tip">
-    <div>💡 Tip: Use the left sidebar to navigate between sections anytime.</div>
+    <div>💡 Tip: Use the left sidebar to navigate anytime.</div>
     <div>Hexaware © 2024 • Snowflake</div>
 </div>
 """, unsafe_allow_html=True)
