@@ -1,5 +1,3 @@
-
-
 import streamlit as st
 
 st.set_page_config(
@@ -164,8 +162,8 @@ st.markdown(
     """
     <div class="top-header">
         <div style="display:flex; align-items:center; justify-content:space-between;">
-            <img src="pages/snowflake_logo.png" style="height:32px;" />
-            <img src="pages/logo.png" style="height:36px;" />
+            <img src="pages/snowflake_logo.png", width = 210px />
+            <img src="pages/logo.png", width = 200px />
         </div>
     </div>
     """,
