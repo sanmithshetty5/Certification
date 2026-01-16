@@ -1629,7 +1629,7 @@ st.markdown("""
     /* 2. Container Cards (The White Boxes with Borders) */
     [data-testid="stVerticalBlockBorderWrapper"] {
         background-color: #FFFFFF;
-        border: 1px solid #CBD5E1; /* Visible Grey Border */
+        border: 1.5px solid #1E293B; /* Visible Grey Border */
         border-radius: 8px;
         padding: 2rem; /* Internal spacing */
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Subtle Shadow */
