@@ -119,6 +119,16 @@ div.stButton > button:disabled {
     cursor: not-allowed !important;
 }
 
+/* DISABLED */
+div.stButton > button:disabled {
+    background-color: #f1f5f9 !important;
+    border: 2px solid #e2e8f0 !important;
+}
+
+div.stButton > button:disabled span {
+    color: #94a3b8 !important;
+}
+
 /* Row spacing */
 .row-spacing {
     margin-top: 3rem;
