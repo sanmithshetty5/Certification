@@ -804,66 +804,90 @@ st.set_page_config(
 # -----------------------------------------
 st.markdown("""
 <style>
-/* 1. Page Background - Clean Light Grey */
-.stApp {
-    background-color: #F1F5F9;
-    font-family: 'Inter', sans-serif;
-}
+    /* 1. Main Background - Light Gray for Contrast */
+    .stApp {
+        background-color: #F1F5F9; /* Slate-100 */
+    }
 
-/* 2. Containers (Cards) - White background with shadow */
-[data-testid="stVerticalBlockBorderWrapper"] {
-    background-color: #FFFFFF;
-    border-radius: 10px;
-    padding: 20px;
-    border: 1px solid #E2E8F0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    margin-bottom: 1rem;
-}
+    /* 2. Remove default top padding */
+    .block-container {
+        padding-top: 1.5rem;
+        padding-bottom: 3rem;
+    }
 
-/* 3. Input Fields - FORCE White Background & Dark Text */
-input, select, textarea {
-    background-color: #FFFFFF !important;
-    color: #0F172A !important; /* Dark text */
-    border: 1px solid #CBD5E1 !important;
-}
+    /* 3. Card Styling (The White Boxes) */
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background-color: #FFFFFF;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #E2E8F0; /* Slate-200 */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        margin-bottom: 1rem;
+    }
 
-/* Fix for Streamlit's specific widget structures to ensure visibility */
-.stTextInput > div > div > input {
-    color: #0F172A !important;
-    background-color: #FFFFFF !important;
-}
-.stSelectbox > div > div > div {
-    background-color: #FFFFFF !important;
-    color: #0F172A !important;
-}
-.stDateInput > div > div > input {
-    color: #0F172A !important;
-}
+    /* 4. Input Fields - Force White Background & Dark Text */
+    input[type="text"], input[type="number"], .stDateInput input, .stSelectbox div[data-baseweb="select"] {
+        background-color: #FFFFFF !important;
+        color: #1E293B !important; /* Dark Slate Text */
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 6px !important;
+    }
+    
+    /* Input Focus State */
+    input:focus, .stSelectbox div[data-baseweb="select"]:focus-within {
+        border-color: #3B82F6 !important; /* Blue border on focus */
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+    }
 
-/* 4. Headings */
-h1, h2, h3 {
-    color: #1E293B;
-    font-weight: 700;
-}
+    /* 5. Labels - Bold and Dark */
+    label p {
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+        color: #475569 !important; /* Slate-600 */
+    }
+    
+    /* 6. Headers */
+    h1, h2, h3 {
+        color: #0F172A; /* Slate-900 */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .section-title {
+        color: #334155;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .section-divider {
+        height: 2px;
+        background-color: #F1F5F9;
+        margin-bottom: 20px;
+        margin-top: 5px;
+    }
 
-/* 5. Custom Dividers for Sections */
-.section-header {
-    color: #334155;
-    font-size: 1.05rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    border-bottom: 2px solid #F1F5F9;
-    padding-bottom: 5px;
-}
+    /* 7. Buttons */
+    .stButton > button {
+        border-radius: 6px;
+        font-weight: 600;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+    }
+    
+    /* Primary Button override */
+    button[kind="primary"] {
+        background-color: #2563EB; /* Royal Blue */
+    }
+    button[kind="primary"]:hover {
+        background-color: #1D4ED8;
+    }
 
-/* 6. Buttons */
-.stButton > button {
-    border-radius: 6px;
-    font-weight: 600;
-}
 </style>
 """, unsafe_allow_html=True)
-
 
 # -----------------------------------------
 # Snowflake Session
