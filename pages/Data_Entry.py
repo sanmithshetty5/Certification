@@ -819,6 +819,11 @@ st.markdown("""
     margin-bottom: 1rem;
 }
 
+/* Checkbox text color */
+div[data-testid="stCheckbox"] label {
+    color: #334155;   /* Slate-700 (professional, readable) */
+    font-weight: 500;
+}
 /* 3. Input Fields - FORCE White Background & Dark Text */
 input, select, textarea {
     background-color: #FFFFFF !important;
@@ -831,9 +836,9 @@ input, select, textarea {
     color: #0F172A !important;
     background-color: #FFFFFF !important;
 }
-.stSelectbox > div > div > div {
-    background-color: #FFFFFF !important;
-    color: #0F172A !important;
+# .stSelectbox > div > div > div {
+#     background-color: #FFFFFF !important;
+#     color: #334155 !important;
 }
 .stDateInput > div > div > input {
     color: #0F172A !important;
@@ -841,7 +846,7 @@ input, select, textarea {
 
 /* 4. Headings */
 h1, h2, h3 {
-    color: #1E293B;
+    color: #334155;
     font-weight: 700;
 }
 
@@ -980,7 +985,7 @@ if st.session_state.last_emp_id != emp_id:
 # -----------------------------------------
 # Header
 # -----------------------------------------
-st.title("🎓 Certification Tracker")
+st.title(":blue[🎓 Certification Tracker]")
 st.markdown("---")
 
 # -----------------------------------------
