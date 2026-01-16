@@ -210,11 +210,11 @@ st.markdown("""
     font-family: Inter, sans-serif;
 }
 
-/* Sidebar */
-section[data-testid="stSidebar"] {
-    background-color: #ffffff;
-    border-right: 1px solid #e5e7eb;
-}
+# /* Sidebar */
+# section[data-testid="stSidebar"] {
+#     background-color: #;
+#     border-right: 1px solid #e5e7eb;
+# }
 
 /* Header */
 .page-title {
