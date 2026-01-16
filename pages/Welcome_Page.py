@@ -170,10 +170,10 @@ with st.container():
     col1, col2 = st.columns([1, 1])
 
     with col1:
-        st.image("pages/snowflake_logo.png", width=210)
+        st.image("assets/snowflake_logo.png", width=210)
 
     with col2:
-        st.image("pages/logo.png", width=200)
+        st.image("assets/hexaware_logo.png", width=200)
 
     # Welcome text
     st.markdown(
