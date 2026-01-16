@@ -220,7 +220,7 @@ with title_col:
 with logo_col:
     st.image(
         "https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/logo.png",
-        width=250,
+        width=200,
     )
 st.markdown("---")
 
