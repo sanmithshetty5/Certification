@@ -171,9 +171,11 @@
 #         use_container_width=True
 #     )
 
-
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import io
+import zipfile
 
 # -----------------------------------------
 # PAGE CONFIG
@@ -261,11 +263,6 @@ section[data-testid="stSidebar"] {
     padding: 0.5rem 1rem;
 }
 
-/* Remove default Streamlit borders */
-div[data-testid="stMetric"] {
-    background: none;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -308,44 +305,17 @@ df["Completed Flag"] = df["Actual Date of completion"].notna()
 with st.sidebar:
     st.markdown("## 🔎 Analytics Filters")
 
-    year_filter = st.multiselect(
-        "Year",
-        sorted(df["Year"].dropna().unique())
-    )
-
-    month_filter = st.multiselect(
-        "Month",
-        df["Month"].dropna().unique()
-    )
-
+    year_filter = st.multiselect("Year", sorted(df["Year"].dropna().unique()))
+    month_filter = st.multiselect("Month", df["Month"].dropna().unique())
     date_filter = st.date_input("Date Range", [])
 
     st.divider()
 
-    cert_filter = st.multiselect(
-        "Certification",
-        sorted(df["Certification"].dropna().unique())
-    )
-
-    snowpro_filter = st.multiselect(
-        "SnowPro Status",
-        sorted(df["SnowPro Certified"].dropna().unique())
-    )
-
-    voucher_filter = st.multiselect(
-        "Voucher Status",
-        sorted(df["Voucher Status"].dropna().unique())
-    )
-
-    account_filter = st.multiselect(
-        "Account",
-        sorted(df["Account"].dropna().unique())
-    )
-
-    vertical_filter = st.multiselect(
-        "Vertical / SL",
-        sorted(df["Vertical / SL"].dropna().unique())
-    )
+    cert_filter = st.multiselect("Certification", sorted(df["Certification"].dropna().unique()))
+    snowpro_filter = st.multiselect("SnowPro Status", sorted(df["SnowPro Certified"].dropna().unique()))
+    voucher_filter = st.multiselect("Voucher Status", sorted(df["Voucher Status"].dropna().unique()))
+    account_filter = st.multiselect("Account", sorted(df["Account"].dropna().unique()))
+    vertical_filter = st.multiselect("Vertical / SL", sorted(df["Vertical / SL"].dropna().unique()))
 
 # -----------------------------------------
 # APPLY FILTERS
@@ -380,6 +350,36 @@ if vertical_filter:
     filtered_df = filtered_df[filtered_df["Vertical / SL"].isin(vertical_filter)]
 
 # -----------------------------------------
+# EXPORT CHART FUNCTION
+# -----------------------------------------
+def export_charts_as_zip(data):
+    buffer = io.BytesIO()
+
+    with zipfile.ZipFile(buffer, "w") as z:
+
+        charts = {
+            "certifications_distribution.png": data["Certification"].value_counts(),
+            "snowpro_status.png": data["SnowPro Certified"].value_counts(),
+            "voucher_usage.png": data["Voucher Status"].value_counts()
+        }
+
+        for name, series in charts.items():
+            fig, ax = plt.subplots(figsize=(7, 5))
+            series.plot(kind="bar", ax=ax)
+            ax.set_title(name.replace("_", " ").replace(".png", "").title())
+            ax.set_xlabel("")
+            ax.set_ylabel("Count")
+            plt.xticks(rotation=45, ha="right")
+
+            img = io.BytesIO()
+            fig.savefig(img, format="png", bbox_inches="tight")
+            plt.close(fig)
+            z.writestr(name, img.getvalue())
+
+    buffer.seek(0)
+    return buffer
+
+# -----------------------------------------
 # HEADER
 # -----------------------------------------
 header_left, header_right = st.columns([6, 2])
@@ -395,12 +395,17 @@ with header_left:
 
 with header_right:
     st.markdown("<br>", unsafe_allow_html=True)
-    st.button("⬇ Export Data")
+    st.download_button(
+        "⬇ Export Charts",
+        data=export_charts_as_zip(filtered_df),
+        file_name="certification_analytics_charts.zip",
+        mime="application/zip"
+    )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
 # -----------------------------------------
-# KPI CARDS (NO DELTAS)
+# KPI CARDS
 # -----------------------------------------
 k1, k2, k3, k4 = st.columns(4)
 
@@ -428,44 +433,26 @@ with k4:
     st.progress(completion / 100)
 
 # -----------------------------------------
-# DISTRIBUTION SECTION
+# CHARTS (DISPLAY)
 # -----------------------------------------
 st.markdown("<br>", unsafe_allow_html=True)
 
 c1, c2 = st.columns([3, 2])
 
 with c1:
-    st.markdown("""
-    <div class="card">
-        <div class="chart-title">Certifications Distribution</div>
-    """, unsafe_allow_html=True)
-
+    st.markdown('<div class="card"><div class="chart-title">Certifications Distribution</div>', unsafe_allow_html=True)
     st.bar_chart(filtered_df["Certification"].value_counts())
-
     st.markdown("</div>", unsafe_allow_html=True)
 
 with c2:
-    st.markdown("""
-    <div class="card">
-        <div class="chart-title">SnowPro Status</div>
-    """, unsafe_allow_html=True)
-
+    st.markdown('<div class="card"><div class="chart-title">SnowPro Status</div>', unsafe_allow_html=True)
     st.bar_chart(filtered_df["SnowPro Certified"].value_counts())
-
     st.markdown("</div>", unsafe_allow_html=True)
 
-# -----------------------------------------
-# VOUCHER USAGE
-# -----------------------------------------
 st.markdown("<br>", unsafe_allow_html=True)
 
-st.markdown("""
-<div class="card">
-    <div class="chart-title">Voucher Usage</div>
-""", unsafe_allow_html=True)
-
+st.markdown('<div class="card"><div class="chart-title">Voucher Usage</div>', unsafe_allow_html=True)
 st.bar_chart(filtered_df["Voucher Status"].value_counts())
-
 st.markdown("</div>", unsafe_allow_html=True)
 
 # -----------------------------------------
@@ -499,4 +486,3 @@ st.markdown("""
 💡 Tip: Use filters to explore certification insights across teams and time periods.
 </div>
 """, unsafe_allow_html=True)
-
