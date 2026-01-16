@@ -18,6 +18,15 @@ st.markdown("""
     font-family: Inter, sans-serif;
 }
 
+/* Top header container */
+.top-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1.2rem 2rem 1.6rem 2rem;
+    margin-bottom: 2.5rem;
+}
+
+
 /* Header */
 .welcome-title {
     font-size: 2.4rem;
@@ -149,37 +158,27 @@ div.stButton > button:disabled span {
 """, unsafe_allow_html=True)
 
 # -------------------------------
-# HEADER
+# TOP HEADER CONTAINER
 # -------------------------------
-
-# -------------------------------
-# TOP LOGO BAR
-# -------------------------------
-with st.container():
-    left, spacer, right = st.columns([1, 6, 1])
-
-    with left:
-        st.image(
-            "pages/snowflake_logo.png",
-            width=210
-        )
-
-    with right:
-        st.image(
-            "pages/logo.png",
-            width=200
-        )
-
-
 st.markdown("""
-<div>
-    <div class="welcome-title">
-        Welcome to the Employee Certification Portal 👋
+<div class="top-header">
+
+    <div style="display:flex; align-items:center; justify-content:space-between;">
+        <img src="assets/snowflake_logo.png" style="height:32px;" />
+        <img src="assets/hexaware_logo.png" style="height:36px;" />
     </div>
-    <div class="subtitle">
-        This portal helps to track employee certifications, ensure compliance,
-        monitor readiness, and gain actionable insights across teams and departments.
+
+    <div style="margin-top:2rem;">
+        <div class="welcome-title">
+            Welcome to the Employee Certification Portal 👋
+        </div>
+        <div class="subtitle">
+            This portal helps your organization track employee certifications,
+            ensure compliance, monitor readiness, and gain actionable insights
+            across Hexaware teams and Snowflake environments.
+        </div>
     </div>
+
 </div>
 """, unsafe_allow_html=True)
 
