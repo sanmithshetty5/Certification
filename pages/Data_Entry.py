@@ -985,7 +985,7 @@ if st.session_state.last_emp_id != emp_id:
 # -----------------------------------------
 # Header
 # -----------------------------------------
-st.title(":blue[🎓 Certification Tracker]")
+st.title(":black[🎓 Certification Tracker]")
 st.markdown("---")
 
 # -----------------------------------------
@@ -1026,7 +1026,7 @@ with st.container(border=True):
         with c_sub2:
             enrol_year = st.selectbox("Enrolment Year", year_opts)
             
-        planned_date = st.date_input("Planned Certification Date", date.today())
+        planned_date = st.date_input(":black[Planned Certification Date]", date.today())
 
     with m2:
         completed = st.checkbox("Certification Completed?")
