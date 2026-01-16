@@ -43,12 +43,6 @@ st.markdown("""
         z-index: 1000;
     }
     
-    # .app-logo img {
-    #     height: 1000px;       /* adjust if needed */
-    #     width: auto;
-    # }
-
-
     /* 3. WIDGET LABELS (The "Headers" above inputs) - CRITICAL FIX */
     .stTextInput label, .stSelectbox label, .stDateInput label, .stTextArea label {
         color: #1E293B !important; /* Dark Slate - High Contrast */
@@ -226,7 +220,7 @@ with title_col:
 with logo_col:
     st.image(
         "https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/logo.png",
-        width=180,
+        width=250,
     )
 st.markdown("---")
 
