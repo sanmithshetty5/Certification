@@ -859,6 +859,9 @@ h1, h2, h3 {
     border-bottom: 2px solid #F1F5F9;
     padding-bottom: 5px;
 }
+.black-label div[data-testid="stDateInput"] label {
+    color: #000000 !important;
+}
 
 /* 6. Buttons */
 .stButton > button {
@@ -1026,7 +1029,11 @@ with st.container(border=True):
         with c_sub2:
             enrol_year = st.selectbox("Enrolment Year", year_opts)
             
-        planned_date = st.date_input(":black[Planned Certification Date]", date.today())
+        # planned_date = st.date_input(":black[Planned Certification Date]", date.today())
+        with st.container():
+            st.markdown('<div class="black-label">', unsafe_allow_html=True)
+            planned_date = st.date_input("Planned Certification Date", date.today())
+            st.markdown('</div>', unsafe_allow_html=True)
 
     with m2:
         completed = st.checkbox("Certification Completed?")
