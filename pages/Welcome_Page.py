@@ -158,17 +158,22 @@ div.stButton > button:disabled span {
 # -------------------------------
 # TOP HEADER CONTAINER
 # -------------------------------
-st.markdown(
-    """
-    <div class="top-header">
-        <div style="display:flex; align-items:center; justify-content:space-between;">
-            <img src="pages/snowflake_logo.png", width = 210px />
-            <img src="pages/logo.png", width = 200px />
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# -------------------------------
+# TOP HEADER CONTAINER (LOGOS)
+# -------------------------------
+with st.container():
+    st.markdown('<div class="top-header">', unsafe_allow_html=True)
+
+    col1, col2 = st.columns([1, 1])
+
+    with col1:
+        st.image("assets/snowflake_logo.png", width=210)
+
+    with col2:
+        st.image("assets/hexaware_logo.png", width=200)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
 st.markdown(
     """
 <div style="margin-top:2rem;">
