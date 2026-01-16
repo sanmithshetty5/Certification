@@ -156,14 +156,17 @@ div.stButton > button:disabled span {
 """, unsafe_allow_html=True)
 
 # -------------------------------
-# TOP HEADER CONTAINER
-# -------------------------------
-# -------------------------------
-# TOP HEADER CONTAINER (LOGOS)
+# TOP HEADER (REAL CONTAINER)
 # -------------------------------
 with st.container():
-    st.markdown('<div class="top-header">', unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="top-header">
+        """,
+        unsafe_allow_html=True
+    )
 
+    # Logos row
     col1, col2 = st.columns([1, 1])
 
     with col1:
@@ -172,23 +175,24 @@ with st.container():
     with col2:
         st.image("pages/logo.png", width=200)
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Welcome text
+    st.markdown(
+        """
+        <div style="margin-top:2rem;">
+            <div class="welcome-title">
+                Welcome to the Employee Certification Portal 👋
+            </div>
+            <div class="subtitle">
+                This portal helps your organization track employee certifications,
+                ensure compliance, monitor readiness, and gain actionable insights
+                across Hexaware teams and Snowflake environments.
+            </div>
+        </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-st.markdown(
-    """
-<div style="margin-top:2rem;">
-        <div class="welcome-title">
-            Welcome to the Employee Certification Portal 👋
-        </div>
-        <div class="subtitle">
-            This portal helps your organization track employee certifications,
-            ensure compliance, monitor readiness, and gain actionable insights
-            across Hexaware teams and Snowflake environments.
-        </div>
-</div>
- """,
-    unsafe_allow_html=True
-)
 # -------------------------------
 # TRY THINGS OUT
 # -------------------------------
