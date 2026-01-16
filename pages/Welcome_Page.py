@@ -153,21 +153,21 @@ div.stButton > button:disabled span {
 # -------------------------------
 
 # -------------------------------
-# TOP LOGO CONTAINER
+# TOP LOGO BAR
 # -------------------------------
 with st.container():
-    col1, col2 = st.columns([1, 1])
+    left, spacer, right = st.columns([1, 6, 1])
 
-    with col1:
-        st.image(
-            "pages/logo.png",
-            width=180
-        )
-
-    with col2:
+    with left:
         st.image(
             "pages/snowflake_logo.png",
-            width=180
+            width=170
+        )
+
+    with right:
+        st.image(
+            "pages/logo.png",
+            width=170
         )
 
 
