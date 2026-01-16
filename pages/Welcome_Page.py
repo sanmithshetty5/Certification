@@ -161,13 +161,13 @@ with st.container():
     with left:
         st.image(
             "pages/snowflake_logo.png",
-            width=170
+            width=210
         )
 
     with right:
         st.image(
             "pages/logo.png",
-            width=170
+            width=200
         )
 
 
