@@ -1835,7 +1835,7 @@ with st.container(border=True):
 # Enrolment & Planning (UI FIXED)
 # -----------------------------------------
 with st.container(border=True):
-    st.markdown('<div class="section-header">🗓️ Schedule & Status</div>', unsafe_allow_html=True)
+    st.markdown('<div class="selection-card">🗓️ Schedule & Status</div>', unsafe_allow_html=True)
     m1, m2 = st.columns(2)
 
     with m1:
