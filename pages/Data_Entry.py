@@ -985,7 +985,7 @@ if st.session_state.last_emp_id != emp_id:
 # -----------------------------------------
 # Header
 # -----------------------------------------
-st.title(":black[🎓 Certification Tracker]")
+st.title(":blue[🎓 Certification Tracker]")
 st.markdown("---")
 
 # -----------------------------------------
