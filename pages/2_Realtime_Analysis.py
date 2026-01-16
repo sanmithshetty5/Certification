@@ -393,10 +393,10 @@ with header_left:
     </div>
     """, unsafe_allow_html=True)
 
-with header_right:
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.button("⬇ Export Data")
-    st.button("➕ Assign Voucher")
+# with header_right:
+#     st.markdown("<br>", unsafe_allow_html=True)
+#     st.button("⬇ Export Data")
+#     st.button("➕ Assign Voucher")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
