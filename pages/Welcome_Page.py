@@ -155,18 +155,24 @@ div.stButton > button:disabled span {
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------------
-# TOP HEADER (REAL CONTAINER)
-# -------------------------------
 with st.container():
     st.markdown(
         """
-        <div class="top-header">
+        <style>
+        .logo-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.2rem 2rem;
+            margin-bottom: 2.5rem;
+        }
+        </style>
         """,
         unsafe_allow_html=True
     )
 
-    # Logos row
+    st.markdown('<div class="logo-box">', unsafe_allow_html=True)
+
     col1, col2 = st.columns([1, 1])
 
     with col1:
@@ -175,6 +181,9 @@ with st.container():
     with col2:
         st.image("assets/hexaware_logo.png", width=200)
 
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    
     # Welcome text
     st.markdown(
         """
