@@ -172,101 +172,118 @@
 #     )
 
 
-
 import streamlit as st
 import pandas as pd
-import altair as alt
 
-# --------------------------------------------------
+# -----------------------------------------
 # PAGE CONFIG
-# --------------------------------------------------
+# -----------------------------------------
 st.set_page_config(
     page_title="Certification Analytics",
     layout="wide"
 )
 
-# --------------------------------------------------
-# GLOBAL CSS – MATCH REFERENCE UI
-# --------------------------------------------------
+# -----------------------------------------
+# CLEAR PAGE STATE
+# -----------------------------------------
+for key in [
+    "record",
+    "edit_mode",
+    "pending_data",
+    "pending_action",
+    "last_emp_id"
+]:
+    if key in st.session_state:
+        del st.session_state[key]
+
+# -----------------------------------------
+# GLOBAL CSS (SNOWFLAKE STYLE)
+# -----------------------------------------
 st.markdown("""
 <style>
+
+/* App background */
 .stApp {
     background-color: #f8fafc;
-    color: #0f172a;
-    font-family: "Inter", sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
-/* PAGE TITLE */
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #ffffff;
+    border-right: 1px solid #e5e7eb;
+}
+
+/* Header */
 .page-title {
     font-size: 2.4rem;
     font-weight: 800;
-    margin-bottom: 0.2rem;
+    color: #0f172a;
 }
 .page-subtitle {
-    color: #64748b;
     font-size: 1.05rem;
-    max-width: 900px;
+    color: #64748b;
+    margin-top: 0.3rem;
 }
 
-/* KPI CARDS */
-.kpi-card {
-    background: white;
+/* Card */
+.card {
+    background: #ffffff;
     border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 6px 20px rgba(15,23,42,0.06);
-    height: 150px;
+    padding: 1.6rem;
+    box-shadow: 0 8px 24px rgba(15,23,42,0.06);
 }
-.kpi-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.kpi-icon {
-    background: #f1f5f9;
-    border-radius: 12px;
-    padding: 10px;
-    font-size: 18px;
-}
-.kpi-delta {
-    color: #22c55e;
-    font-weight: 600;
-    font-size: 0.85rem;
-}
+
+/* KPI */
 .kpi-label {
-    margin-top: 1rem;
+    font-size: 0.9rem;
     color: #64748b;
-    font-size: 0.95rem;
 }
 .kpi-value {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 800;
-    margin-top: 0.2rem;
+    color: #0f172a;
 }
 
-/* CHART CARDS */
-.chart-card {
-    background: white;
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 6px 20px rgba(15,23,42,0.06);
+/* Chart title */
+.chart-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
 
-/* BUTTONS */
-div.stButton > button {
-    background-color: #0f172a !important;
-    color: white !important;
+/* Buttons */
+.stButton button {
+    background-color: #0f766e !important;
+    color: #ffffff !important;
     border-radius: 12px !important;
-    font-weight: 600;
+    font-weight: 600 !important;
+    padding: 0.5rem 1rem;
 }
+
+/* Remove default Streamlit borders */
+div[data-testid="stMetric"] {
+    background: none;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
-# --------------------------------------------------
-# LOAD DATA (REPLACE WITH YOUR SOURCE)
-# --------------------------------------------------
-@st.cache_data
+# -----------------------------------------
+# SNOWFLAKE CONNECTION
+# -----------------------------------------
+cnx = st.connection("snowflake")
+session = cnx.session()
+
+# -----------------------------------------
+# LOAD DATA
+# -----------------------------------------
+@st.cache_data(show_spinner="Loading certification data...")
 def load_data():
-    return pd.read_csv("certification_data.csv")  # replace if needed
+    return session.sql("""
+        SELECT *
+        FROM USE_CASE.DETAILS.NEW_CERTIFICATION
+    """).to_pandas()
 
 df = load_data()
 
@@ -274,47 +291,36 @@ if df.empty:
     st.warning("No data available.")
     st.stop()
 
-# --------------------------------------------------
-# ENROLMENT MONTH FIX (Jan-24 & Jan-2024)
-# --------------------------------------------------
-df["Enrolment Month"] = (
-    df["Enrolment Month"]
-    .astype(str)
-    .str.replace(r"-(\d{2})$", r"-20\1", regex=True)
-)
+# -----------------------------------------
+# DATE HANDLING
+# -----------------------------------------
+DATE_COLUMN = "Enrolment Month"
 
-df["Enrolment Month Parsed"] = pd.to_datetime(
-    df["Enrolment Month"],
-    format="%b-%Y",
-    errors="coerce"
-)
-
-df["Enrolment Month Filter"] = df["Enrolment Month Parsed"].dt.strftime("%b-%Y")
+df[DATE_COLUMN] = pd.to_datetime(df[DATE_COLUMN], errors="coerce")
+df["Year"] = df[DATE_COLUMN].dt.year
+df["Month"] = df[DATE_COLUMN].dt.month_name()
+df["Date"] = df[DATE_COLUMN].dt.date
 df["Completed Flag"] = df["Actual Date of completion"].notna()
 
-# --------------------------------------------------
-# HEADER
-# --------------------------------------------------
-h1, h2 = st.columns([4, 1])
-with h1:
-    st.markdown("""
-    <div class="page-title">Certification Analytics</div>
-    <div class="page-subtitle">
-        Real-time overview of employee certification progress, voucher lifecycle,
-        and vertical-specific distribution.
-    </div>
-    """, unsafe_allow_html=True)
-
-# --------------------------------------------------
+# -----------------------------------------
 # SIDEBAR FILTERS
-# --------------------------------------------------
+# -----------------------------------------
 with st.sidebar:
-    st.header("🔎 Analytics Filters")
+    st.markdown("## 🔎 Analytics Filters")
 
-    enrolment_month = st.multiselect(
-        "Enrolment Month",
-        sorted(df["Enrolment Month Filter"].dropna().unique())
+    year_filter = st.multiselect(
+        "Year",
+        sorted(df["Year"].dropna().unique())
     )
+
+    month_filter = st.multiselect(
+        "Month",
+        df["Month"].dropna().unique()
+    )
+
+    date_filter = st.date_input("Date Range", [])
+
+    st.divider()
 
     cert_filter = st.multiselect(
         "Certification",
@@ -331,113 +337,167 @@ with st.sidebar:
         sorted(df["Voucher Status"].dropna().unique())
     )
 
+    account_filter = st.multiselect(
+        "Account",
+        sorted(df["Account"].dropna().unique())
+    )
+
     vertical_filter = st.multiselect(
         "Vertical / SL",
         sorted(df["Vertical / SL"].dropna().unique())
     )
 
-# --------------------------------------------------
+# -----------------------------------------
 # APPLY FILTERS
-# --------------------------------------------------
+# -----------------------------------------
 filtered_df = df.copy()
 
-if enrolment_month:
+if year_filter:
+    filtered_df = filtered_df[filtered_df["Year"].isin(year_filter)]
+
+if month_filter:
+    filtered_df = filtered_df[filtered_df["Month"].isin(month_filter)]
+
+if len(date_filter) == 2:
     filtered_df = filtered_df[
-        filtered_df["Enrolment Month Filter"].isin(enrolment_month)
+        (filtered_df["Date"] >= date_filter[0]) &
+        (filtered_df["Date"] <= date_filter[1])
     ]
+
 if cert_filter:
     filtered_df = filtered_df[filtered_df["Certification"].isin(cert_filter)]
+
 if snowpro_filter:
     filtered_df = filtered_df[filtered_df["SnowPro Certified"].isin(snowpro_filter)]
+
 if voucher_filter:
     filtered_df = filtered_df[filtered_df["Voucher Status"].isin(voucher_filter)]
+
+if account_filter:
+    filtered_df = filtered_df[filtered_df["Account"].isin(account_filter)]
+
 if vertical_filter:
     filtered_df = filtered_df[filtered_df["Vertical / SL"].isin(vertical_filter)]
 
-# --------------------------------------------------
-# KPI CARDS (MATCH IMAGE)
-# --------------------------------------------------
+# -----------------------------------------
+# HEADER
+# -----------------------------------------
+header_left, header_right = st.columns([6, 2])
+
+with header_left:
+    st.markdown("""
+    <div class="page-title">Certification Analytics</div>
+    <div class="page-subtitle">
+        Real-time overview of employee certification progress,
+        voucher lifecycle, and vertical-wise distribution.
+    </div>
+    """, unsafe_allow_html=True)
+
+with header_right:
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.button("⬇ Export Data")
+    st.button("➕ Assign Voucher")
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# -----------------------------------------
+# KPI CARDS (NO DELTAS)
+# -----------------------------------------
 k1, k2, k3, k4 = st.columns(4)
 
-def kpi_card(col, icon, label, value, delta):
+def kpi_card(col, label, value):
     with col:
         st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-header">
-                <div class="kpi-icon">{icon}</div>
-                <div class="kpi-delta">{delta}</div>
-            </div>
+        <div class="card">
             <div class="kpi-label">{label}</div>
             <div class="kpi-value">{value}</div>
         </div>
         """, unsafe_allow_html=True)
 
-kpi_card(k1, "🗄️", "Total Records", len(filtered_df), "+12.5%")
-kpi_card(k2, "👥", "Unique Employees", filtered_df["EMP ID"].nunique(), "+5.2%")
-kpi_card(k3, "🎓", "Completed Certifications", int(filtered_df["Completed Flag"].sum()), "+18.1%")
-kpi_card(
-    k4,
-    "📊",
-    "Completion %",
-    f"{round(filtered_df['Completed Flag'].mean() * 100, 1)}%",
-    "+2.4%"
-)
+kpi_card(k1, "Total Records", len(filtered_df))
+kpi_card(k2, "Unique Employees", filtered_df["EMP ID"].nunique())
+kpi_card(k3, "Completed Certifications", int(filtered_df["Completed Flag"].sum()))
 
-# --------------------------------------------------
-# CHARTS
-# --------------------------------------------------
-cert_chart = (
-    alt.Chart(filtered_df)
-    .mark_bar(color="#0ea5a4", cornerRadiusTopLeft=6, cornerRadiusTopRight=6)
-    .encode(
-        x=alt.X("Certification:N", sort="-y", title=None),
-        y=alt.Y("count()", title=None),
-        tooltip=["count()"]
-    )
-    .properties(height=320)
-)
+with k4:
+    completion = round(filtered_df["Completed Flag"].mean() * 100, 1)
+    st.markdown(f"""
+    <div class="card">
+        <div class="kpi-label">Completion %</div>
+        <div class="kpi-value">{completion}%</div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.progress(completion / 100)
 
-snowpro_chart = (
-    alt.Chart(filtered_df)
-    .mark_bar(color="#0284c7", cornerRadiusTopLeft=6, cornerRadiusTopRight=6)
-    .encode(
-        x=alt.X("SnowPro Certified:N", title=None),
-        y=alt.Y("count()", title=None),
-        tooltip=["count()"]
-    )
-    .properties(height=320)
-)
+# -----------------------------------------
+# DISTRIBUTION SECTION
+# -----------------------------------------
+st.markdown("<br>", unsafe_allow_html=True)
 
-c1, c2 = st.columns(2)
+c1, c2 = st.columns([3, 2])
+
 with c1:
-    st.markdown("<div class='chart-card'>", unsafe_allow_html=True)
-    st.subheader("Certifications Distribution")
-    st.altair_chart(cert_chart, use_container_width=True)
+    st.markdown("""
+    <div class="card">
+        <div class="chart-title">Certifications Distribution</div>
+    """, unsafe_allow_html=True)
+
+    st.bar_chart(filtered_df["Certification"].value_counts())
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 with c2:
-    st.markdown("<div class='chart-card'>", unsafe_allow_html=True)
-    st.subheader("SnowPro Status")
-    st.altair_chart(snowpro_chart, use_container_width=True)
+    st.markdown("""
+    <div class="card">
+        <div class="chart-title">SnowPro Status</div>
+    """, unsafe_allow_html=True)
+
+    st.bar_chart(filtered_df["SnowPro Certified"].value_counts())
+
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --------------------------------------------------
-# DRILL DOWN TABLE
-# --------------------------------------------------
-with st.expander("🔍 Drill-Down Data View"):
+# -----------------------------------------
+# VOUCHER USAGE
+# -----------------------------------------
+st.markdown("<br>", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="card">
+    <div class="chart-title">Voucher Usage</div>
+""", unsafe_allow_html=True)
+
+st.bar_chart(filtered_df["Voucher Status"].value_counts())
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+# -----------------------------------------
+# DRILL-DOWN TABLE
+# -----------------------------------------
+st.markdown("<br>", unsafe_allow_html=True)
+
+with st.expander("🔍 View Detailed Records"):
     st.dataframe(
         filtered_df[
             [
                 "EMP ID",
                 "EMP Name",
                 "Certification",
-                "Enrolment Month",
+                DATE_COLUMN,
                 "SnowPro Certified",
                 "Voucher Status",
                 "Account",
                 "Vertical / SL"
             ]
         ],
-        use_container_width=True
+        use_container_width=True,
+        height=450
     )
+
+# -----------------------------------------
+# FOOTER
+# -----------------------------------------
+st.markdown("""
+<div style="margin-top:3rem;color:#64748b;font-size:0.85rem;">
+💡 Tip: Use filters to explore certification insights across teams and time periods.
+</div>
+""", unsafe_allow_html=True)
 
