@@ -1625,17 +1625,17 @@ st.markdown("""
         background-color: #F8FAFC; /* Light Blue-Grey Background */
         font-family: 'Inter', sans-serif;
     }
+    
+    /* SELECTIVE CARD BORDER — CLOUD & SNOWFLAKE SAFE */
+    .section-card {
+        background-color: #FFFFFF;
+        border: 1.5px solid #1E293B;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
 
-   /* STREAMLIT CLOUD + SNOWFLAKE SAFE CONTAINER BORDER FIX */
-div[data-testid="stVerticalBlock"] > div:has(> div[data-testid="stVerticalBlockBorderWrapper"]),
-div[data-testid="stVerticalBlockBorderWrapper"]{
-    background-color: #FFFFFF !important;
-    border: 1.5px solid #1E293B !important;
-    border-radius: 8px !important;
-    padding: 2rem !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
-    margin-bottom: 20px !important;
-}
 
 
     /* 3. WIDGET LABELS (The "Headers" above inputs) - CRITICAL FIX */
@@ -1813,10 +1813,15 @@ st.markdown("---")
 # Employee + Certification (UI FIXED)
 # -----------------------------------------
 # Using border=True creates the container, CSS styles it as a card
-with st.container(border=True):
-    st.markdown('<div class="section-header">👤 Employee Details</div>', unsafe_allow_html=True)
-    
-    c1, c2, c3 = st.columns([1, 2, 2])
+st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
+st.markdown('<div class="section-header">👤 Employee Details</div>', unsafe_allow_html=True)
+
+c1, c2, c3 = st.columns([1, 2, 2])
+# fields here stay EXACTLY the same
+
+st.markdown('</div>', unsafe_allow_html=True)
+
 
     with c1:
         emp_id = st.text_input("Employee ID", value=emp_id)
@@ -1831,6 +1836,7 @@ with st.container(border=True):
         )
     with c3:
         certification = st.selectbox("Certification Track", certifications, index=certifications.index(certification) if certification in certifications else 0)
+st.markdown('</div>', unsafe_allow_html=True)
 
 # -----------------------------------------
 # Enrolment & Planning (UI FIXED)
