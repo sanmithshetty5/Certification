@@ -282,7 +282,7 @@ session = cnx.session()
 def load_data():
     return session.sql("""
         SELECT *
-        FROM USE_CASE.DETAILS.NEW_CERTIFICATION
+        FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
     """).to_pandas()
 
 df = load_data()
