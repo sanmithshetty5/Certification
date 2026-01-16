@@ -44,7 +44,7 @@ st.markdown("""
     }
     
     .app-logo img {
-        height: 48px;       /* adjust if needed */
+        height: 84px;       /* adjust if needed */
         width: auto;
     }
 
