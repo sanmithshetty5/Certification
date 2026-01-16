@@ -88,58 +88,58 @@ st.markdown("""
 }
 
 
-# /* Chart title */
-# .chart-title {
-#     font-size: 1.1rem;
-#     font-weight: 700;
-#     margin-bottom: 1rem;
-# }
+/* Chart title */
+.chart-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
 
-# /* -------------------------------
-#    GLOBAL BUTTON OVERRIDE (FIXED)
-# --------------------------------*/
+/* -------------------------------
+   GLOBAL BUTTON OVERRIDE (FIXED)
+--------------------------------*/
 
-# /* NORMAL BUTTON + DOWNLOAD BUTTON */
-# div.stButton > button,
-# div.stDownloadButton > button {
-#     background-color: #030712 !important;
-#     color: #ffffff !important;
-#     border: 2px solid #030712 !important;
-#     border-radius: 10px !important;
-#     font-weight: 700 !important;
-#     padding: 0.75rem 1rem !important;
-#     transition: all 0.25s ease-in-out !important;
-# }
+/* NORMAL BUTTON + DOWNLOAD BUTTON */
+div.stButton > button,
+div.stDownloadButton > button {
+    background-color: #030712 !important;
+    color: #ffffff !important;
+    border: 2px solid #030712 !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.25s ease-in-out !important;
+}
 
-# /* HOVER */
-# div.stButton > button:hover,
-# div.stDownloadButton > button:hover {
-#     background-color: #ffffff !important;
-#     color: #030712 !important;
-# }
+/* HOVER */
+div.stButton > button:hover,
+div.stDownloadButton > button:hover {
+    background-color: #ffffff !important;
+    color: #030712 !important;
+}
 
-# /* FOCUS / ACTIVE */
-# div.stButton > button:focus,
-# div.stButton > button:active,
-# div.stDownloadButton > button:focus,
-# div.stDownloadButton > button:active {
-#     background-color: #ffffff !important;
-#     color: #030712 !important;
-#     outline: none !important;
-#     box-shadow: none !important;
-# }
+/* FOCUS / ACTIVE */
+div.stButton > button:focus,
+div.stButton > button:active,
+div.stDownloadButton > button:focus,
+div.stDownloadButton > button:active {
+    background-color: #ffffff !important;
+    color: #030712 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
 
-# /* DISABLED */
-# div.stButton > button:disabled,
-# div.stDownloadButton > button:disabled {
-#     background-color: #f1f5f9 !important;
-#     color: #94a3b8 !important;
-#     border: 2px solid #e2e8f0 !important;
-#     cursor: not-allowed !important;
-# }
+/* DISABLED */
+div.stButton > button:disabled,
+div.stDownloadButton > button:disabled {
+    background-color: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    border: 2px solid #e2e8f0 !important;
+    cursor: not-allowed !important;
+}
 
-# </style>
-# """, unsafe_allow_html=True)
+</style>
+""", unsafe_allow_html=True)
 
 # -----------------------------------------
 # SNOWFLAKE CONNECTION
