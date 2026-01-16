@@ -164,8 +164,8 @@ st.markdown(
     """
     <div class="top-header">
         <div style="display:flex; align-items:center; justify-content:space-between;">
-            <img src="assets/snowflake_logo.png" style="height:32px;" />
-            <img src="assets/hexaware_logo.png" style="height:36px;" />
+            <img src="pages/snowflake_logo.png" style="height:32px;" />
+            <img src="pages/logo.png" style="height:36px;" />
         </div>
     </div>
     """,
