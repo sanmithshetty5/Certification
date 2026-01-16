@@ -160,15 +160,20 @@ div.stButton > button:disabled span {
 # -------------------------------
 # TOP HEADER CONTAINER
 # -------------------------------
-st.markdown("""
-<div class="top-header">
-
-    <div style="display:flex; align-items:center; justify-content:space-between;">
-        <img src="assets/snowflake_logo.png" style="height:32px;" />
-        <img src="assets/hexaware_logo.png" style="height:36px;" />
+st.markdown(
+    """
+    <div class="top-header">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+            <img src="assets/snowflake_logo.png" style="height:32px;" />
+            <img src="assets/hexaware_logo.png" style="height:36px;" />
+        </div>
     </div>
-
-    <div style="margin-top:2rem;">
+    """,
+    unsafe_allow_html=True
+)
+st.markdown(
+    """
+<div style="margin-top:2rem;">
         <div class="welcome-title">
             Welcome to the Employee Certification Portal 👋
         </div>
@@ -177,11 +182,10 @@ st.markdown("""
             ensure compliance, monitor readiness, and gain actionable insights
             across Hexaware teams and Snowflake environments.
         </div>
-    </div>
-
 </div>
-""", unsafe_allow_html=True)
-
+ """,
+    unsafe_allow_html=True
+)
 # -------------------------------
 # TRY THINGS OUT
 # -------------------------------
