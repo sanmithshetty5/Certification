@@ -43,10 +43,10 @@ st.markdown("""
         z-index: 1000;
     }
     
-    .app-logo img {
-        height: 1000px;       /* adjust if needed */
-        width: auto;
-    }
+    # .app-logo img {
+    #     height: 1000px;       /* adjust if needed */
+    #     width: auto;
+    # }
 
 
     /* 3. WIDGET LABELS (The "Headers" above inputs) - CRITICAL FIX */
