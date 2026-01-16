@@ -199,15 +199,15 @@ for key in [
         del st.session_state[key]
 
 # -----------------------------------------
-# GLOBAL CSS (SNOWFLAKE STYLE)
+# GLOBAL CSS – ENTERPRISE UI (MATCHES HOME PAGE)
 # -----------------------------------------
 st.markdown("""
 <style>
-
 /* App background */
 .stApp {
     background-color: #f8fafc;
-    font-family: 'Inter', sans-serif;
+    color: #0f172a;
+    font-family: Inter, sans-serif;
 }
 
 /* Sidebar */
@@ -220,7 +220,6 @@ section[data-testid="stSidebar"] {
 .page-title {
     font-size: 2.4rem;
     font-weight: 800;
-    color: #0f172a;
 }
 .page-subtitle {
     font-size: 1.05rem;
@@ -233,6 +232,7 @@ section[data-testid="stSidebar"] {
     background: #ffffff;
     border-radius: 16px;
     padding: 1.6rem;
+    border: 1px solid #e2e8f0;
     box-shadow: 0 8px 24px rgba(15,23,42,0.06);
 }
 
@@ -244,7 +244,6 @@ section[data-testid="stSidebar"] {
 .kpi-value {
     font-size: 2rem;
     font-weight: 800;
-    color: #0f172a;
 }
 
 /* Chart title */
@@ -254,15 +253,38 @@ section[data-testid="stSidebar"] {
     margin-bottom: 1rem;
 }
 
-/* Buttons */
-.stButton button {
-    background-color: #0f766e !important;
+/* -------------------------------
+   GLOBAL BUTTON OVERRIDE (SAME AS HOME)
+--------------------------------*/
+div.stButton > button {
+    background-color: #030712 !important;
     color: #ffffff !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    padding: 0.5rem 1rem;
+    border: 2px solid #030712 !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.25s ease-in-out !important;
 }
 
+div.stButton > button:hover {
+    background-color: #ffffff !important;
+    color: #030712 !important;
+}
+
+div.stButton > button:focus,
+div.stButton > button:active {
+    background-color: #ffffff !important;
+    color: #030712 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+div.stButton > button:disabled {
+    background-color: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    border: 2px solid #e2e8f0 !important;
+    cursor: not-allowed !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -324,28 +346,21 @@ filtered_df = df.copy()
 
 if year_filter:
     filtered_df = filtered_df[filtered_df["Year"].isin(year_filter)]
-
 if month_filter:
     filtered_df = filtered_df[filtered_df["Month"].isin(month_filter)]
-
 if len(date_filter) == 2:
     filtered_df = filtered_df[
         (filtered_df["Date"] >= date_filter[0]) &
         (filtered_df["Date"] <= date_filter[1])
     ]
-
 if cert_filter:
     filtered_df = filtered_df[filtered_df["Certification"].isin(cert_filter)]
-
 if snowpro_filter:
     filtered_df = filtered_df[filtered_df["SnowPro Certified"].isin(snowpro_filter)]
-
 if voucher_filter:
     filtered_df = filtered_df[filtered_df["Voucher Status"].isin(voucher_filter)]
-
 if account_filter:
     filtered_df = filtered_df[filtered_df["Account"].isin(account_filter)]
-
 if vertical_filter:
     filtered_df = filtered_df[filtered_df["Vertical / SL"].isin(vertical_filter)]
 
@@ -354,9 +369,7 @@ if vertical_filter:
 # -----------------------------------------
 def export_charts_as_zip(data):
     buffer = io.BytesIO()
-
     with zipfile.ZipFile(buffer, "w") as z:
-
         charts = {
             "certifications_distribution.png": data["Certification"].value_counts(),
             "snowpro_status.png": data["SnowPro Certified"].value_counts(),
@@ -382,9 +395,9 @@ def export_charts_as_zip(data):
 # -----------------------------------------
 # HEADER
 # -----------------------------------------
-header_left, header_right = st.columns([6, 2])
+h1, h2 = st.columns([6, 2])
 
-with header_left:
+with h1:
     st.markdown("""
     <div class="page-title">Certification Analytics</div>
     <div class="page-subtitle">
@@ -393,7 +406,7 @@ with header_left:
     </div>
     """, unsafe_allow_html=True)
 
-with header_right:
+with h2:
     st.markdown("<br>", unsafe_allow_html=True)
     st.download_button(
         "⬇ Export Charts",
@@ -402,14 +415,13 @@ with header_right:
         mime="application/zip"
     )
 
-st.markdown("<br>", unsafe_allow_html=True)
-
 # -----------------------------------------
 # KPI CARDS
 # -----------------------------------------
+st.markdown("<br>", unsafe_allow_html=True)
 k1, k2, k3, k4 = st.columns(4)
 
-def kpi_card(col, label, value):
+def kpi(col, label, value):
     with col:
         st.markdown(f"""
         <div class="card">
@@ -418,9 +430,9 @@ def kpi_card(col, label, value):
         </div>
         """, unsafe_allow_html=True)
 
-kpi_card(k1, "Total Records", len(filtered_df))
-kpi_card(k2, "Unique Employees", filtered_df["EMP ID"].nunique())
-kpi_card(k3, "Completed Certifications", int(filtered_df["Completed Flag"].sum()))
+kpi(k1, "Total Records", len(filtered_df))
+kpi(k2, "Unique Employees", filtered_df["EMP ID"].nunique())
+kpi(k3, "Completed Certifications", int(filtered_df["Completed Flag"].sum()))
 
 with k4:
     completion = round(filtered_df["Completed Flag"].mean() * 100, 1)
@@ -433,7 +445,7 @@ with k4:
     st.progress(completion / 100)
 
 # -----------------------------------------
-# CHARTS (DISPLAY)
+# CHARTS
 # -----------------------------------------
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -450,7 +462,6 @@ with c2:
     st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
-
 st.markdown('<div class="card"><div class="chart-title">Voucher Usage</div>', unsafe_allow_html=True)
 st.bar_chart(filtered_df["Voucher Status"].value_counts())
 st.markdown("</div>", unsafe_allow_html=True)
@@ -459,7 +470,6 @@ st.markdown("</div>", unsafe_allow_html=True)
 # DRILL-DOWN TABLE
 # -----------------------------------------
 st.markdown("<br>", unsafe_allow_html=True)
-
 with st.expander("🔍 View Detailed Records"):
     st.dataframe(
         filtered_df[
@@ -486,3 +496,4 @@ st.markdown("""
 💡 Tip: Use filters to explore certification insights across teams and time periods.
 </div>
 """, unsafe_allow_html=True)
+
