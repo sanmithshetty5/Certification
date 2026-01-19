@@ -180,7 +180,7 @@ with st.sidebar:
             color: #ffffff;
             margin-bottom: 1rem;
         ">
-            🔍 Search Employee
+        🔍 Search Employee
         </div>
         """, 
         unsafe_allow_html=True
