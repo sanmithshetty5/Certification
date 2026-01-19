@@ -4,8 +4,10 @@ import streamlit as st
 
 st.set_page_config(
     page_title="Welcome | Employee Certification Portal",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
+
 
 # -------------------------------
 # GLOBAL CSS – Enterprise UI
@@ -138,7 +140,7 @@ div.stButton > button:disabled {
 </style>
 """, unsafe_allow_html=True)
 
-st.sidebar.title("Welcome Page")
+
 # -------------------------------
 # HEADER
 # -------------------------------
