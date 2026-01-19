@@ -128,57 +128,124 @@ df["Completed Flag"] = df["Actual Date of completion"].notna()
 # -----------------------------------------
 # SIDEBAR FILTERS (MONTH + YEAR)
 # -----------------------------------------
+# with st.sidebar:
+#     st.markdown("## 🔎 Analytics Filters")
+
+#     month_order = ["Jan","Feb","Mar","Apr","May","Jun",
+#                    "Jul","Aug","Sep","Oct","Nov","Dec"]
+
+#     available_months = sorted(
+#     df["Enroll_Month_Name"].dropna().unique(),
+#     key=lambda x: month_order.index(x) if x in month_order else 99
+# )
+#     # Month options in correct order
+#     month_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+
+#     available_months = sorted(
+#         df["Enroll_Month_Name"].dropna().unique(),
+#         key=lambda x: month_order.index(x) if x in month_order else 99)
+#     selected_month = st.selectbox(
+#         "Enrollment Month",
+#         available_months)
+    
+#     # Get available years as strings
+#     available_years = sorted(
+#         df["Enroll_Year"].dropna().astype(str).unique()
+#     )
+    
+#     if not available_years:
+#         st.warning("No valid enrollment years found.")
+#         st.stop()
+    
+#     selected_year = st.selectbox(
+#         "Enrollment Year",
+#         available_years,
+#         index=len(available_years) - 1  # default to latest year
+#     )
+#     st.divider()
+#     cert_filter = st.multiselect("Certification", sorted(df["Certification"].dropna().unique()))
+#     snowpro_filter = st.multiselect("SnowPro Status", sorted(df["SnowPro Certified"].dropna().unique()))
+#     voucher_filter = st.multiselect("Voucher Status", sorted(df["Voucher Status"].dropna().unique()))
+#     account_filter = st.multiselect("Account", sorted(df["Account"].dropna().unique()))
+#     vertical_filter = st.multiselect("Vertical / SL", sorted(df["Vertical / SL"].dropna().unique()))
+
+# -----------------------------------------
+# SIDEBAR FILTERS (MULTIPLE MONTHS + YEARS)
+# -----------------------------------------
 with st.sidebar:
     st.markdown("## 🔎 Analytics Filters")
 
+    # Month options in correct order
     month_order = ["Jan","Feb","Mar","Apr","May","Jun",
                    "Jul","Aug","Sep","Oct","Nov","Dec"]
 
     available_months = sorted(
-    df["Enroll_Month_Name"].dropna().unique(),
-    key=lambda x: month_order.index(x) if x in month_order else 99
-)
-    # Month options in correct order
-    month_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-
-    available_months = sorted(
         df["Enroll_Month_Name"].dropna().unique(),
-        key=lambda x: month_order.index(x) if x in month_order else 99)
-    selected_month = st.selectbox(
-        "Enrollment Month",
-        available_months)
-    
-    # Get available years as strings
+        key=lambda x: month_order.index(x) if x in month_order else 99
+    )
+
+    selected_months = st.multiselect(
+        "Enrollment Month(s)",
+        available_months,
+        default=None  # no default selection
+    )
+
+    # Year options
     available_years = sorted(
-        df["Enroll_Year"].dropna().astype(str).unique()
+        df["Enroll_Year"].dropna().unique()
     )
-    
-    if not available_years:
-        st.warning("No valid enrollment years found.")
-        st.stop()
-    
-    selected_year = st.selectbox(
-        "Enrollment Year",
+
+    selected_years = st.multiselect(
+        "Enrollment Year(s)",
         available_years,
-        index=len(available_years) - 1  # default to latest year
+        default=None  # no default selection
     )
+
     st.divider()
+
+    # Other existing multiselect filters
     cert_filter = st.multiselect("Certification", sorted(df["Certification"].dropna().unique()))
     snowpro_filter = st.multiselect("SnowPro Status", sorted(df["SnowPro Certified"].dropna().unique()))
     voucher_filter = st.multiselect("Voucher Status", sorted(df["Voucher Status"].dropna().unique()))
     account_filter = st.multiselect("Account", sorted(df["Account"].dropna().unique()))
     vertical_filter = st.multiselect("Vertical / SL", sorted(df["Vertical / SL"].dropna().unique()))
 
+
 # -----------------------------------------
 # APPLY FILTERS
 # -----------------------------------------
+# filtered_df = df.copy()
+
+# filtered_df = filtered_df[
+#     (filtered_df["Enroll_Month_Name"] == selected_month) &
+#     (filtered_df["Enroll_Year"] == selected_year)
+# ]
+
+# if cert_filter:
+#     filtered_df = filtered_df[filtered_df["Certification"].isin(cert_filter)]
+# if snowpro_filter:
+#     filtered_df = filtered_df[filtered_df["SnowPro Certified"].isin(snowpro_filter)]
+# if voucher_filter:
+#     filtered_df = filtered_df[filtered_df["Voucher Status"].isin(voucher_filter)]
+# if account_filter:
+#     filtered_df = filtered_df[filtered_df["Account"].isin(account_filter)]
+# if vertical_filter:
+#     filtered_df = filtered_df[filtered_df["Vertical / SL"].isin(vertical_filter)]
+
+# -----------------------------------------
+# APPLY FILTERS (OPTIONAL MULTIPLE MONTHS + YEARS)
+# -----------------------------------------
 filtered_df = df.copy()
 
-filtered_df = filtered_df[
-    (filtered_df["Enroll_Month_Name"] == selected_month) &
-    (filtered_df["Enroll_Year"] == selected_year)
-]
+# Filter by months if selected
+if selected_months:
+    filtered_df = filtered_df[filtered_df["Enroll_Month_Name"].isin(selected_months)]
 
+# Filter by years if selected
+if selected_years:
+    filtered_df = filtered_df[filtered_df["Enroll_Year"].isin(selected_years)]
+
+# Other filters
 if cert_filter:
     filtered_df = filtered_df[filtered_df["Certification"].isin(cert_filter)]
 if snowpro_filter:
@@ -189,6 +256,7 @@ if account_filter:
     filtered_df = filtered_df[filtered_df["Account"].isin(account_filter)]
 if vertical_filter:
     filtered_df = filtered_df[filtered_df["Vertical / SL"].isin(vertical_filter)]
+
 
 # -----------------------------------------
 # EXPORT CHART FUNCTION
