@@ -95,7 +95,7 @@ def load_data():
 df = load_data()
 
 if df.empty:
-    st.warning("No data available.")
+    st.error("No data available.")
     st.stop()
 
 # -----------------------------------------
