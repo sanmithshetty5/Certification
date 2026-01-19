@@ -42,12 +42,11 @@ st.markdown("""
     
     /* Optional: If the above doesn't work due to Streamlit version differences, 
        try targeting the 'p' tag inside the label */
-    /*
+    
     section[data-testid="stSidebar"] .stTextInput label p,
     section[data-testid="stSidebar"] .stSelectbox label p {
         color: white !important;
     }
-    */
 
     
     /* TOP-RIGHT LOGO */
