@@ -781,49 +781,131 @@ with k4:
     </div>
     """, unsafe_allow_html=True)
     st.progress(completion / 100 if completion else 0)
-
 # -----------------------------------------
-# CHARTS
+# CHARTS – ROW 1
 # -----------------------------------------
-c1, c2 = st.columns([3, 2])
+r1c1, r1c2 = st.columns(2)
 
-with c1:
+with r1c1:
     st.markdown('<div class="card"><div class="chart-title">Certifications Distribution</div>', unsafe_allow_html=True)
     st.bar_chart(filtered_df["Certification"].value_counts())
     st.markdown("</div>", unsafe_allow_html=True)
 
-with c2:
+with r1c2:
     st.markdown('<div class="card"><div class="chart-title">SnowPro Status</div>', unsafe_allow_html=True)
     st.bar_chart(filtered_df["SnowPro Certified"].value_counts())
     st.markdown("</div>", unsafe_allow_html=True)
 
-st.markdown('<div class="card"><div class="chart-title">Voucher Usage</div>', unsafe_allow_html=True)
-st.bar_chart(filtered_df["Voucher Status"].value_counts())
-st.markdown("</div>", unsafe_allow_html=True)
 
 # -----------------------------------------
-# LINEAR GRAPH – EMPLOYEES OVER YEARS
+# CHARTS – ROW 2
+# -----------------------------------------
+r2c1, r2c2 = st.columns(2)
+
+with r2c1:
+    st.markdown('<div class="card"><div class="chart-title">Voucher Usage</div>', unsafe_allow_html=True)
+    st.bar_chart(filtered_df["Voucher Status"].value_counts())
+    st.markdown("</div>", unsafe_allow_html=True)
+
+with r2c2:
+    st.markdown('<div class="card"><div class="chart-title">Employees Growth Over Years</div>', unsafe_allow_html=True)
+
+    emp_year_df = (
+        filtered_df
+        .dropna(subset=["Enroll_Year"])
+        .groupby("Enroll_Year")["EMP ID"]
+        .nunique()
+        .sort_index()
+    )
+
+    st.line_chart(emp_year_df)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# -----------------------------------------
+# CHART – ROW 3 (FULL WIDTH – FUNNEL)
 # -----------------------------------------
 st.markdown(
-    '<div class="card"><div class="chart-title">Employees Growth Over Years</div>',
+    '<div class="card"><div class="chart-title">Certification Completion Funnel</div>',
     unsafe_allow_html=True
 )
 
-emp_year_df = (
-    filtered_df
-    .dropna(subset=["Enroll_Year"])
-    .groupby("Enroll_Year")["EMP ID"]
-    .nunique()
-    .sort_index()
-)
+funnel_data = {
+    "Stage": [
+        "Enrolled",
+        "Badge 1 Completed",
+        "Badge 2 Completed",
+        "Badge 3 Completed",
+        "Badge 4 Completed",
+        "Badge 5 Completed",
+        "Certification Completed"
+    ],
+    "Employees": [
+        filtered_df["EMP ID"].nunique(),
+        filtered_df[filtered_df["Badge 1 Status"] == "Completed"]["EMP ID"].nunique(),
+        filtered_df[filtered_df["Badge 2 Status"] == "Completed"]["EMP ID"].nunique(),
+        filtered_df[filtered_df["Badge 3 Status"] == "Completed"]["EMP ID"].nunique(),
+        filtered_df[filtered_df["Badge 4 Status"] == "Completed"]["EMP ID"].nunique(),
+        filtered_df[filtered_df["Badge 5 Status"] == "Completed"]["EMP ID"].nunique(),
+        filtered_df[filtered_df["Completed Flag"] == True]["EMP ID"].nunique()
+    ]
+}
 
-st.line_chart(emp_year_df)
+funnel_df = pd.DataFrame(funnel_data)
 
+st.bar_chart(funnel_df.set_index("Stage"), horizontal=True)
 st.markdown("</div>", unsafe_allow_html=True)
 
 
 # -----------------------------------------
-# DRILL-DOWN TABLE
+# CHART – ROW 4 (FULL WIDTH – HEATMAP)
+# -----------------------------------------
+st.markdown(
+    '<div class="card"><div class="chart-title">Employee Enrollment Heatmap (Month vs Year)</div>',
+    unsafe_allow_html=True
+)
+
+heatmap_df = (
+    filtered_df
+    .dropna(subset=["Enroll_Month_Name", "Enroll_Year"])
+    .groupby(["Enroll_Year", "Enroll_Month_Name"])["EMP ID"]
+    .nunique()
+    .reset_index()
+)
+
+heatmap_pivot = heatmap_df.pivot(
+    index="Enroll_Month_Name",
+    columns="Enroll_Year",
+    values="EMP ID"
+).fillna(0)
+
+month_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+heatmap_pivot = heatmap_pivot.reindex(month_order)
+
+fig, ax = plt.subplots(figsize=(12, 5))
+im = ax.imshow(heatmap_pivot, aspect="auto")
+
+ax.set_xticks(range(len(heatmap_pivot.columns)))
+ax.set_xticklabels(heatmap_pivot.columns)
+ax.set_yticks(range(len(heatmap_pivot.index)))
+ax.set_yticklabels(heatmap_pivot.index)
+
+plt.colorbar(im, ax=ax, label="No. of Employees")
+
+for i in range(len(heatmap_pivot.index)):
+    for j in range(len(heatmap_pivot.columns)):
+        ax.text(j, i, int(heatmap_pivot.iloc[i, j]),
+                ha="center", va="center", fontsize=9)
+
+ax.set_xlabel("Year")
+ax.set_ylabel("Month")
+
+st.pyplot(fig)
+st.markdown("</div>", unsafe_allow_html=True)
+
+
+# -----------------------------------------
+# DRILL-DOWN TABLE (BOTTOM)
 # -----------------------------------------
 with st.expander("🔍 View Detailed Records"):
     st.dataframe(
@@ -842,6 +924,7 @@ with st.expander("🔍 View Detailed Records"):
         use_container_width=True,
         height=450
     )
+
 
 # -----------------------------------------
 # FOOTER
