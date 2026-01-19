@@ -257,6 +257,7 @@ if account_filter:
 if vertical_filter:
     filtered_df = filtered_df[filtered_df["Vertical / SL"].isin(vertical_filter)]
 
+# Prepare header labels
 months_label = ", ".join(selected_months) if selected_months else ""
 years_label = ", ".join(selected_years) if selected_years else ""
 
@@ -298,6 +299,12 @@ with h1:
     <div class="page-subtitle">
         Enrollment Period: <b>{months_label}{' - ' if months_label and years_label else ''}{years_label}</b>
     </div>""", unsafe_allow_html=True)
+
+# Show message if no data
+if filtered_df.empty:
+    st.warning("No data is available for the selected filters.")
+    st.stop()  # Stop further rendering to avoid errors
+
 
 with h2:
     st.markdown("<br>", unsafe_allow_html=True)
