@@ -278,7 +278,7 @@ with h1:
     </div>""", unsafe_allow_html=True)
 
 # Show message if no data
-if series.empty:
+if filtered_df.empty:
     st.error("No data is available for the selected filters.")
     st.stop()  # Stop further rendering to avoid errors
 
