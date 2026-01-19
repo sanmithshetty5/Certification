@@ -260,12 +260,7 @@ if vertical_filter:
 months_label = ", ".join(selected_months) if selected_months else ""
 years_label = ", ".join(selected_years) if selected_years else ""
 
-st.markdown(f"""
-<div class="page-title">Certification Analytics</div>
-<div class="page-subtitle">
-    Enrollment Period: <b>{months_label}{' - ' if months_label and years_label else ''}{years_label}</b>
-</div>
-""", unsafe_allow_html=True)
+
 
 
 
@@ -295,15 +290,14 @@ def export_charts_as_zip(data):
 # -----------------------------------------
 # HEADER
 # -----------------------------------------
-h1, h2 = st.columns([6, 2])
+h1,h2 = st.columns([6, 2])
 
 with h1:
     st.markdown(f"""
     <div class="page-title">Certification Analytics</div>
     <div class="page-subtitle">
-        Enrollment Period: <b>{selected_months}-{selected_years}</b>
-    </div>
-    """, unsafe_allow_html=True)
+        Enrollment Period: <b>{months_label}{' - ' if months_label and years_label else ''}{years_label}</b>
+    </div>""", unsafe_allow_html=True)
 
 with h2:
     st.markdown("<br>", unsafe_allow_html=True)
