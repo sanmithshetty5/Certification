@@ -328,9 +328,8 @@ with r1c1:
         filtered_df
         .groupby("Certification")["EMP ID"]
         .nunique()
-        .sort_values(ascending=False)
-        .reset_index()
-        .rename(columns={"EMP ID": "Employees"})
+        .reset_index(name="Employees")
+        .sort_values("Employees", ascending=False)
     )
 
     # Reverse index so highest is on top (Streamlit quirk)
@@ -342,6 +341,7 @@ with r1c1:
     )
 
     st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 with r1c2:
