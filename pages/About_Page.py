@@ -220,10 +220,9 @@ with row2_col1:
     st.markdown("""
     <div class="feature-card-v">
         <div class="icon-box" style="background: #f3e8ff; color: #7c3aed;">🤖</div>
-        <div class="card-title">AI-Driven Insights</div>
+        <div class="card-title">AI-Assisted Insights</div>
         <div class="card-desc">
-            Leverage AI to identify skill gaps, predict compliance risks, and receive 
-            tailored recommendations to optimize workforce readiness.
+           Use intelligent analysis to uncover skill gaps, flag potential compliance risks, and deliver focused, actionable recommendations.
         </div>
     </div>
     """, unsafe_allow_html=True)
