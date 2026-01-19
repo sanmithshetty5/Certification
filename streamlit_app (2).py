@@ -821,21 +821,21 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# -------------------------------
-# NEW: Quick Glance Metrics
-# -------------------------------
-# This adds immediate visual value before the navigation cards.
-st.markdown('<div class="section-title">At a Glance (Dummy Data)</div>', unsafe_allow_html=True)
-m1, m2, m3, m4 = st.columns(4)
-with m1:
-    st.metric(label="Total Certified Employees", value="1,245", delta="12 this month")
-with m2:
-    st.metric(label="Active Certifications", value="3,502")
-with m3:
-    st.metric(label="Expiring (30 Days)", value="45", delta="-5", delta_color="inverse")
-with m4:
-    # A simple visual trick for a compliance score
-    st.metric(label="Overall Compliance Score", value="92%", delta="On Track")
+# # -------------------------------
+# # NEW: Quick Glance Metrics
+# # -------------------------------
+# # This adds immediate visual value before the navigation cards.
+# st.markdown('<div class="section-title">At a Glance (Dummy Data)</div>', unsafe_allow_html=True)
+# m1, m2, m3, m4 = st.columns(4)
+# with m1:
+#     st.metric(label="Total Certified Employees", value="1,245", delta="12 this month")
+# with m2:
+#     st.metric(label="Active Certifications", value="3,502")
+# with m3:
+#     st.metric(label="Expiring (30 Days)", value="45", delta="-5", delta_color="inverse")
+# with m4:
+#     # A simple visual trick for a compliance score
+#     st.metric(label="Overall Compliance Score", value="92%", delta="On Track")
 
 
 # -------------------------------
