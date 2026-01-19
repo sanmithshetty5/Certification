@@ -161,18 +161,16 @@ h1, h2, h3 {
 # -------------------------------
 st.markdown("""
 <div class="hero-container">
-    <div class="hero-title">Master Your Skills.<br>Track Your Success.</div>
+    <div class="hero-title">Snowflake Certification Control Center<br>Track Your Success.</div>
     <div class="hero-sub">
-        An intelligent certification hub designed to streamline employee growth, 
-        visualize skill gaps, and accelerate organizational readiness.
+        Track, manage, and monitor Snowflake certification completion across Hexaware teams with clarity and confidence.
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 # -------------------------------
-# KEY FEATURES GRID
+# CORE FEATURES GRID (3 Columns)
 # -------------------------------
-# Since we removed screenshots, we use a 3-column grid to display features as cards
 st.markdown("### 🚀 Core Capabilities", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -180,8 +178,8 @@ col1, col2, col3 = st.columns(3, gap="medium")
 
 with col1:
     st.markdown("""
-    <div class="feature-card">
-        <div class="icon-box" style="background: #e0e7ff; color: #4338ca;">📝</div>
+    <div class="feature-card-v">
+        <div class="icon-box" style="background: #e0e7ff; color: #4338ca; margin-bottom: 1.5rem;">📝</div>
         <div class="card-title">Streamlined Tracking</div>
         <div class="card-desc">
             Effortlessly log employee details, certification tracks, and exam statuses. 
@@ -192,8 +190,8 @@ with col1:
 
 with col2:
     st.markdown("""
-    <div class="feature-card">
-        <div class="icon-box" style="background: #fce7f3; color: #be185d;">📊</div>
+    <div class="feature-card-v">
+        <div class="icon-box" style="background: #fce7f3; color: #be185d; margin-bottom: 1.5rem;">📊</div>
         <div class="card-title">Intelligent Analytics</div>
         <div class="card-desc">
             Visualize completion rates and skill distribution. 
@@ -204,8 +202,8 @@ with col2:
 
 with col3:
     st.markdown("""
-    <div class="feature-card">
-        <div class="icon-box" style="background: #dcfce7; color: #15803d;">☁️</div>
+    <div class="feature-card-v">
+        <div class="icon-box" style="background: #dcfce7; color: #15803d; margin-bottom: 1.5rem;">☁️</div>
         <div class="card-title">Cloud Native</div>
         <div class="card-desc">
             Powered by <b>Snowflake</b> for infinite scalability. 
@@ -215,33 +213,25 @@ with col3:
     """, unsafe_allow_html=True)
 
 # -------------------------------
-# SECONDARY FEATURES (2 Cols)
+# SECONDARY FEATURE (Centered)
 # -------------------------------
 st.markdown("<br>", unsafe_allow_html=True)
-c_left, c_right = st.columns(2, gap="medium")
 
-with c_left:
-    st.markdown("""
-    <div class="feature-card" style="display:flex; align-items:center; gap:1.5rem;">
-        <div class="icon-box" style="background: #fef3c7; color: #b45309; margin-bottom:0;">🎟️</div>
-        <div>
-            <div class="card-title" style="margin-bottom:0.25rem;">Voucher Management</div>
-            <div class="card-desc">Track voucher usage and expiration to optimize L&D budgets.</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+# Use columns to center the remaining utility feature
+# [1, 2, 1] ratio creates a wide center column with padding on sides
+c_pad1, c_center, c_pad2 = st.columns([1, 2, 1])
 
-with c_right:
+with c_center:
+    # Using the horizontal card layout here for contrast
     st.markdown("""
-    <div class="feature-card" style="display:flex; align-items:center; gap:1.5rem;">
+    <div class="feature-card-h">
         <div class="icon-box" style="background: #e0f2fe; color: #0369a1; margin-bottom:0;">📥</div>
         <div>
-            <div class="card-title" style="margin-bottom:0.25rem;">Instant Export</div>
-            <div class="card-desc">Download complete datasets and visual reports with one click.</div>
+            <div class="card-title" style="margin-bottom:0.25rem;">Instant Export Utility</div>
+            <div class="card-desc">Download complete datasets and visual reports with one click for offline analysis.</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
-
 
 # -------------------------------
 # PARTNERS SECTION
