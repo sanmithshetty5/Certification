@@ -1,5 +1,3 @@
-
-
 import streamlit as st
 
 st.set_page_config(
@@ -18,6 +16,30 @@ st.markdown("""
     background-color: #f8fafc;
     color: #0f172a;
     font-family: Inter, sans-serif;
+}
+
+/* -------------------------
+   NEW: Logo Header Container
+   ------------------------- */
+.logo-container {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    /* Approx 2cm height (1cm ~= 37.8px, so 2cm ~= 75px) */
+    height: 75px; 
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    gap: 20px; /* Space between logos */
+    margin-bottom: 2rem;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.02);
+}
+
+.logo-img {
+    /* Approx 1.5cm height to fit inside the 2cm container comfortably */
+    height: 55px; 
+    width: auto; /* Maintains aspect ratio */
 }
 
 /* Header */
@@ -142,7 +164,19 @@ div.stButton > button:disabled {
 
 
 # -------------------------------
-# HEADER
+# HEADER LOGOS (NEW)
+# -------------------------------
+# Replace the 'src' links below with your actual image paths or URLs
+# st.markdown("""
+# <div class="logo-container">
+#     <img src="https://via.placeholder.com/150x50?text=Logo+1" class="logo-img">
+#     <img src="https://via.placeholder.com/150x50?text=Logo+2" class="logo-img">
+# </div>
+# """, unsafe_allow_html=True)
+
+
+# -------------------------------
+# PAGE TITLE / WELCOME
 # -------------------------------
 st.markdown("""
 <div>
