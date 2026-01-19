@@ -159,6 +159,10 @@ with st.sidebar:
     available_years = sorted(
     [y for y in df["Enroll_Year"].dropna().astype(str).str.strip().unique() if y.isdigit()])
 
+    selected_year = st.selectbox(
+    "Enrollment Year",
+    available_years,
+    index=len(available_years) - 1)  # default to latest year
 
     st.divider()
 
