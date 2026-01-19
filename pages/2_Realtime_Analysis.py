@@ -301,7 +301,7 @@ with h1:
     st.markdown(f"""
     <div class="page-title">Certification Analytics</div>
     <div class="page-subtitle">
-        Enrollment Period: <b>{selected_month}-{selected_year}</b>
+        Enrollment Period: <b>{selected_months}-{selected_years}</b>
     </div>
     """, unsafe_allow_html=True)
 
