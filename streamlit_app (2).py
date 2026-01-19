@@ -39,7 +39,7 @@ st.markdown("""
 
 /* STRICTLY FORCE IMAGE SIZES */
 .logo-container img {
-    height: 1.5cm !important; /* Force scale down to 1.5cm */
+    height: 2cm !important; /* Force scale down to 1.5cm */
     width: auto !important;   /* Maintain aspect ratio */
     object-fit: contain !important;
     margin-bottom: 0 !important;
