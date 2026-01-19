@@ -24,7 +24,7 @@ st.markdown("""
 
 /* --- Main Container --- */
 .stApp {
-    background: #f8fafc; /* Very light slate background */
+    background: #f8fafc;
     font-family: 'Plus Jakarta Sans', sans-serif;
     color: #334155;
 }
@@ -64,7 +64,7 @@ h1, h2, h3 {
     line-height: 1.6;
 }
 
-/* --- Feature Cards (Vertical Layout) --- */
+/* --- Feature Cards (Vertical) --- */
 .feature-card-v {
     background: white;
     padding: 2rem;
@@ -74,6 +74,8 @@ h1, h2, h3 {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     top: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .feature-card-v:hover {
@@ -82,7 +84,7 @@ h1, h2, h3 {
     border-color: #6366f1;
 }
 
-/* --- Feature Cards (Horizontal Layout) --- */
+/* --- Feature Cards (Horizontal) --- */
 .feature-card-h {
     background: white;
     padding: 1.5rem 2rem;
@@ -93,12 +95,14 @@ h1, h2, h3 {
     gap: 1.5rem;
     transition: all 0.3s ease;
 }
+
 .feature-card-h:hover {
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      border-color: #6366f1;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #6366f1;
+    transform: translateY(-2px);
 }
 
-
+/* --- Icon & Text Styling --- */
 .icon-box {
     width: 50px;
     height: 50px;
@@ -107,7 +111,12 @@ h1, h2, h3 {
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    flex-shrink: 0; /* Prevents icon squishing in horizontal layout */
+    flex-shrink: 0;
+    margin-bottom: 1.5rem; /* Only for vertical layout */
+}
+/* Remove bottom margin for icon in horizontal layout */
+.feature-card-h .icon-box {
+    margin-bottom: 0;
 }
 
 .card-title {
@@ -123,12 +132,12 @@ h1, h2, h3 {
     line-height: 1.6;
 }
 
-
-/* --- Partners --- */
+/* --- Partners Section --- */
 .partner-section {
     margin-top: 4rem;
     text-align: center;
 }
+
 .partner-logo-container {
     background: white;
     padding: 2rem;
@@ -141,9 +150,12 @@ h1, h2, h3 {
     height: 100%;
     transition: transform 0.2s;
 }
+
 .partner-logo-container:hover {
     transform: scale(1.02);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
+
 .partner-img {
     height: 50px;
     object-fit: contain;
@@ -166,17 +178,18 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # -------------------------------
-# CORE FEATURES GRID (3 Columns)
+# CORE FEATURES (2x2 Grid)
 # -------------------------------
 st.markdown("### 🚀 Core Capabilities", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns(3, gap="medium")
+# Row 1: Tracking & Analytics
+row1_col1, row1_col2 = st.columns(2, gap="medium")
 
-with col1:
+with row1_col1:
     st.markdown("""
     <div class="feature-card-v">
-        <div class="icon-box" style="background: #e0e7ff; color: #4338ca; margin-bottom: 1.5rem;">📝</div>
+        <div class="icon-box" style="background: #e0e7ff; color: #4338ca;">📝</div>
         <div class="card-title">Streamlined Tracking</div>
         <div class="card-desc">
             Effortlessly log employee details, certification tracks, and exam statuses. 
@@ -185,10 +198,10 @@ with col1:
     </div>
     """, unsafe_allow_html=True)
 
-with col2:
+with row1_col2:
     st.markdown("""
     <div class="feature-card-v">
-        <div class="icon-box" style="background: #fce7f3; color: #be185d; margin-bottom: 1.5rem;">📊</div>
+        <div class="icon-box" style="background: #fce7f3; color: #be185d;">📊</div>
         <div class="card-title">Intelligent Analytics</div>
         <div class="card-desc">
             Visualize completion rates and skill distribution. 
@@ -197,10 +210,28 @@ with col2:
     </div>
     """, unsafe_allow_html=True)
 
-with col3:
+# Spacer between rows
+st.markdown("<br>", unsafe_allow_html=True)
+
+# Row 2: AI & Cloud
+row2_col1, row2_col2 = st.columns(2, gap="medium")
+
+with row2_col1:
     st.markdown("""
     <div class="feature-card-v">
-        <div class="icon-box" style="background: #dcfce7; color: #15803d; margin-bottom: 1.5rem;">☁️</div>
+        <div class="icon-box" style="background: #f3e8ff; color: #7c3aed;">🤖</div>
+        <div class="card-title">AI-Driven Insights</div>
+        <div class="card-desc">
+            Leverage AI to identify skill gaps, predict compliance risks, and receive 
+            tailored recommendations to optimize workforce readiness.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with row2_col2:
+    st.markdown("""
+    <div class="feature-card-v">
+        <div class="icon-box" style="background: #dcfce7; color: #15803d;">☁️</div>
         <div class="card-title">Cloud Native</div>
         <div class="card-desc">
             Powered by <b>Snowflake</b> for infinite scalability. 
@@ -210,19 +241,17 @@ with col3:
     """, unsafe_allow_html=True)
 
 # -------------------------------
-# SECONDARY FEATURE (Centered)
+# UTILITY FEATURE (Centered)
 # -------------------------------
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Use columns to center the remaining utility feature
-# [1, 2, 1] ratio creates a wide center column with padding on sides
+# [1, 2, 1] ratio creates a wide center column for the export utility
 c_pad1, c_center, c_pad2 = st.columns([1, 2, 1])
 
 with c_center:
-    # Using the horizontal card layout here for contrast
     st.markdown("""
     <div class="feature-card-h">
-        <div class="icon-box" style="background: #e0f2fe; color: #0369a1; margin-bottom:0;">📥</div>
+        <div class="icon-box" style="background: #e0f2fe; color: #0369a1;">📥</div>
         <div>
             <div class="card-title" style="margin-bottom:0.25rem;">Instant Export Utility</div>
             <div class="card-desc">Download complete datasets and visual reports with one click for offline analysis.</div>
@@ -230,14 +259,13 @@ with c_center:
     </div>
     """, unsafe_allow_html=True)
 
-
 # -------------------------------
 # PARTNERS SECTION
 # -------------------------------
 st.markdown("<div class='partner-section'>", unsafe_allow_html=True)
 st.markdown("<div style='font-size:0.8rem; font-weight:700; color:#94a3b8; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.5rem;'>Built with Modern Tech</div>", unsafe_allow_html=True)
 
-# Centering the partners block using ratio columns
+# Centering the partners block
 p1, p2, p3 = st.columns([1, 4, 1]) 
 
 with p2:
