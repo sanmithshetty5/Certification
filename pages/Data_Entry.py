@@ -172,7 +172,19 @@ def autofill_employee_name(emp_id):
 # -----------------------------------------
 with st.sidebar:
     # MODIFIED: Use inline HTML span to style the markdown header text directly
-    st.markdown("## <span style='color: white;'>🔍 Search Employee</span>", unsafe_allow_html=True)
+   st.markdown(
+        """
+        <div style="
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        ">
+            🔍 Search Employee
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
 
     # The label color here is now controlled by the CSS block above
     emp_id = st.text_input("Employee ID (10 digits)")
