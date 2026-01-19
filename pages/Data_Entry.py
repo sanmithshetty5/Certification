@@ -280,13 +280,23 @@ with st.container(border=True):
         )
     with c3:
         certification = st.selectbox("Certification Track", certifications, index=certifications.index(certification) if certification in certifications else 0)
+        
 # -----------------------------------------
-# Duplicate Check (NEW – NON-INTRUSIVE)
+# Real-time Duplicate Detection (NEW)
 # -----------------------------------------
-st.session_state.duplicate_exists = (
-    not st.session_state.edit_mode
-    and check_duplicate_emp_cert(emp_id, certification)
-)
+if (
+    emp_id
+    and emp_id.isdigit()
+    and len(emp_id) == 10
+    and certification
+    and not st.session_state.edit_mode
+):
+    st.session_state.duplicate_exists = check_duplicate_emp_cert(
+        emp_id, certification
+    )
+else:
+    st.session_state.duplicate_exists = False
+
 # -----------------------------------------
 # Duplicate Warning Message (NEW)
 # -----------------------------------------
