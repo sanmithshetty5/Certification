@@ -107,22 +107,16 @@ df = df[df["Enrolment Month"] != "nan"]
 # Normalize Enrolment Month safely
 df["Enrolment Month"] = df["Enrolment Month"].astype(str).str.strip()
 
-df["Enroll_Month_Name"] = (
-    df["Enrolment Month"]
-    .str.split("-").str[0]
-    .str.strip()
-    .str[:3]        # Take first 3 letters
-    .str.title()    # Jan, Feb, Mar
-)
+# Normalize Enrolment Month safely (e.g., "Dec- 2024")
+df["Enrolment Month"] = df["Enrolment Month"].astype(str).str.strip()
 
-df["Enroll_Year"] = (
-    df["Enrolment Month"]
-    .str.split("-")
-    .str[-1]
-    .str.strip()
-)
+# Extract Month and Year separately
+df["Enroll_Month_Name"] = df["Enrolment Month"].apply(lambda x: x.split("-")[0].strip()[:3].title())
+df["Enroll_Year"] = df["Enrolment Month"].apply(lambda x: x.split("-")[-1].strip())
 
+# Ensure only numeric years
 df.loc[~df["Enroll_Year"].str.isdigit(), "Enroll_Year"] = None
+
 
 
 
@@ -144,24 +138,34 @@ with st.sidebar:
     df["Enroll_Month_Name"].dropna().unique(),
     key=lambda x: month_order.index(x) if x in month_order else 99
 )
+    # Month options in correct order
+month_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 
+available_months = sorted(
+    df["Enroll_Month_Name"].dropna().unique(),
+    key=lambda x: month_order.index(x) if x in month_order else 99
+)
 
-    selected_month = st.selectbox(
-        "Enrollment Month",
-        available_months
-    )
+selected_month = st.selectbox(
+    "Enrollment Month",
+    available_months
+)
 
-    available_years = sorted(
-    [y for y in df["Enroll_Year"].dropna().astype(str).str.strip().unique() if y.isdigit()])
-    
-    # if not available_years:
-    # st.warning("No valid enrollment years found.")
-    # st.stop()
-    
-    selected_year = st.selectbox(
+# Get available years as strings
+available_years = sorted(
+    df["Enroll_Year"].dropna().astype(str).unique()
+)
+
+if not available_years:
+    st.warning("No valid enrollment years found.")
+    st.stop()
+
+selected_year = st.selectbox(
     "Enrollment Year",
     available_years,
-    index=len(available_years) - 1)
+    index=len(available_years) - 1  # default to latest year
+)
+
 
 
 
