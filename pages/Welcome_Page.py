@@ -199,7 +199,7 @@ with r1c2:
     "Open Certification Tracker",
     key="btn_open_ana;lytics",
     use_container_width=True):
-        st.switch_page("pages/dashboard.py")
+        st.switch_page("pages/2_Realtime_Analysis.py")
 
 
 # -------- ROW 2 --------
