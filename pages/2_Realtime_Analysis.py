@@ -235,6 +235,13 @@ if certprepod_filter:
 months_label = ", ".join(selected_months) if selected_months else ""
 years_label = ", ".join(selected_years) if selected_years else ""
 
+st.write(filtered_df[[
+    "Certification",
+    "SnowPro Certified",
+    "Voucher Status"
+]])
+
+
 # -----------------------------------------
 # EXPORT CHART FUNCTION
 # -----------------------------------------
@@ -318,9 +325,27 @@ with k4:
 r1c1, r1c2 = st.columns(2)
 
 with r1c1:
-    st.markdown('<div class="card"><div class="chart-title">Certifications Distribution</div>', unsafe_allow_html=True)
-    st.bar_chart(filtered_df["Certification"].value_counts())
+    st.markdown(
+        '<div class="card"><div class="chart-title">Certification Funnel</div>',
+        unsafe_allow_html=True
+    )
+
+    funnel_df = (
+        filtered_df
+        .groupby("Certification")["EMP ID"]
+        .nunique()
+        .sort_values(ascending=False)
+        .reset_index()
+        .rename(columns={"EMP ID": "Employees"})
+    )
+
+    st.bar_chart(
+        funnel_df.set_index("Certification"),
+        horizontal=True
+    )
+
     st.markdown("</div>", unsafe_allow_html=True)
+
 
 with r1c2:
     st.markdown('<div class="card"><div class="chart-title">SnowPro Status</div>', unsafe_allow_html=True)
@@ -416,7 +441,6 @@ funnel_df = pd.DataFrame(funnel_data)
 
 st.bar_chart(
     funnel_df.set_index("Stage"),
-    horizontal=True
 )
 st.markdown("</div>", unsafe_allow_html=True)
 
