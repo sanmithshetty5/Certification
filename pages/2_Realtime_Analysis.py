@@ -802,6 +802,27 @@ st.bar_chart(filtered_df["Voucher Status"].value_counts())
 st.markdown("</div>", unsafe_allow_html=True)
 
 # -----------------------------------------
+# LINEAR GRAPH – EMPLOYEES OVER YEARS
+# -----------------------------------------
+st.markdown(
+    '<div class="card"><div class="chart-title">Employees Growth Over Years</div>',
+    unsafe_allow_html=True
+)
+
+emp_year_df = (
+    filtered_df
+    .dropna(subset=["Enroll_Year"])
+    .groupby("Enroll_Year")["EMP ID"]
+    .nunique()
+    .sort_index()
+)
+
+st.line_chart(emp_year_df)
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+
+# -----------------------------------------
 # DRILL-DOWN TABLE
 # -----------------------------------------
 with st.expander("🔍 View Detailed Records"):
