@@ -173,8 +173,8 @@ div.stButton > button:disabled {
 # The CSS above will force them to fit within the 2cm height.
 st.markdown("""
 <div class="logo-container">
-    <img src="https://via.placeholder.com/150x50?text=Snowflake" alt="Logo 1">
-    <img src="https://via.placeholder.com/150x50?text=Hexaware" alt="Logo 2">
+    <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/snowflake_logo.png">
+    <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/logo.png">
 </div>
 """, unsafe_allow_html=True)
 
