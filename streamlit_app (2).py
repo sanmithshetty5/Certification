@@ -164,6 +164,8 @@ div.stButton > button:disabled {
 </style>
 """, unsafe_allow_html=True)
 
+
+ st.sidebar.title("Welcome Page")
 # -------------------------------
 # HEADER
 # -------------------------------
