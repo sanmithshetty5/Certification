@@ -338,7 +338,7 @@ with r1c1:
         filtered_df
         .groupby("Certification")["EMP ID"]
         .nunique()
-        .sort_values(ascending=False)
+        .sort_values(ascending=True)
         .reset_index()
         .rename(columns={"EMP ID": "Employees"})
     )
