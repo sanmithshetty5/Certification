@@ -34,7 +34,22 @@ st.markdown("""
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
     }
+    /* Target the labels of text inputs and select boxes specifically within the sidebar */
+    section[data-testid="stSidebar"] .stTextInput label,
+    section[data-testid="stSidebar"] .stSelectbox label {
+        color: white !important;
+    }
+    
+    /* Optional: If the above doesn't work due to Streamlit version differences, 
+       try targeting the 'p' tag inside the label */
+    /*
+    section[data-testid="stSidebar"] .stTextInput label p,
+    section[data-testid="stSidebar"] .stSelectbox label p {
+        color: white !important;
+    }
+    */
 
+    
     /* TOP-RIGHT LOGO */
     .app-logo {
         position: fixed;
@@ -157,8 +172,10 @@ def autofill_employee_name(emp_id):
 # Sidebar – Search (UNCHANGED LOGIC)
 # -----------------------------------------
 with st.sidebar:
-    st.markdown("## 🔍 Search Employee")
+    # MODIFIED: Use inline HTML span to style the markdown header text directly
+    st.markdown("## <span style='color: white;'>🔍 Search Employee</span>", unsafe_allow_html=True)
 
+    # The label color here is now controlled by the CSS block above
     emp_id = st.text_input("Employee ID (10 digits)")
 
     certifications = (
