@@ -421,7 +421,7 @@ for key in [
         del st.session_state[key]
 
 # -----------------------------------------
-# GLOBAL CSS
+# GLOBAL CSS – ENTERPRISE UI
 # -----------------------------------------
 st.markdown("""
 <style>
@@ -455,6 +455,19 @@ st.markdown("""
     font-weight: 700;
     margin-bottom: 1rem;
 }
+div.stButton > button,
+div.stDownloadButton > button {
+    background-color: #030712 !important;
+    color: #ffffff !important;
+    border: 2px solid #030712 !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+}
+div.stButton > button:hover,
+div.stDownloadButton > button:hover {
+    background-color: #ffffff !important;
+    color: #030712 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -477,24 +490,30 @@ def load_data():
 df = load_data()
 
 if df.empty:
-    st.warning("No data available.")
+    st.error("No data available.")
     st.stop()
 
 # -----------------------------------------
-# ENROLMENT MONTH NORMALIZATION
+# DERIVE MONTH & YEAR FROM VARCHAR COLUMN
 # -----------------------------------------
-df["Enrolment Month"] = df["Enrolment Month"].astype(str).str.strip()
+df["Enrolment Month"] = df["Enrolment Month"].astype(str)
 df = df[df["Enrolment Month"] != "nan"]
 
-df["Enroll_Month_Name"] = df["Enrolment Month"].apply(
-    lambda x: x.split("-")[0].strip()[:3].title()
-)
+# Normalize Enrolment Month safely
+df["Enrolment Month"] = df["Enrolment Month"].astype(str).str.strip()
 
-df["Enroll_Year"] = df["Enrolment Month"].apply(
-    lambda x: x.split("-")[-1].strip()
-)
+# Normalize Enrolment Month safely (e.g., "Dec- 2024")
+df["Enrolment Month"] = df["Enrolment Month"].astype(str).str.strip()
 
+# Extract Month and Year separately
+df["Enroll_Month_Name"] = df["Enrolment Month"].apply(lambda x: x.split("-")[0].strip()[:3].title())
+df["Enroll_Year"] = df["Enrolment Month"].apply(lambda x: x.split("-")[-1].strip())
+
+# Ensure only numeric years
 df.loc[~df["Enroll_Year"].str.isdigit(), "Enroll_Year"] = None
+
+
+
 
 # -----------------------------------------
 # COMPLETION FLAG
@@ -502,76 +521,238 @@ df.loc[~df["Enroll_Year"].str.isdigit(), "Enroll_Year"] = None
 df["Completed Flag"] = df["Actual Date of completion"].notna()
 
 # -----------------------------------------
-# SIDEBAR FILTERS
+# SIDEBAR FILTERS (MONTH + YEAR)
+# -----------------------------------------
+# with st.sidebar:
+#     st.markdown("## 🔎 Analytics Filters")
+
+#     month_order = ["Jan","Feb","Mar","Apr","May","Jun",
+#                    "Jul","Aug","Sep","Oct","Nov","Dec"]
+
+#     available_months = sorted(
+#     df["Enroll_Month_Name"].dropna().unique(),
+#     key=lambda x: month_order.index(x) if x in month_order else 99
+# )
+#     # Month options in correct order
+#     month_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+
+#     available_months = sorted(
+#         df["Enroll_Month_Name"].dropna().unique(),
+#         key=lambda x: month_order.index(x) if x in month_order else 99)
+#     selected_month = st.selectbox(
+#         "Enrollment Month",
+#         available_months)
+    
+#     # Get available years as strings
+#     available_years = sorted(
+#         df["Enroll_Year"].dropna().astype(str).unique()
+#     )
+    
+#     if not available_years:
+#         st.warning("No valid enrollment years found.")
+#         st.stop()
+    
+#     selected_year = st.selectbox(
+#         "Enrollment Year",
+#         available_years,
+#         index=len(available_years) - 1  # default to latest year
+#     )
+#     st.divider()
+#     cert_filter = st.multiselect("Certification", sorted(df["Certification"].dropna().unique()))
+#     snowpro_filter = st.multiselect("SnowPro Status", sorted(df["SnowPro Certified"].dropna().unique()))
+#     voucher_filter = st.multiselect("Voucher Status", sorted(df["Voucher Status"].dropna().unique()))
+#     account_filter = st.multiselect("Account", sorted(df["Account"].dropna().unique()))
+#     vertical_filter = st.multiselect("Vertical / SL", sorted(df["Vertical / SL"].dropna().unique()))
+
+# -----------------------------------------
+# SIDEBAR FILTERS (MULTIPLE MONTHS + YEARS)
 # -----------------------------------------
 with st.sidebar:
     st.markdown("## 🔎 Analytics Filters")
 
-    # ---- Month / Year ----
+    # Month options in correct order
     month_order = ["Jan","Feb","Mar","Apr","May","Jun",
                    "Jul","Aug","Sep","Oct","Nov","Dec"]
 
     available_months = sorted(
         df["Enroll_Month_Name"].dropna().unique(),
-        key=lambda x: month_order.index(x)
+        key=lambda x: month_order.index(x) if x in month_order else 99
     )
 
-    selected_month = st.selectbox("Enrollment Month", available_months)
+    selected_months = st.multiselect(
+        "Enrollment Month(s)",
+        available_months,
+        default=None  # no default selection
+    )
 
-    available_years = sorted(df["Enroll_Year"].dropna().unique())
-    selected_year = st.selectbox(
-        "Enrollment Year",
+    # Year options
+    available_years = sorted(
+        df["Enroll_Year"].dropna().unique()
+    )
+
+    selected_years = st.multiselect(
+        "Enrollment Year(s)",
         available_years,
-        index=len(available_years) - 1
+        default=None  # no default selection
     )
 
     st.divider()
 
-    # ---- Badge Filters ----
-    badge_values = ["Completed", "In-Progress"]
+    # Other existing multiselect filters
+    # Other existing multiselect filters
+    cert_filter = st.multiselect(
+        "Certification",
+        sorted(df["Certification"].dropna().unique())
+    )
 
-    badge1_filter = st.multiselect("Badge 1 Status", badge_values)
-    badge2_filter = st.multiselect("Badge 2 Status", badge_values)
-    badge3_filter = st.multiselect("Badge 3 Status", badge_values)
-    badge4_filter = st.multiselect("Badge 4 Status", badge_values)
-    badge5_filter = st.multiselect("Badge 5 Status", badge_values)
+    snowpro_filter = st.multiselect(
+        "SnowPro Status",
+        sorted(df["SnowPro Certified"].dropna().unique())
+    )
 
-    # ---- CertPrepOD Filter ----
-    certprep_filter = st.multiselect(
-        "CertPrepOD Course",
+    voucher_filter = st.multiselect(
+        "Voucher Status",
+        sorted(df["Voucher Status"].dropna().unique())
+    )
+
+    # --- NEW: Badge Filters (Fixed Values) ---
+    badge_status_values = ["Completed", "In-Progress"]
+
+    badge1_filter = st.multiselect("Badge 1 Status", badge_status_values)
+    badge2_filter = st.multiselect("Badge 2 Status", badge_status_values)
+    badge3_filter = st.multiselect("Badge 3 Status", badge_status_values)
+    badge4_filter = st.multiselect("Badge 4 Status", badge_status_values)
+    badge5_filter = st.multiselect("Badge 5 Status", badge_status_values)
+
+    # --- NEW: CertPrepOD Filter (Fixed Values) ---
+    certprepod_filter = st.multiselect(
+        "CertPrepOD Status",
         ["Completed", "Not Started"]
     )
+
+
 
 # -----------------------------------------
 # APPLY FILTERS
 # -----------------------------------------
-filtered_df = df[
-    (df["Enroll_Month_Name"] == selected_month) &
-    (df["Enroll_Year"] == selected_year)
-]
+# filtered_df = df.copy()
 
+# filtered_df = filtered_df[
+#     (filtered_df["Enroll_Month_Name"] == selected_month) &
+#     (filtered_df["Enroll_Year"] == selected_year)
+# ]
+
+# if cert_filter:
+#     filtered_df = filtered_df[filtered_df["Certification"].isin(cert_filter)]
+# if snowpro_filter:
+#     filtered_df = filtered_df[filtered_df["SnowPro Certified"].isin(snowpro_filter)]
+# if voucher_filter:
+#     filtered_df = filtered_df[filtered_df["Voucher Status"].isin(voucher_filter)]
+# if account_filter:
+#     filtered_df = filtered_df[filtered_df["Account"].isin(account_filter)]
+# if vertical_filter:
+#     filtered_df = filtered_df[filtered_df["Vertical / SL"].isin(vertical_filter)]
+
+# -----------------------------------------
+# APPLY FILTERS (OPTIONAL MULTIPLE MONTHS + YEARS)
+# -----------------------------------------
+filtered_df = df.copy()
+
+# Filter by months if selected
+if selected_months:
+    filtered_df = filtered_df[filtered_df["Enroll_Month_Name"].isin(selected_months)]
+
+# Filter by years if selected
+if selected_years:
+    filtered_df = filtered_df[filtered_df["Enroll_Year"].isin(selected_years)]
+
+# Other filters
+if cert_filter:
+    filtered_df = filtered_df[filtered_df["Certification"].isin(cert_filter)]
+if snowpro_filter:
+    filtered_df = filtered_df[filtered_df["SnowPro Certified"].isin(snowpro_filter)]
+if voucher_filter:
+    filtered_df = filtered_df[filtered_df["Voucher Status"].isin(voucher_filter)]
+# Badge filters
 if badge1_filter:
     filtered_df = filtered_df[filtered_df["Badge 1 Status"].isin(badge1_filter)]
+
 if badge2_filter:
     filtered_df = filtered_df[filtered_df["Badge 2 Status"].isin(badge2_filter)]
+
 if badge3_filter:
     filtered_df = filtered_df[filtered_df["Badge 3 Status"].isin(badge3_filter)]
+
 if badge4_filter:
     filtered_df = filtered_df[filtered_df["Badge 4 Status"].isin(badge4_filter)]
+
 if badge5_filter:
     filtered_df = filtered_df[filtered_df["Badge 5 Status"].isin(badge5_filter)]
-if certprep_filter:
-    filtered_df = filtered_df[filtered_df["CertPrepOD Course"].isin(certprep_filter)]
+
+# CertPrepOD filter
+if certprepod_filter:
+    filtered_df = filtered_df[
+        filtered_df["CertPrepOD Course"].isin(certprepod_filter)
+    ]
+
+
+# Prepare header labels
+months_label = ", ".join(selected_months) if selected_months else ""
+years_label = ", ".join(selected_years) if selected_years else ""
+
+
+
+
+
+# -----------------------------------------
+# EXPORT CHART FUNCTION
+# -----------------------------------------
+def export_charts_as_zip(data):
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w") as z:
+        charts = {
+            "certifications_distribution.png": data["Certification"].value_counts(),
+            "snowpro_status.png": data["SnowPro Certified"].value_counts(),
+            "voucher_usage.png": data["Voucher Status"].value_counts()
+        }
+        for name, series in charts.items():
+            fig, ax = plt.subplots(figsize=(7, 5))
+            series.plot(kind="bar", ax=ax)
+            ax.set_title(name.replace("_", " ").replace(".png", "").title())
+            plt.xticks(rotation=45, ha="right")
+            img = io.BytesIO()
+            fig.savefig(img, format="png", bbox_inches="tight")
+            plt.close(fig)
+            z.writestr(name, img.getvalue())
+    buffer.seek(0)
+    return buffer
 
 # -----------------------------------------
 # HEADER
 # -----------------------------------------
-st.markdown(f"""
-<div class="page-title">Certification Analytics</div>
-<div class="page-subtitle">
-Enrollment Period: <b>{selected_month}- {selected_year}</b>
-</div>
-""", unsafe_allow_html=True)
+h1,h2 = st.columns([6, 2])
+
+with h1:
+    st.markdown(f"""
+    <div class="page-title">Certification Analytics</div>
+    <div class="page-subtitle">
+        Enrollment Period: <b>{months_label}{' - ' if months_label and years_label else ''}{years_label}</b>
+    </div>""", unsafe_allow_html=True)
+
+# Show message if no data
+if filtered_df.empty:
+    st.error("No data is available for the selected filters.")
+    st.stop()  # Stop further rendering to avoid errors
+
+
+with h2:
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.download_button(
+        "⬇ Export Charts",
+        data=export_charts_as_zip(filtered_df),
+        file_name="certification_analytics_charts.zip",
+        mime="application/zip"
+    )
 
 # -----------------------------------------
 # KPI CARDS
@@ -607,17 +788,21 @@ with k4:
 c1, c2 = st.columns([3, 2])
 
 with c1:
-    st.markdown('<div class="card"><div class="chart-title">Certification Distribution</div>', unsafe_allow_html=True)
+    st.markdown('<div class="card"><div class="chart-title">Certifications Distribution</div>', unsafe_allow_html=True)
     st.bar_chart(filtered_df["Certification"].value_counts())
     st.markdown("</div>", unsafe_allow_html=True)
 
 with c2:
-    st.markdown('<div class="card"><div class="chart-title">CertPrepOD Status</div>', unsafe_allow_html=True)
-    st.bar_chart(filtered_df["CertPrepOD Course"].value_counts())
+    st.markdown('<div class="card"><div class="chart-title">SnowPro Status</div>', unsafe_allow_html=True)
+    st.bar_chart(filtered_df["SnowPro Certified"].value_counts())
     st.markdown("</div>", unsafe_allow_html=True)
 
+st.markdown('<div class="card"><div class="chart-title">Voucher Usage</div>', unsafe_allow_html=True)
+st.bar_chart(filtered_df["Voucher Status"].value_counts())
+st.markdown("</div>", unsafe_allow_html=True)
+
 # -----------------------------------------
-# DETAIL TABLE
+# DRILL-DOWN TABLE
 # -----------------------------------------
 with st.expander("🔍 View Detailed Records"):
     st.dataframe(
@@ -627,16 +812,21 @@ with st.expander("🔍 View Detailed Records"):
                 "EMP Name",
                 "Certification",
                 "Enrolment Month",
-                "Badge 1 Status",
-                "Badge 2 Status",
-                "Badge 3 Status",
-                "Badge 4 Status",
-                "Badge 5 Status",
-                "CertPrepOD Course"
+                "SnowPro Certified",
+                "Voucher Status",
+                "Account",
+                "Vertical / SL"
             ]
         ],
         use_container_width=True,
         height=450
     )
 
-
+# -----------------------------------------
+# FOOTER
+# -----------------------------------------
+st.markdown("""
+<div style="margin-top:3rem;color:#64748b;font-size:0.85rem;">
+💡 Tip: Select Enrollment Month and Year to explore certification trends.
+</div>
+""", unsafe_allow_html=True)
