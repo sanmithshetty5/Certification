@@ -333,6 +333,9 @@ with r1c1:
         .rename(columns={"EMP ID": "Employees"})
     )
 
+    # Reverse index so highest is on top (Streamlit quirk)
+    funnel_df = funnel_df.iloc[::-1]
+
     st.bar_chart(
         funnel_df.set_index("Certification"),
         horizontal=True
