@@ -165,37 +165,12 @@ selected_year = st.selectbox(
     available_years,
     index=len(available_years) - 1  # default to latest year
 )
-
-
-
-
-    # available_years = sorted(df["Enroll_Year"].unique())
-    # selected_year = st.selectbox(
-    #     "Enrollment Year",
-    #     available_years
-    # )
-    # available_years = sorted(
-    # [y for y in df["Enroll_Year"].dropna().astype(str).str.strip().unique() if y.isdigit()])
-    
-    # if not available_years:
-    # st.warning("No valid enrollment years found.")
-    # st.stop()
-
-    # selected_year = st.selectbox(
-    # "Enrollment Year",
-    # available_years,
-    # index=len(available_years) - 1)  # default to latest year
-    
-
-
-    
-    st.divider()
-
-    cert_filter = st.multiselect("Certification", sorted(df["Certification"].dropna().unique()))
-    snowpro_filter = st.multiselect("SnowPro Status", sorted(df["SnowPro Certified"].dropna().unique()))
-    voucher_filter = st.multiselect("Voucher Status", sorted(df["Voucher Status"].dropna().unique()))
-    account_filter = st.multiselect("Account", sorted(df["Account"].dropna().unique()))
-    vertical_filter = st.multiselect("Vertical / SL", sorted(df["Vertical / SL"].dropna().unique()))
+st.divider()
+cert_filter = st.multiselect("Certification", sorted(df["Certification"].dropna().unique()))
+snowpro_filter = st.multiselect("SnowPro Status", sorted(df["SnowPro Certified"].dropna().unique()))
+voucher_filter = st.multiselect("Voucher Status", sorted(df["Voucher Status"].dropna().unique()))
+account_filter = st.multiselect("Account", sorted(df["Account"].dropna().unique()))
+vertical_filter = st.multiselect("Vertical / SL", sorted(df["Vertical / SL"].dropna().unique()))
 
 # -----------------------------------------
 # APPLY FILTERS
