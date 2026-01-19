@@ -117,9 +117,13 @@ df["Enroll_Month_Name"] = (
 
 df["Enroll_Year"] = (
     df["Enrolment Month"]
-    .str.split("-").str[1]
+    .str.split("-")
+    .str[-1]
     .str.strip()
 )
+
+df.loc[~df["Enroll_Year"].str.isdigit(), "Enroll_Year"] = None
+
 
 
 # -----------------------------------------
