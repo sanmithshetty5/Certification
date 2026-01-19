@@ -235,13 +235,6 @@ if certprepod_filter:
 months_label = ", ".join(selected_months) if selected_months else ""
 years_label = ", ".join(selected_years) if selected_years else ""
 
-st.write(filtered_df[[
-    "Certification",
-    "SnowPro Certified",
-    "Voucher Status"
-]])
-
-
 # -----------------------------------------
 # EXPORT CHART FUNCTION
 # -----------------------------------------
