@@ -158,15 +158,17 @@ with st.sidebar:
     # )
     available_years = sorted(
     [y for y in df["Enroll_Year"].dropna().astype(str).str.strip().unique() if y.isdigit()])
+    
+    if not available_years:
+    st.warning("No valid enrollment years found.")
+    st.stop()
 
     selected_year = st.selectbox(
     "Enrollment Year",
     available_years,
     index=len(available_years) - 1)  # default to latest year
     
-    if not available_years:
-    st.warning("No valid enrollment years found.")
-    st.stop()
+
 
     
     st.divider()
