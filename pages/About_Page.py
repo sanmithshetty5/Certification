@@ -64,8 +64,8 @@ h1, h2, h3 {
     line-height: 1.6;
 }
 
-/* --- Feature Cards --- */
-.feature-card {
+/* --- Feature Cards (Vertical Layout) --- */
+.feature-card-v {
     background: white;
     padding: 2rem;
     border-radius: 16px;
@@ -76,11 +76,28 @@ h1, h2, h3 {
     top: 0;
 }
 
-.feature-card:hover {
+.feature-card-v:hover {
     transform: translateY(-8px);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
     border-color: #6366f1;
 }
+
+/* --- Feature Cards (Horizontal Layout) --- */
+.feature-card-h {
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+}
+.feature-card-h:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      border-color: #6366f1;
+}
+
 
 .icon-box {
     width: 50px;
@@ -90,7 +107,7 @@ h1, h2, h3 {
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    flex-shrink: 0; /* Prevents icon squishing in horizontal layout */
 }
 
 .card-title {
@@ -106,26 +123,6 @@ h1, h2, h3 {
     line-height: 1.6;
 }
 
-/* --- Stats/Numbers Section --- */
-.stat-box {
-    text-align: center;
-    padding: 1.5rem;
-    background: linear-gradient(to bottom right, #ffffff, #f8fafc);
-    border-radius: 12px;
-    border: 1px solid #f1f5f9;
-}
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: #4f46e5;
-}
-.stat-label {
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #94a3b8;
-    font-weight: 600;
-}
 
 /* --- Partners --- */
 .partner-section {
@@ -233,13 +230,15 @@ with c_center:
     </div>
     """, unsafe_allow_html=True)
 
+
 # -------------------------------
 # PARTNERS SECTION
 # -------------------------------
 st.markdown("<div class='partner-section'>", unsafe_allow_html=True)
 st.markdown("<div style='font-size:0.8rem; font-weight:700; color:#94a3b8; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.5rem;'>Built with Modern Tech</div>", unsafe_allow_html=True)
 
-p1, p2, p3 = st.columns([1, 4, 1]) # Centering the middle content
+# Centering the partners block using ratio columns
+p1, p2, p3 = st.columns([1, 4, 1]) 
 
 with p2:
     pp1, pp2 = st.columns(2, gap="large")
