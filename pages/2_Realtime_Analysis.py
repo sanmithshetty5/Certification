@@ -154,9 +154,9 @@ with st.sidebar:
     available_years = sorted(
     [y for y in df["Enroll_Year"].dropna().astype(str).str.strip().unique() if y.isdigit()])
     
-    if not available_years:
-    st.warning("No valid enrollment years found.")
-    st.stop()
+    # if not available_years:
+    # st.warning("No valid enrollment years found.")
+    # st.stop()
     
     selected_year = st.selectbox(
     "Enrollment Year",
