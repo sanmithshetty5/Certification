@@ -13,6 +13,14 @@ st.set_page_config(
 )
 
 # -----------------------------------------
+# GLOBAL THEME COLORS
+# -----------------------------------------
+# Indigo Blue - Professional, high contrast against white cards
+CHART_COLOR = "#4f46e5" 
+# Matplotlib colormap for Heatmap (Light Blue to Dark Blue)
+HEATMAP_CMAP = "Blues"  
+
+# -----------------------------------------
 # CLEAR PAGE STATE
 # -----------------------------------------
 for key in [
@@ -114,9 +122,6 @@ df["Enroll_Year"] = df["Enrolment Month"].apply(lambda x: x.split("-")[-1].strip
 # Ensure only numeric years
 df.loc[~df["Enroll_Year"].str.isdigit(), "Enroll_Year"] = None
 
-
-
-
 # -----------------------------------------
 # COMPLETION FLAG
 # -----------------------------------------
@@ -140,7 +145,7 @@ with st.sidebar:
     selected_months = st.multiselect(
         "Enrollment Month(s)",
         available_months,
-        default=None  # no default selection
+        default=None 
     )
 
     # Year options
@@ -151,12 +156,11 @@ with st.sidebar:
     selected_years = st.multiselect(
         "Enrollment Year(s)",
         available_years,
-        default=None  # no default selection
+        default=None 
     )
 
     st.divider()
 
-    # Other existing multiselect filters
     # Other existing multiselect filters
     cert_filter = st.multiselect(
         "Certification",
@@ -237,7 +241,7 @@ years_label = ", ".join(selected_years) if selected_years else ""
 
 
 # -----------------------------------------
-# EXPORT CHART FUNCTION
+# EXPORT CHART FUNCTION (Updated Colors)
 # -----------------------------------------
 def export_charts_as_zip(data):
     buffer = io.BytesIO()
@@ -249,9 +253,14 @@ def export_charts_as_zip(data):
         }
         for name, series in charts.items():
             fig, ax = plt.subplots(figsize=(7, 5))
-            series.plot(kind="bar", ax=ax)
+            # Set colors for export to match app
+            series.plot(kind="bar", ax=ax, color=CHART_COLOR)
             ax.set_title(name.replace("_", " ").replace(".png", "").title())
             plt.xticks(rotation=45, ha="right")
+            # Remove spines for cleaner look
+            ax.spines['top'].set_visible(False)
+            ax.spines['right'].set_visible(False)
+            
             img = io.BytesIO()
             fig.savefig(img, format="png", bbox_inches="tight")
             plt.close(fig)
@@ -313,6 +322,7 @@ with k4:
     </div>
     """, unsafe_allow_html=True)
     st.progress(completion / 100 if completion else 0)
+
 # -----------------------------------------
 # CHARTS – ROW 1
 # -----------------------------------------
@@ -328,25 +338,26 @@ with r1c1:
         filtered_df
         .groupby("Certification")["EMP ID"]
         .nunique()
-        .reset_index(name="Employees")
-        .sort_values("Employees", ascending=False)
+        .sort_values(ascending=False)
+        .reset_index()
+        .rename(columns={"EMP ID": "Employees"})
     )
-
-    # Reverse index so highest is on top (Streamlit quirk)
-    funnel_df = funnel_df.iloc[::-1]
 
     st.bar_chart(
         funnel_df.set_index("Certification"),
-        horizontal=True
+        horizontal=True,
+        color=CHART_COLOR  # Applied new color
     )
 
     st.markdown("</div>", unsafe_allow_html=True)
 
 
-
 with r1c2:
     st.markdown('<div class="card"><div class="chart-title">SnowPro Status</div>', unsafe_allow_html=True)
-    st.bar_chart(filtered_df["SnowPro Certified"].value_counts())
+    st.bar_chart(
+        filtered_df["SnowPro Certified"].value_counts(),
+        color=CHART_COLOR  # Applied new color
+    )
     st.markdown("</div>", unsafe_allow_html=True)
 
 
@@ -357,7 +368,10 @@ r2c1, r2c2 = st.columns(2)
 
 with r2c1:
     st.markdown('<div class="card"><div class="chart-title">Voucher Usage</div>', unsafe_allow_html=True)
-    st.bar_chart(filtered_df["Voucher Status"].value_counts())
+    st.bar_chart(
+        filtered_df["Voucher Status"].value_counts(),
+        color=CHART_COLOR  # Applied new color
+    )
     st.markdown("</div>", unsafe_allow_html=True)
 
 with r2c2:
@@ -371,46 +385,15 @@ with r2c2:
         .sort_index()
     )
 
-    st.line_chart(emp_year_df)
+    st.line_chart(
+        emp_year_df,
+        color=CHART_COLOR  # Applied new color
+    )
     st.markdown("</div>", unsafe_allow_html=True)
 
 
-# # -----------------------------------------
-# # CHART – ROW 3 (FULL WIDTH – FUNNEL)
-# # -----------------------------------------
-# st.markdown(
-#     '<div class="card"><div class="chart-title">Certification Completion Funnel</div>',
-#     unsafe_allow_html=True
-# )
-
-# funnel_data = {
-#     "Stage": [
-#         "Enrolled",
-#         "Badge 1 Completed",
-#         "Badge 2 Completed",
-#         "Badge 3 Completed",
-#         "Badge 4 Completed",
-#         "Badge 5 Completed",
-#         "Certification Completed"
-#     ],
-#     "Employees": [
-#         filtered_df["EMP ID"].nunique(),
-#         filtered_df[filtered_df["Badge 1 Status"] == "Completed"]["EMP ID"].nunique(),
-#         filtered_df[filtered_df["Badge 2 Status"] == "Completed"]["EMP ID"].nunique(),
-#         filtered_df[filtered_df["Badge 3 Status"] == "Completed"]["EMP ID"].nunique(),
-#         filtered_df[filtered_df["Badge 4 Status"] == "Completed"]["EMP ID"].nunique(),
-#         filtered_df[filtered_df["Badge 5 Status"] == "Completed"]["EMP ID"].nunique(),
-#         filtered_df[filtered_df["Completed Flag"] == True]["EMP ID"].nunique()
-#     ]
-# }
-
-# funnel_df = pd.DataFrame(funnel_data)
-
-# st.bar_chart(funnel_df.set_index("Stage"), horizontal=True)
-# st.markdown("</div>", unsafe_allow_html=True)
-
 # -----------------------------------------
-# CHART – ROW 3 (FULL WIDTH – FUNNEL)
+# CHART – ROW 3 (FULL WIDTH – BADGE FUNNEL)
 # -----------------------------------------
 st.markdown(
     '<div class="card"><div class="chart-title">Badge Completion Funnel</div>',
@@ -438,6 +421,7 @@ funnel_df = pd.DataFrame(funnel_data)
 
 st.bar_chart(
     funnel_df.set_index("Stage"),
+    color=CHART_COLOR  # Applied new color
 )
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -467,23 +451,39 @@ heatmap_pivot = heatmap_df.pivot(
 month_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 heatmap_pivot = heatmap_pivot.reindex(month_order)
 
+# Set background to match card (white)
 fig, ax = plt.subplots(figsize=(12, 5))
-im = ax.imshow(heatmap_pivot, aspect="auto")
+fig.patch.set_facecolor('#ffffff')
+ax.set_facecolor('#ffffff')
+
+# Updated Color Map to 'Blues' for better UI integration
+im = ax.imshow(heatmap_pivot, aspect="auto", cmap=HEATMAP_CMAP) 
 
 ax.set_xticks(range(len(heatmap_pivot.columns)))
-ax.set_xticklabels(heatmap_pivot.columns)
+ax.set_xticklabels(heatmap_pivot.columns, fontsize=10, color="#64748b", weight="bold")
 ax.set_yticks(range(len(heatmap_pivot.index)))
-ax.set_yticklabels(heatmap_pivot.index)
+ax.set_yticklabels(heatmap_pivot.index, fontsize=10, color="#64748b", weight="bold")
 
-plt.colorbar(im, ax=ax, label="No. of Employees")
+# Customize Colorbar
+cbar = plt.colorbar(im, ax=ax, label="No. of Employees")
+cbar.ax.yaxis.set_tick_params(color="#64748b")
+cbar.outline.set_visible(False)
+
+# Clean up spines
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color('#e2e8f0')
+ax.spines['left'].set_color('#e2e8f0')
 
 for i in range(len(heatmap_pivot.index)):
     for j in range(len(heatmap_pivot.columns)):
-        ax.text(j, i, int(heatmap_pivot.iloc[i, j]),
-                ha="center", va="center", fontsize=9)
+        # Calculate color for text based on background intensity
+        val = int(heatmap_pivot.iloc[i, j])
+        text_color = "white" if val > heatmap_pivot.values.max() * 0.5 else "#0f172a"
+        ax.text(j, i, val, ha="center", va="center", fontsize=9, color=text_color, fontweight="bold")
 
-ax.set_xlabel("Year")
-ax.set_ylabel("Month")
+ax.set_xlabel("Year", fontsize=10, color="#64748b", labelpad=10)
+ax.set_ylabel("Month", fontsize=10, color="#64748b", labelpad=10)
 
 st.pyplot(fig)
 st.markdown("</div>", unsafe_allow_html=True)
