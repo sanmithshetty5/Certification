@@ -5,16 +5,16 @@ st.set_page_config(
     layout="wide"
 )
 
-# st.sidebar.title("🎓 Certification Portal")
+st.sidebar.title("🎓 Certification Portal")
 
-# page = st.sidebar.radio(
-#     "Navigate",
-#     [
-#         "🏠 Welcome",
-#         "✍️ Certification Tracker",
-#         "📊 Certification Analytics"
-#     ]
-# )
+page = st.sidebar.radio(
+    "Navigate",
+    [
+        "🏠 Welcome",
+        "✍️ Certification Tracker",
+        "📊 Certification Analytics"
+    ]
+)
 
 if page == "🏠 Welcome":
     st.switch_page("pages/Welcome_Page.py")
