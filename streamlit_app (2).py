@@ -166,13 +166,13 @@ div.stButton > button:disabled {
 # -------------------------------
 # HEADER LOGOS (NEW)
 # -------------------------------
-# Replace the 'src' links below with your actual image paths or URLs
-# st.markdown("""
-# <div class="logo-container">
-#     <img src="https://via.placeholder.com/150x50?text=Logo+1" class="logo-img">
-#     <img src="https://via.placeholder.com/150x50?text=Logo+2" class="logo-img">
-# </div>
-# """, unsafe_allow_html=True)
+Replace the 'src' links below with your actual image paths or URLs
+st.markdown("""
+<div class="logo-container">
+    <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/snowflake_logo.png">
+    <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/logo.png">
+</div>
+""", unsafe_allow_html=True)
 
 
 # -------------------------------
