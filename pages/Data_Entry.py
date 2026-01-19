@@ -461,7 +461,7 @@ if st.session_state.pending_data:
         st.subheader("🔍 Review Before Saving")
         st.dataframe(pd.DataFrame([st.session_state.pending_data]), use_container_width=True)
 
-        if st.button("✅ Confirm & Save", disabled=st.session_state.save_completed, type="primary"):
+        if st.button("✅ Confirm & Save", disabled=(st.session_state.save_completed or st.session_state.duplicate_exists), type="primary"):
             if st.session_state.pending_action == "insert":
                 session.create_dataframe(
                     [Row(**st.session_state.pending_data)]
