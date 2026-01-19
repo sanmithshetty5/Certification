@@ -163,7 +163,12 @@ with st.sidebar:
     "Enrollment Year",
     available_years,
     index=len(available_years) - 1)  # default to latest year
+    
+    if not available_years:
+    st.warning("No valid enrollment years found.")
+    st.stop()
 
+    
     st.divider()
 
     cert_filter = st.multiselect("Certification", sorted(df["Certification"].dropna().unique()))
