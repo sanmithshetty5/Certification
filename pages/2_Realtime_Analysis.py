@@ -104,8 +104,23 @@ if df.empty:
 df["Enrolment Month"] = df["Enrolment Month"].astype(str)
 df = df[df["Enrolment Month"] != "nan"]
 
-df["Enroll_Month_Name"] = df["Enrolment Month"].str.split("-").str[0]
-df["Enroll_Year"] = df["Enrolment Month"].str.split("-").str[1]
+# Normalize Enrolment Month safely
+df["Enrolment Month"] = df["Enrolment Month"].astype(str).str.strip()
+
+df["Enroll_Month_Name"] = (
+    df["Enrolment Month"]
+    .str.split("-").str[0]
+    .str.strip()
+    .str[:3]        # Take first 3 letters
+    .str.title()    # Jan, Feb, Mar
+)
+
+df["Enroll_Year"] = (
+    df["Enrolment Month"]
+    .str.split("-").str[1]
+    .str.strip()
+)
+
 
 # -----------------------------------------
 # COMPLETION FLAG
@@ -122,9 +137,10 @@ with st.sidebar:
                    "Jul","Aug","Sep","Oct","Nov","Dec"]
 
     available_months = sorted(
-        df["Enroll_Month_Name"].unique(),
-        key=lambda x: month_order.index(x)
-    )
+    df["Enroll_Month_Name"].dropna().unique(),
+    key=lambda x: month_order.index(x) if x in month_order else 99
+)
+
 
     selected_month = st.selectbox(
         "Enrollment Month",
