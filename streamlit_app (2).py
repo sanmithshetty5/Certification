@@ -341,7 +341,7 @@ st.markdown("""
 
 /* STRICTLY FORCE IMAGE SIZES */
 .logo-container img {
-    height: 1.5cm !important; /* Adjusted to 1.5cm to fit comfortably inside the 2cm container */
+    height: 2cm !important; /* Adjusted to 1.5cm to fit comfortably inside the 2cm container */
     width: auto !important;   
     object-fit: contain !important;
     margin-bottom: 0 !important;
