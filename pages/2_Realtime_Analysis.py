@@ -195,7 +195,7 @@ df["Completed Flag"] = df["Actual Date of completion"].notna()
 # SIDEBAR
 # -----------------------------------------
 with st.sidebar:
-    st.image("https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/logo.png", width=200) # Placeholder Logo
+    st.image("https://www.flaticon.com/free-icon/analytics_14356703?term=analytics+tool&page=1&position=3&origin=search&related_id=14356703", width=200) # Placeholder Logo
     st.markdown("## Analytics Console")
     st.markdown("---")
     
