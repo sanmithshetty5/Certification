@@ -586,9 +586,14 @@ with r1c1:
 with r1c2:
     st.markdown("""
     <div class="card">
-        <div class="card-icon">
-    <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analysis.png" style="width: 32px; height: auto; filter: opacity(0.7);">
-</div>
+        <div>
+            <div class="badge badge-purple">Analytics</div>
+            
+            <div class="card-header-row">
+                <div class="card-icon">
+                    <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analysis.png" 
+                         style="width: 32px; height: auto; filter: opacity(0.7);">
+                </div>
                 <div>
                     <h3>View Analytics Dashboard</h3>
                     <p>
@@ -599,9 +604,10 @@ with r1c2:
         </div>
     </div>
     """, unsafe_allow_html=True)
+    
+    # The button remains outside the markdown to stay functional
     if st.button("Go to Dashboard", key="btn_open_analytics", use_container_width=True):
         st.switch_page("pages/2_Realtime_Analysis.py")
-
 
 # -------- ROW 2 --------
 st.markdown('<div class="row-spacing"></div>', unsafe_allow_html=True)
