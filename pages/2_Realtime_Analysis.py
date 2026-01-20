@@ -41,7 +41,7 @@ st.markdown(f"""
     
     /* 2. TYPOGRAPHY & TEXT COLORS */
     h1, h2, h3, h4, h5, h6, p, div, span, label {{
-        color: {TEXT_COLOR} !important;
+        color: {SB_TEXT} !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }}
     
