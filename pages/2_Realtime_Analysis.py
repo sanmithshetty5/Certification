@@ -112,42 +112,42 @@ st.markdown(f"""
         margin-top: 5px;
     }}
 
-    /* 6. SIDEBAR REFINEMENT */
-    section[data-testid="stSidebar"] {{
-        background-color: #0F172A !important; /* Dark navy */
-        border-right: 1px solid #1E293B;
-    }}
-    section[data-testid="stSidebar"] h1,
-    section[data-testid="stSidebar"] h2,
-    section[data-testid="stSidebar"] h3,
-    section[data-testid="stSidebar"] h4 {{
-        color: #FFFFFF !important;
-        font-weight: 600;
-    }}
-    /* Sidebar labels */
-    section[data-testid="stSidebar"] label,
-    section[data-testid="stSidebar"] label p {{
-        color: #FFFFFF !important;
-        font-weight: 500;
-    }}
+    # /* 6. SIDEBAR REFINEMENT */
+    # section[data-testid="stSidebar"] {{
+    #     background-color: #0F172A !important; /* Dark navy */
+    #     border-right: 1px solid #1E293B;
+    # }}
+    # section[data-testid="stSidebar"] h1,
+    # section[data-testid="stSidebar"] h2,
+    # section[data-testid="stSidebar"] h3,
+    # section[data-testid="stSidebar"] h4 {{
+    #     color: #FFFFFF !important;
+    #     font-weight: 600;
+    # }}
+    # /* Sidebar labels */
+    # section[data-testid="stSidebar"] label,
+    # section[data-testid="stSidebar"] label p {{
+    #     color: #FFFFFF !important;
+    #     font-weight: 500;
+    # }}
 
-    /* Sidebar input text */
-    section[data-testid="stSidebar"] input,
-    section[data-testid="stSidebar"] textarea {{
-        color: #0F172A !important;
-        background-color: #FFFFFF !important;
-    }}
+    # /* Sidebar input text */
+    # section[data-testid="stSidebar"] input,
+    # section[data-testid="stSidebar"] textarea {{
+    #     color: #0F172A !important;
+    #     background-color: #FFFFFF !important;
+    # }}
     
-    /* Sidebar selectbox */
-    section[data-testid="stSidebar"] div[data-baseweb="select"] {{
-        background-color: #FFFFFF !important;
-        color: #0F172A !important;
-    }}
+    # /* Sidebar selectbox */
+    # section[data-testid="stSidebar"] div[data-baseweb="select"] {{
+    #     background-color: #FFFFFF !important;
+    #     color: #0F172A !important;
+    # }}
     
-    /* Sidebar divider lines */
-    section[data-testid="stSidebar"] hr {{
-        border-color: #334155;
-    }}
+    # /* Sidebar divider lines */
+    # section[data-testid="stSidebar"] hr {{
+    #     border-color: #334155;
+    # }}
 
     /* 7. MATPLOTLIB TRANSPARENCY FIX */
     .chart-title {{
