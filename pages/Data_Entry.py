@@ -9,7 +9,7 @@ from snowflake.snowpark import Row
 # Page Config
 # -----------------------------------------
 st.set_page_config(
-    page_title="Certification Tracker",a
+    page_title="Certification Tracker"
     layout="wide",
     initial_sidebar_state="expanded"
 )
