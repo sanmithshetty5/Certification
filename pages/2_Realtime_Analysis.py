@@ -83,42 +83,12 @@ div.stDownloadButton > button:hover {
 }
 
 
-/* -------------------------------
-   FIX: Expander opened state
--------------------------------- */
-
-/* Expander container */
-div[data-testid="stExpander"] {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-    border-radius: 12px;
-}
-
-/* Expander header */
-div[data-testid="stExpander"] > div:first-child {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-}
-
-/* Expander content (when opened) */
-div[data-testid="stExpander"] div[role="region"] {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-}
-
-/* DataFrame inside expander */
-div[data-testid="stExpander"] .stDataFrame,
-div[data-testid="stExpander"] .stDataFrame * {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-}
-
-/* Table header fix */
-div[data-testid="stExpander"] thead tr th {
-    background-color: #f1f5f9 !important;
-    color: #0f172a !important;
+/* Expander header text ONLY */
+div[data-testid="stExpander"] > div:first-child p {
+    color: #ffffff !important;
     font-weight: 700;
 }
+
 
 </style>
 """, unsafe_allow_html=True)
