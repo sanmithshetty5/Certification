@@ -586,12 +586,9 @@ with r1c1:
 with r1c2:
     st.markdown("""
     <div class="card">
-        <div>
-             <div class="badge badge-purple">Analytics</div>
-             <div class="card-header-row">
-                <div class="card-icon">
-                    <span class="material-symbols-rounded">monitoring</span>
-                </div>
+        <div class="card-icon">
+    <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analysis.png" style="width: 32px; height: auto; filter: opacity(0.7);">
+</div>
                 <div>
                     <h3>View Analytics Dashboard</h3>
                     <p>
