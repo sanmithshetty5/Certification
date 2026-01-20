@@ -332,7 +332,7 @@ with r2c2:
         </div>
     </div>
     """, unsafe_allow_html=True)
-    if st.button("View Documentation", key="btn_open_analytics", use_container_width=True):
+    if st.button("View Documentation", key="btn_open_about_page", use_container_width=True):
         st.switch_page("pages/About_Page.py")
 
 
