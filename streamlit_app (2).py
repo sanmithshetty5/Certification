@@ -452,6 +452,14 @@ st.markdown("""
     margin-bottom: 1rem;
 }
 
+.card-icon {
+    font-size: 2rem;
+    padding: 0.5rem;
+    background: #f1f5f9;
+    border-radius: 10px;
+    line-height: 1;
+}
+
 /* Updated Icon Style for Flat Icons */
 .card-icon {
     display: flex;
