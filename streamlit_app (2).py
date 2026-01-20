@@ -605,10 +605,9 @@ with r1c2:
     </div>
     """, unsafe_allow_html=True)
     
-    # The button remains outside the markdown to stay functional
+    # Keep the button separate so Streamlit can handle the click event
     if st.button("Go to Dashboard", key="btn_open_analytics", use_container_width=True):
         st.switch_page("pages/2_Realtime_Analysis.py")
-
 # -------- ROW 2 --------
 st.markdown('<div class="row-spacing"></div>', unsafe_allow_html=True)
 
