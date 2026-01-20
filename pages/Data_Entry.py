@@ -279,7 +279,7 @@ with st.container(border=True):
             )
         )
     with c3:
-        certification = st.selectbox("Certification Track", certifications, index=certifications.index(certification) if certification in certifications else 0)
+        certification = st.selectbox("Certification ", certifications, index=certifications.index(certification) if certification in certifications else 0)
         
 # -----------------------------------------
 # Real-time Duplicate Detection (NEW)
