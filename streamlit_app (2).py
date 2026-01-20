@@ -609,9 +609,7 @@ with r2c1:
         <div>
             <div class="badge badge-green">Intelligence</div>
             <div class="card-header-row">
-                <div class="card-icon">
-                    <span class="material-symbols-rounded">memory</span>
-                </div>
+                <div class="card-icon">🤖</div>
                 <div>
                     <h3>AI-Driven Insights</h3>
                     <p>
@@ -623,6 +621,7 @@ with r2c1:
     </div>
     """, unsafe_allow_html=True)
     st.button("Explore AI (Coming Soon) 🔒", key="btn_ai_insight", disabled=True, use_container_width=True)
+
 
 with r2c2:
     st.markdown("""
