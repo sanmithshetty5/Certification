@@ -132,7 +132,7 @@ st.markdown(f"""
 
     /* BUTTONS */
     div.stDownloadButton > button {{
-        background-color: {PRIMARY_COLOR};
+        background-color: #4ED95E;
         color: #ffffff !important;
         border-radius: 8px;
         border: none;
@@ -140,7 +140,7 @@ st.markdown(f"""
         padding: 0.6rem 1rem;
     }}
     div.stDownloadButton > button:hover {{
-        background-color: {ACCENT_COLOR};
+        transform: translateY(-3px);
         color: #ffffff !important;
     }}
 
