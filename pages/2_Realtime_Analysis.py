@@ -22,8 +22,9 @@ PRIMARY_COLOR = "#2563eb"    # Blue-600
 SECONDARY_COLOR = "#475569"  # Slate-600
 ACCENT_COLOR = "#3b82f6"     # Blue-500
 BACKGROUND_COLOR = "#f8fafc" # Slate-50 (Very light grey)
-TEXT_COLOR = "#1e293b"       # Slate-800 (Very dark grey)
-
+TEXT_COLOR = "#1e293b"# Slate-800 (Very dark grey)
+SB_TEXT="ffffff"
+SB_BACKGROUND_COLOR="000000"
 # Matplotlib Colors
 CHART_COLOR = "#2563eb"      
 HEATMAP_CMAP = "Blues"
@@ -113,13 +114,13 @@ st.markdown(f"""
 
     /* 6. SIDEBAR REFINEMENT */
     section[data-testid="stSidebar"] {{
-        background-color: #ffffff;
+        background-color: {SB_BACKGROUND_COLOR};
         border-right: 1px solid #e2e8f0;
     }}
     section[data-testid="stSidebar"] h1, 
     section[data-testid="stSidebar"] h2, 
     section[data-testid="stSidebar"] h3 {{
-        color: {TEXT_COLOR} !important;
+        color: {SB_TEXT} !important;
     }}
 
     /* 7. MATPLOTLIB TRANSPARENCY FIX */
