@@ -277,8 +277,9 @@ with r1c2:
              <div class="badge badge-purple">Analytics</div>
              <div class="card-header-row">
                 <div class="card-icon">
-                     <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analysis.png"
-                     style="width: 32px; height: 32px; object-fit: contain; opacity: 0.8;>
+                     <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analysis.png" 
+                     style="width: 32px; height: 32px; object-fit: contain; opacity: 0.8;">
+
                  </div>
                 <div>
                     <h3>View Analytics Dashboard</h3>
