@@ -126,7 +126,7 @@ st.markdown(f"""
     .chart-title {{
         font-weight: 700;
         font-size: 1.1rem;
-        color: {TEXT_COLOR};
+        color: {BACKGROUND_COLOR};
         margin-bottom: 1rem;
     }}
 
