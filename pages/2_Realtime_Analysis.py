@@ -140,6 +140,7 @@ st.markdown(f"""
         padding: 0.6rem 1rem;
     }}
     div.stDownloadButton > button:hover {{
+        background-color: #4ED95E;
         transform: translateY(-3px);
         color: #ffffff !important;
     }}
