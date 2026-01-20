@@ -132,14 +132,16 @@ st.markdown(f"""
 
     /* BUTTONS */
     div.stButton > button {{
-        background-color: {BACKGROUND_COLOR};
-        color: white !important;
+        background-color: {PRIMARY_COLOR};
+        color: #ffffff !important;
         border-radius: 8px;
         border: none;
+        font-weight: 600;
+        padding: 0.6rem 1rem;
     }}
     div.stButton > button:hover {{
-        background-color: {PRIMARY_COLOR};
-        color: white !important;
+        background-color: {ACCENT_COLOR};
+        color: #ffffff !important;
     }}
 
 </style>
