@@ -126,13 +126,13 @@ st.markdown(f"""
     .chart-title {{
         font-weight: 700;
         font-size: 1.1rem;
-        color: {BACKGROUND_COLOR};
+        color: {TEXT_COLOR};
         margin-bottom: 1rem;
     }}
 
     /* BUTTONS */
     div.stButton > button {{
-        background-color: {TEXT_COLOR};
+        background-color: {BACKGROUND_COLOR};
         color: white !important;
         border-radius: 8px;
         border: none;
