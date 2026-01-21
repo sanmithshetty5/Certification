@@ -880,28 +880,35 @@ with row3_1:
 with row3_2:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Account-wise Certification Summary</div>', unsafe_allow_html=True)
 
+    # --- FIX: Checking which column to use for Status ---
+    # We try "SnowPro Certified" first (used in Chart 2). 
+    # If that doesn't exist, change this variable to your actual status column name.
+    status_col = "SnowPro Certified" 
+    
     # 1. Prepare Table Data
-    table_df = (
-        filtered_df
-        .groupby("Account")
-        .agg(
-            Total_Employees=("EMP ID", "nunique"),
-            Certified=("Status", lambda x: (x == "Completed").sum()),
-            In_Progress=("Status", lambda x: (x == "In Progress").sum()),
-            Not_Started=("Status", lambda x: (x == "Not Started").sum()),
+    if status_col in filtered_df.columns:
+        table_df = (
+            filtered_df
+            .groupby("Account")
+            .agg(
+                Total_Employees=("EMP ID", "nunique"),
+                Certified=(status_col, lambda x: (x == "Completed").sum()),
+                In_Progress=(status_col, lambda x: (x == "In Progress").sum()),
+                Not_Started=(status_col, lambda x: (x == "Not Started").sum()),
+            )
+            .reset_index()
+            .sort_values(by="Certified", ascending=False)
         )
-        .reset_index()
-        .sort_values(by="Certified", ascending=False)
-    )
 
-    # 2. Display Interactive Table
-    # Height is set to match the visual height of the chart on the left roughly
-    st.dataframe(
-        table_df,
-        use_container_width=True,
-        height=450, # Adjusted slightly to align with the chart
-        hide_index=True # Cleaner look without the index column
-    )
+        # 2. Display Interactive Table
+        st.dataframe(
+            table_df,
+            use_container_width=True,
+            height=450, 
+            hide_index=True 
+        )
+    else:
+        st.error(f"Error: Column '{status_col}' not found. Please check your Excel column names.")
 
     st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
