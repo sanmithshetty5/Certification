@@ -25,7 +25,7 @@ ACCENT_COLOR = "#3b82f6"         # Blue-500
 BACKGROUND_COLOR = "#f8fafc"     # Light background
 TEXT_COLOR = "#1e293b"           # Dark text
 CHART_COLOR = PRIMARY_COLOR
-HEATMAP_CMAP = "Blues"
+HEATMAPf_CMAP = "Blues"
 SB_TEXT = "#ffffff"
 
 
@@ -59,7 +59,7 @@ st.markdown(f"""
     
     /* 2. TYPOGRAPHY & TEXT COLORS */
     h1, h2, h3, h4, h5, h6, p, div, span, label {{
-        color: {SB_TEXT} !important;
+        color: {TEXT_COLOR} !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }}
     
