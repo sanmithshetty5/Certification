@@ -185,7 +185,7 @@ session = cnx.session()
 # -----------------------------------------
 # LOAD DATA
 # -----------------------------------------
-@st.cache_data(show_spinner="Connecting to Database...")
+# @st.cache_data(show_spinner="Connecting to Database...")
 def load_data():
     return session.sql("""
         SELECT *
