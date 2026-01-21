@@ -455,9 +455,48 @@ c3, c4 = st.columns(2)
 
 with c3:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Voucher Utilization</div>', unsafe_allow_html=True)
-    st.bar_chart(filtered_df["Voucher Status"].value_counts(), color=CHART_COLOR)
-    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # 1. Prepare Data
+    voucher_data = filtered_df["Voucher Status"].value_counts().reset_index()
+    voucher_data.columns = ["Status", "Count"]
+    # Add a root column to group everything under one parent (optional but helps formatting)
+    voucher_data["Type"] = "Vouchers" 
 
+    # 2. Create Interactive Treemap
+    fig = px.treemap(
+        voucher_data, 
+        path=["Status"], # Hierarchy path
+        values="Count",
+        color="Status", # Color different blocks distinctly
+        # Using your palette: Blue-600, Blue-500, Slate-600, Light Slate
+        color_discrete_sequence=[PRIMARY_COLOR, ACCENT_COLOR, SECONDARY_COLOR, "#94a3b8"]
+    )
+
+    # 3. Apply Professional Styling
+    fig.update_traces(
+        textinfo="label+value", # Show Label and Number
+        textfont=dict(family="Segoe UI", size=15),
+        hovertemplate='<b>%{label}</b><br>Count: %{value}<extra></extra>'
+    )
+
+    fig.update_layout(
+        margin=dict(t=0, l=0, r=0, b=0), # completely fills the container
+        font=dict(family="Segoe UI", color="#ffffff"), # White text inside the colored blocks
+        height=250,
+        paper_bgcolor="rgba(0,0,0,0)",
+    )
+
+    # 4. Toolbar Configuration
+    my_config = {
+        'displayModeBar': 'hover',
+        'displaylogo': False,
+        'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d'] 
+        # Zooming is handled by clicking the blocks in a Treemap
+    }
+
+    st.plotly_chart(fig, use_container_width=True, config=my_config)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 with c4:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Yearly Enrollment Trend</div>', unsafe_allow_html=True)
     trend = filtered_df.dropna(subset=["Enroll_Year"]).groupby("Enroll_Year")["EMP ID"].nunique().sort_index()
