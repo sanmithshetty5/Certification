@@ -877,12 +877,10 @@ with row3_1:
 # ==============================================================================
 # RIGHT COLUMN: Account Certification Overview (Heatmap)
 # ==============================================================================
-st.markdown(
-        '<div class="dashboard-card"><div class="chart-title">Account-wise Certification Summary</div>',
-        unsafe_allow_html=True
-    )
+with row3_2:
+    st.markdown('<div class="dashboard-card"><div class="chart-title">Account-wise Certification Summary</div>', unsafe_allow_html=True)
 
-    # Prepare table data
+    # 1. Prepare Data (Your Logic)
     table_df = (
         filtered_df
         .groupby("Account")
@@ -893,15 +891,48 @@ st.markdown(
             Not_Started=("Status", lambda x: (x == "Not Started").sum()),
         )
         .reset_index()
-        .sort_values(by="Certified", ascending=False)
+        .sort_values(by="Certified", ascending=True) # Sorted for Chart (Bottom to Top)
     )
 
-    # Display interactive table
-    st.dataframe(
-        table_df,
-        use_container_width=True,
-        height=420
+    # 2. Prepare Data for Heatmap
+    # Set 'Account' as index so it becomes the Y-Axis labels
+    heatmap_data = table_df.set_index("Account")
+    
+    # 3. Create Interactive Heatmap (Seaborn Style)
+    fig = px.imshow(
+        heatmap_data, 
+        text_auto=True, # Automatically adds numbers inside cells
+        aspect="auto",  # Adjusts width/height to fill container
+        color_continuous_scale="GnBu", # "Green-Blue" - A very popular, clean Seaborn palette
+        labels=dict(x="Metric", y="Account", color="Count")
     )
+
+    # 4. Apply Professional Styling
+    fig.update_layout(
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(t=30, l=0, r=0, b=0),
+        
+        # Axis Styling
+        xaxis=dict(side="top", tickfont=dict(family="Segoe UI", size=13)), # Put labels on top (like a table)
+        yaxis=dict(tickfont=dict(family="Segoe UI", size=12), dtick=1),
+        
+        font=dict(family="Segoe UI", color="#1e293b"),
+        height=v_height, # Sync height with the left chart
+        coloraxis_showscale=False # Hide color bar to save space
+    )
+    
+    # Ensure text color contrasts well (Dark text on light blocks, White on dark blocks)
+    fig.update_traces(textfont=dict(family="Segoe UI", size=13))
+
+    # 5. Toolbar Configuration
+    my_config = {
+        'displayModeBar': 'hover',
+        'displaylogo': False,
+        'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+    }
+
+    st.plotly_chart(fig, use_container_width=True, config=my_config)
 
     st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
