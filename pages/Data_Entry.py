@@ -379,6 +379,14 @@ with st.container(border=True):
 # -----------------------------------------
 # Courses & Organization (UI FIXED)
 # -----------------------------------------
+def normalize_text(val):
+    if val is None:
+        return None
+    elif isinstance(val, str) and val.stip() == "":
+        return None
+    return val.strip() if isInstance(val,str) else return val
+
+
 with st.container(border=True):
     st.markdown('<div class="section-header">🏢 Department Info</div>', unsafe_allow_html=True)
     r1, r2 = st.columns(2)
@@ -409,15 +417,15 @@ def prepare_payload():
         "CertPrepOD Course": cert_prep,
         "Level Up Courses": level_up,
         "# Trial Exams": trial_exam,
-        "Account": account,
-        "Account SPOC": account_spoc,
-        "Vertical / SL": vertical,
-        "Batch": batch,
+        "Account": normalize_text(account),
+        "Account SPOC": normalize_text(account_spoc),
+        "Vertical / SL": normalize_text(vertical),
+        "Batch": normalize_text(batch),
         "Planned Certification date": cert_date_to_str(planned_date),
         "Actual Date of completion": cert_date_to_str(actual_date),
         "Voucher Status": voucher_status,
         "SnowPro Certified": snowpro,
-        "Comment": comment
+        "Comment": normalize_text(comment)
     }
 
 # -----------------------------------------
