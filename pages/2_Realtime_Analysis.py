@@ -345,13 +345,55 @@ st.markdown("<br>", unsafe_allow_html=True)
 # ROW 1 CHARTS
 c1, c2 = st.columns(2)
 
+# with c1:
+#     st.markdown(
+#         '<div class="dashboard-card"><div class="chart-title">Certification Funnel</div>',
+#         unsafe_allow_html=True
+#     )
+
+#     # Prepare funnel data
+#     funnel_df = (
+#         filtered_df
+#         .groupby("Certification")["EMP ID"]
+#         .nunique()
+#         .reset_index()
+#         .sort_values(by="EMP ID", ascending=False)
+#     )
+
+#     # Plot
+#     fig, ax = plt.subplots(figsize=(8, 5))
+#     sns.barplot(
+#     data=funnel_df,
+#     x="EMP ID",
+#     y="Certification",
+#     orient="h",
+#     ax=ax,
+#     color = PRIMARY_COLOR
+# )
+
+#     # Ensure largest is on top
+#     ax.invert_yaxis()
+
+#     # Styling (Power BI–like)
+#     ax.set_xlabel("Number of Employees", fontsize=10)
+#     ax.set_ylabel("")
+#     ax.grid(axis="x", linestyle="--", alpha=0.3)
+
+#     for spine in ax.spines.values():
+#         spine.set_visible(False)
+
+#     st.pyplot(fig)
+
+#     st.markdown("</div>", unsafe_allow_html=True)
+
+
 with c1:
     st.markdown(
         '<div class="dashboard-card"><div class="chart-title">Certification Funnel</div>',
         unsafe_allow_html=True
     )
 
-    # Prepare funnel data
+    # Prepare funnel data (same logic, no change)
     funnel_df = (
         filtered_df
         .groupby("Certification")["EMP ID"]
@@ -360,32 +402,44 @@ with c1:
         .sort_values(by="EMP ID", ascending=False)
     )
 
-    # Plot
-    fig, ax = plt.subplots(figsize=(8, 5))
-    sns.barplot(
-    data=funnel_df,
-    x="EMP ID",
-    y="Certification",
-    orient="h",
-    ax=ax,
-    color = PRIMARY_COLOR
-)
+    # Plotly bar chart (funnel-style)
+    fig = px.bar(
+        funnel_df,
+        x="EMP ID",
+        y="Certification",
+        orientation="h",
+        text="EMP ID",
+        color_discrete_sequence=[PRIMARY_COLOR]
+    )
 
-    # Ensure largest is on top
-    ax.invert_yaxis()
+    # Ensure largest is at top
+    fig.update_yaxes(autorange="reversed")
 
-    # Styling (Power BI–like)
-    ax.set_xlabel("Number of Employees", fontsize=10)
-    ax.set_ylabel("")
-    ax.grid(axis="x", linestyle="--", alpha=0.3)
+    # Layout styling to match your page theme
+    fig.update_layout(
+        height=420,
+        margin=dict(l=20, r=20, t=10, b=20),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        xaxis_title="Number of Employees",
+        yaxis_title="",
+        font=dict(color=TEXT_COLOR),
+        hovermode="closest"
+    )
 
-    for spine in ax.spines.values():
-        spine.set_visible(False)
+    # Hover + text formatting
+    fig.update_traces(
+        hovertemplate=(
+            "<b>Certification:</b> %{y}<br>"
+            "<b>Employees:</b> %{x}<extra></extra>"
+        ),
+        textposition="outside"
+    )
 
-    st.pyplot(fig)
+    # Enable zoom & pan (default Plotly behavior)
+    st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
-
 with c2:
     st.markdown('<div class="dashboard-card"><div class="chart-title">SnowPro Status</div>', unsafe_allow_html=True)
     status_df = (
