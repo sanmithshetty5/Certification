@@ -715,6 +715,22 @@ fig.update_layout(
     ),
     font=dict(family="Segoe UI", color="#1e293b")
 )
+# Style the text on top of bars
+fig.update_traces(
+    textposition="outside", 
+    textfont=dict(color="#1e293b", size=14)
+)
+
+# 5. Toolbar Configuration
+my_config = {
+    'displayModeBar': 'hover',
+    'displaylogo': False,
+    'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+}
+
+st.plotly_chart(fig, use_container_width=True, config=my_config)
+
+st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
 with st.expander("🔎 Inspect Raw Data"):
     st.dataframe(filtered_df, use_container_width=True, height=400)
