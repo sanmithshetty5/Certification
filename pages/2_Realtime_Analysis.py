@@ -186,13 +186,28 @@ session = cnx.session()
 # LOAD DATA
 # -----------------------------------------
 # @st.cache_data(show_spinner="Connecting to Database...")
+# def load_data():
+#     return session.sql("""
+#         SELECT *
+#         FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+#     """).to_pandas()
+
+# df = load_data()
+
 def load_data():
+    # Always fetch fresh data from Snowflake
     return session.sql("""
         SELECT *
         FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
     """).to_pandas()
 
-df = load_data()
+# If refresh was pressed, reset flag after fetching
+if st.session_state.refresh:
+    df = load_data()  # fetch fresh data
+    st.session_state.refresh = False
+else:
+    df = load_data()  # or load normally if needed
+
 
 if df.empty:
     st.error("⚠️ No data available.")
@@ -311,9 +326,13 @@ with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
     if not filtered_df.empty:
         st.download_button("Export Report", data=export_charts_as_zip(filtered_df), file_name="analytics.zip")
+    # Initialize refresh flag
+    if "refresh" not in st.session_state:
+        st.session_state.refresh = False
+    
+    # Refresh button
     if st.button("🔄 Refresh Data"):
-        # Force Streamlit to rerun the script and fetch fresh data
-        st.experimental_rerun()
+        st.session_state.refresh = True
 
 
 if filtered_df.empty:
