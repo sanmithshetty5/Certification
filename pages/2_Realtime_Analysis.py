@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 import io
 import zipfile
 
@@ -329,9 +330,43 @@ st.markdown("<br>", unsafe_allow_html=True)
 c1, c2 = st.columns(2)
 
 with c1:
-    st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Funnel</div>', unsafe_allow_html=True)
-    funnel = (filtered_df.groupby("Certification")["EMP ID"].nunique().sort_values(ascending=False).iloc[::-1] )
-    st.bar_chart(funnel, horizontal=True, color=CHART_COLOR)
+    st.markdown(
+        '<div class="dashboard-card"><div class="chart-title">Certification Funnel</div>',
+        unsafe_allow_html=True
+    )
+
+    # Prepare funnel data
+    funnel_df = (
+        filtered_df
+        .groupby("Certification")["EMP ID"]
+        .nunique()
+        .reset_index()
+        .sort_values(by="EMP ID", ascending=False)
+    )
+
+    # Plot
+    fig, ax = plt.subplots(figsize=(8, 5))
+    sns.barplot(
+        data=funnel_df,
+        x="EMP ID",
+        y="Certification",
+        orient="h",
+        ax=ax
+    )
+
+    # Ensure largest is on top
+    ax.invert_yaxis()
+
+    # Styling (Power BI–like)
+    ax.set_xlabel("Number of Employees", fontsize=10)
+    ax.set_ylabel("")
+    ax.grid(axis="x", linestyle="--", alpha=0.3)
+
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+    st.pyplot(fig)
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 with c2:
