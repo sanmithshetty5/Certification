@@ -392,7 +392,10 @@ with c2:
     filtered_df["SnowPro Certified"]
     .value_counts()
     .reset_index()
-    .rename(columns={"index": "Status", "SnowPro Certified": "Count"}))
+    )
+
+    status_df.columns = ["Status", "Count"]
+
     fig, ax = plt.subplots(figsize=(6, 4))
     sns.barplot(
     data=status_df,
