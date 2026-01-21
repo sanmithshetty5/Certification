@@ -293,17 +293,13 @@ with col_h1:
 with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
 
-    btn_col1, btn_col2 = st.rows(2)
+    if not filtered_df.empty:
+        st.download_button(
+            "Export Report",
+            data=export_charts_as_zip(filtered_df),
+            file_name="analytics.zip"
+        )
 
-    with btn_col1:
-        if not filtered_df.empty:
-            st.download_button(
-                "Export Report",
-                data=export_charts_as_zip(filtered_df),
-                file_name="analytics.zip"
-            )
-
-    with btn_col2:
         if st.button("🔄 Refresh Data"):
             st.cache_data.clear()
             st.rerun()
