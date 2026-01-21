@@ -877,64 +877,32 @@ with row3_1:
 # ==============================================================================
 # RIGHT COLUMN: Account Certification Overview (Heatmap)
 # ==============================================================================
-with row3_2:
-    st.markdown('<div class="dashboard-card"><div class="chart-title">Account Certification Overview</div>', unsafe_allow_html=True)
+st.markdown(
+        '<div class="dashboard-card"><div class="chart-title">Account-wise Certification Summary</div>',
+        unsafe_allow_html=True
+    )
 
-    # 1. Prepare Data (Your Logic)
-    summary_df = (
+    # Prepare table data
+    table_df = (
         filtered_df
         .groupby("Account")
         .agg(
-            Employees=("EMP ID", "nunique"),
-            Completed=("Completed Flag", "sum"), # Assuming 'Completed Flag' is boolean/1-0
+            Total_Employees=("EMP ID", "nunique"),
+            Certified=("Status", lambda x: (x == "Completed").sum()),
+            In_Progress=("Status", lambda x: (x == "In Progress").sum()),
+            Not_Started=("Status", lambda x: (x == "Not Started").sum()),
         )
         .reset_index()
-        .sort_values(by="Completed", ascending=True) # Ascending for Plotly bottom-to-top mapping
+        .sort_values(by="Certified", ascending=False)
     )
 
-    # 2. Prepare Data for Heatmap (Matrix Format)
-    # We display two columns: Total Employees and Completed
-    accounts = summary_df["Account"].tolist()
-    
-    # 3. Create Interactive Heatmap
-    fig_h = px.imshow(
-        summary_df[["Employees", "Completed"]].values,
-        y=accounts,
-        x=["Total Employees", "Completed"],
-        color_continuous_scale="Blues", # Matches your dashboard theme
-        aspect="auto" # Allows the heatmap to stretch to fit the container
+    # Display interactive table
+    st.dataframe(
+        table_df,
+        use_container_width=True,
+        height=420
     )
 
-    # 4. Apply Professional Styling
-    fig_h.update_layout(
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        margin=dict(t=10, l=0, r=0, b=0),
-        
-        # Axis Styling
-        xaxis=dict(side="top", tickfont=dict(family="Segoe UI", size=13)), # Labels on top
-        yaxis=dict(tickfont=dict(family="Segoe UI", size=12), dtick=1),
-        
-        font=dict(family="Segoe UI", color="#1e293b"),
-        height=v_height, # Match height of the neighbor chart
-        coloraxis_showscale=False # Clean look
-    )
-
-    # Add text numbers inside the heatmap blocks
-    fig_h.update_traces(
-        text=summary_df[["Employees", "Completed"]].values, 
-        texttemplate="%{text}",
-        textfont=dict(color="white") # White text for contrast on blue
-    )
-    
-    # 5. Toolbar Configuration (Zoom, Pan enabled)
-    my_config = {
-        'displayModeBar': 'hover', 
-        'displaylogo': False,
-        'modeBarButtonsToRemove': ['lasso2d', 'select2d']
-    }
-
-    st.plotly_chart(fig_h, use_container_width=True, config=my_config)
     st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
 with st.expander("🔎 Inspect Raw Data"):
