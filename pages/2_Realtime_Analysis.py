@@ -911,87 +911,75 @@ with row3_2:
     st.markdown("</div>", unsafe_allow_html=True)
 
 
-# ==============================================================================
-# ROW 4: MONTHLY ENROLLMENT HEATMAP (Year vs. Month)
-# ==============================================================================
-st.markdown('<div class="dashboard-card"><div class="chart-title">Enrollment Trends: Month vs. Year</div>', unsafe_allow_html=True)
+st.markdown('<div class="dashboard-card"><div class="chart-title">Monthly Enrollment Distribution</div>', unsafe_allow_html=True)
 
-# 1. Identify Date Column & Prepare Data
-# I am assuming your date column is named 'Enrollment Date' or similar. 
-# If your column is named differently (e.g., 'Date'), please change the name below.
-date_col = "Enrollment Date" 
-
-if date_col in filtered_df.columns:
-    # Create a copy to avoid SettingWithCopy warnings
-    heatmap_df = filtered_df.copy()
-    
-    # Convert to datetime errors='coerce' turns invalid dates into NaT (null)
-    heatmap_df[date_col] = pd.to_datetime(heatmap_df[date_col], errors='coerce')
-    
-    # Extract Year and Month
-    heatmap_df["Year"] = heatmap_df[date_col].dt.year
-    heatmap_df["Month"] = heatmap_df[date_col].dt.month_name()
-    
-    # Define Month Order for sorting (Jan -> Dec)
-    month_order = [
-        "January", "February", "March", "April", "May", "June", 
-        "July", "August", "September", "October", "November", "December"
-    ]
-    heatmap_df["Month"] = pd.Categorical(heatmap_df["Month"], categories=month_order, ordered=True)
-
-    # 2. Create Pivot Table (Year vs Month)
-    pivot_data = pd.pivot_table(
-        heatmap_df,
-        index="Year",
-        columns="Month",
-        values="EMP ID",
-        aggfunc="nunique",
-        fill_value=0
+# 1. Prepare Data
+if "Enroll_Month_Name" in filtered_df.columns:
+    # Aggregate data by Month Name
+    month_data = (
+        filtered_df
+        .groupby("Enroll_Month_Name")["EMP ID"]
+        .nunique()
+        .reset_index()
+        .rename(columns={"EMP ID": "Count", "Enroll_Month_Name": "Month"})
     )
     
-    # Sort index (Years) descending so recent years are on top
-    pivot_data = pivot_data.sort_index(ascending=False)
+    # 2. Sort Months Chronologically (Crucial)
+    month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    
+    # Filter to keep only months present in data
+    existing_months = [m for m in month_order if m in month_data["Month"].unique()]
+    
+    month_data["Month"] = pd.Categorical(month_data["Month"], categories=existing_months, ordered=True)
+    month_data = month_data.sort_values("Month")
 
-    # 3. Configure Plot for Dark Theme
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-
-    fig, ax = plt.subplots(figsize=(14, 6)) # Wide layout
-    fig.patch.set_facecolor('#0e1117')      # Match dashboard background
-    ax.set_facecolor('#0e1117')
-
-    # 4. Create Heatmap
-    sns.heatmap(
-        pivot_data, 
-        annot=True,          # Show count numbers
-        fmt="d",             # Integer format
-        cmap="mako",         # Dark-friendly gradient (Black -> Teal)
-        linewidths=0.5,
-        linecolor='#0e1117',
-        cbar_kws={'label': 'Enrollment Count'}
+    # 3. Create Interactive Column Chart
+    fig = px.bar(
+        month_data, 
+        x="Month", 
+        y="Count",
+        text="Count", # Show numbers on top of bars
+        color="Count", # Gradient coloring based on volume
+        color_continuous_scale="Blues" # Blue gradient matches your theme
     )
 
-    # 5. Styling Axis & Labels (White for visibility)
-    ax.tick_params(colors='white', which='both')
-    plt.xticks(color='white', fontsize=10)
-    plt.yticks(color='white', fontsize=10, rotation=0)
+    # 4. Apply Dark Theme Styling
+    fig.update_layout(
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(t=20, l=0, r=0, b=0),
+        
+        # X-Axis
+        xaxis=dict(
+            title=None,
+            tickfont=dict(color="white", size=12, family="Segoe UI"),
+            showgrid=False
+        ),
+        
+        # Y-Axis
+        yaxis=dict(
+            title=None,
+            showgrid=True,
+            gridcolor="#333333",
+            tickfont=dict(color="white", size=12, family="Segoe UI")
+        ),
+        
+        font=dict(family="Segoe UI", color="white"),
+        height=350,
+        coloraxis_showscale=False # Hide the color bar for a cleaner look
+    )
 
-    plt.xlabel("Month", color='white', fontsize=12, labelpad=10)
-    plt.ylabel("Year", color='white', fontsize=12, labelpad=10)
+    # Style bars and text
+    fig.update_traces(
+        textposition="outside",
+        textfont=dict(color="white", size=12),
+        marker=dict(line=dict(width=0)) # No border
+    )
 
-    # Colorbar Styling
-    cbar = ax.collections[0].colorbar
-    cbar.ax.yaxis.set_tick_params(color='white')
-    plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
-    cbar.set_label('Learner Count', color='white')
-
-    # Remove outer borders
-    sns.despine(top=True, right=True, left=True, bottom=True)
-
-    st.pyplot(fig)
+    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False})
 
 else:
-    st.error(f"Error: Column '{date_col}' not found. Please check if your Excel has an 'Enrollment Date' column.")
+    st.warning("Column 'Enroll_Month_Name' missing.")
 
 st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
