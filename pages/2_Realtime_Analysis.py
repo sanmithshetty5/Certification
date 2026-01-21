@@ -911,26 +911,25 @@ with row3_2:
     st.markdown("</div>", unsafe_allow_html=True)
 
 
+
 # ==============================================================================
-# ENROLLMENT TREND (STOCK MARKET STYLE)
+# CHART: ENROLLMENT TREND (Stock Market Line Style)
 # ==============================================================================
 st.markdown('<div class="dashboard-card"><div class="chart-title">Enrollment Trend Over Time</div>', unsafe_allow_html=True)
 
 # 1. Prepare Data
-# We need to combine Year and Month into a proper Date object for a time-series plot
 if "Enroll_Month_Name" in filtered_df.columns and "Enroll_Year" in filtered_df.columns:
     
-    # Create a copy to handle dates safely
+    # Create a copy to work on
     trend_df = filtered_df.copy()
     
-    # Drop rows where date info is missing
+    # Drop missing values
     trend_df = trend_df.dropna(subset=["Enroll_Year", "Enroll_Month_Name"])
     
-    # Create a 'Year-Month' string column (e.g., "2024-Jan")
+    # Create a Date String (e.g., "2024-Jan")
     trend_df["DateStr"] = trend_df["Enroll_Year"].astype(str) + "-" + trend_df["Enroll_Month_Name"]
     
-    # Convert to DateTime Object (Crucial for "Stock" look)
-    # format='%Y-%b' expects "2024-Jan", "2024-Feb", etc.
+    # Convert to DateTime Object (Crucial for chronological "Stock" sorting)
     trend_df["Timeline"] = pd.to_datetime(trend_df["DateStr"], format='%Y-%b', errors='coerce')
     
     # Aggregate: Count unique employees per date
@@ -940,37 +939,38 @@ if "Enroll_Month_Name" in filtered_df.columns and "Enroll_Year" in filtered_df.c
         .nunique()
         .reset_index()
         .rename(columns={"EMP ID": "Count"})
-        .sort_values("Timeline") # Sort chronologically (Oldest -> Newest)
+        .sort_values("Timeline") # Sort Oldest -> Newest
     )
 
-    # 2. Create Stock-Style Area Chart
-    fig = px.area(
+    # 2. Create Line Chart (No Area Fill)
+    fig = px.line(
         time_series, 
         x='Timeline', 
         y='Count',
-        markers=True, # Show dots on the line
+        markers=True, # Show dots at data points
     )
 
-    # 3. Apply "Stock Chart" Styling (Dark Mode)
+    # 3. Apply High-Contrast "Stock" Styling
     fig.update_traces(
-        line=dict(color="#4ade80", width=3), # Bright Green line (common for growth)
-        fillcolor="rgba(74, 222, 128, 0.2)", # Semi-transparent green fill below
-        marker=dict(size=6, color="#22c55e", line=dict(width=1, color="white"))
+        line=dict(color="#06b6d4", width=3), # Neon Cyan Line (High Visibility)
+        marker=dict(size=7, color="#06b6d4", line=dict(width=2, color="white")) # White border on dots makes them pop
     )
 
     fig.update_layout(
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        margin=dict(t=20, l=0, r=0, b=0),
+        margin=dict(t=30, l=0, r=0, b=0),
         
         # X-Axis: Time Series with Range Slider
         xaxis=dict(
             title=None,
-            showgrid=False,
-            tickfont=dict(color="white"),
-            # Adds the "Stock" slider at the bottom
+            showgrid=True,
+            gridcolor="#333333",  # Subtle grid lines
+            gridwidth=1,
+            tickfont=dict(color="white", size=12, family="Segoe UI"), # White Text
+            # The "Stock Market" Slider
             rangeslider=dict(visible=True, bgcolor="#0e1117", thickness=0.1),
-            type="date" # Ensures it treats gaps correctly
+            type="date"
         ),
         
         # Y-Axis
@@ -978,12 +978,13 @@ if "Enroll_Month_Name" in filtered_df.columns and "Enroll_Year" in filtered_df.c
             title=None,
             showgrid=True,
             gridcolor="#333333",
-            tickfont=dict(color="white")
+            gridwidth=1,
+            tickfont=dict(color="white", size=12, family="Segoe UI") # White Text
         ),
         
         font=dict(family="Segoe UI", color="white"),
-        height=400,
-        hovermode="x unified" # Shows a vertical line across the chart on hover
+        height=450,
+        hovermode="x unified" # Creates a vertical line across the chart on hover
     )
 
     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False})
