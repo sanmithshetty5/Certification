@@ -610,60 +610,119 @@ with c4:
 st.markdown("<br>", unsafe_allow_html=True)
 
 # FULL WIDTH BADGE CHART
+# st.markdown('<div class="dashboard-card"><div class="chart-title">Badge Progression</div>', unsafe_allow_html=True)
+# badge_data = {
+#     "Stage": ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"],
+#     "Count": [
+#         filtered_df[filtered_df[f"Badge {i} Status"] == "Completed"]["EMP ID"].nunique() 
+#         for i in range(1, 6)
+#     ]
+# }
+# st.bar_chart(pd.DataFrame(badge_data).set_index("Stage"), color=CHART_COLOR)
+# st.markdown("</div>", unsafe_allow_html=True)
+
+# st.markdown("<br>", unsafe_allow_html=True)
+
+# # HEATMAP (STRICT COLOR CONTROL)
+# st.markdown('<div class="dashboard-card"><div class="chart-title">Seasonal Activity Heatmap</div>', unsafe_allow_html=True)
+
+# heatmap_df = filtered_df.dropna(subset=["Enroll_Month_Name", "Enroll_Year"]).groupby(["Enroll_Year", "Enroll_Month_Name"])["EMP ID"].nunique().reset_index()
+
+# if not heatmap_df.empty:
+#     heatmap_pivot = heatmap_df.pivot(index="Enroll_Month_Name", columns="Enroll_Year", values="EMP ID").fillna(0)
+#     month_order_map = {m: i for i, m in enumerate(["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"])}
+#     heatmap_pivot = heatmap_pivot.sort_index(key=lambda x: x.map(month_order_map))
+    
+#     # Matplotlib Figure with Transparent BG and DARK Text
+#     fig, ax = plt.subplots(figsize=(12, 4))
+#     fig.patch.set_alpha(0)      # Transparent figure background
+#     ax.patch.set_alpha(0)       # Transparent axis background
+    
+#     im = ax.imshow(heatmap_pivot, aspect="auto", cmap=HEATMAP_CMAP)
+    
+#     # Axes Styling - FORCE DARK COLORS
+#     ax.set_xticks(range(len(heatmap_pivot.columns)))
+#     ax.set_xticklabels(heatmap_pivot.columns, color="#334155", fontweight="bold")
+#     ax.set_yticks(range(len(heatmap_pivot.index)))
+#     ax.set_yticklabels(heatmap_pivot.index, color="#334155", fontweight="bold")
+    
+#     # Spines
+#     for spine in ax.spines.values(): spine.set_visible(False)
+    
+#     # Text Annotations inside Heatmap
+#     for i in range(len(heatmap_pivot.index)):
+#         for j in range(len(heatmap_pivot.columns)):
+#             val = int(heatmap_pivot.iloc[i, j])
+#             if val > 0:
+#                 # White text if dark block, Black text if light block
+#                 text_c = "white" if val > heatmap_pivot.values.max() * 0.5 else "black"
+#                 ax.text(j, i, val, ha="center", va="center", color=text_c, fontweight="bold")
+
+#     st.pyplot(fig)
+# else:
+#     st.info("Insufficient data for heatmap.")
+# st.markdown("</div>", unsafe_allow_html=True)
+
+# st.markdown("<br>", unsafe_allow_html=True)
+
+# FULL WIDTH BADGE CHART
 st.markdown('<div class="dashboard-card"><div class="chart-title">Badge Progression</div>', unsafe_allow_html=True)
-badge_data = {
+
+# 1. Prepare Data
+badge_counts = [
+    filtered_df[filtered_df[f"Badge {i} Status"] == "Completed"]["EMP ID"].nunique() 
+    for i in range(1, 6)
+]
+badge_data = pd.DataFrame({
     "Stage": ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"],
-    "Count": [
-        filtered_df[filtered_df[f"Badge {i} Status"] == "Completed"]["EMP ID"].nunique() 
-        for i in range(1, 6)
-    ]
+    "Learners": badge_counts
+})
+
+# 2. Create Interactive Funnel Chart
+# Using a "Spectral" like palette for high contrast/variety
+distinct_sequence = ["#2563eb", "#06b6d4", "#8b5cf6", "#d946ef", "#f97316"] 
+
+fig = px.funnel(
+    badge_data, 
+    x='Learners', 
+    y='Stage', 
+    color='Stage', # Colors each stage differently
+    color_discrete_sequence=distinct_sequence
+)
+
+# 3. Apply Professional Styling
+fig.update_layout(
+    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor="rgba(0,0,0,0)",
+    margin=dict(t=20, l=0, r=0, b=20),
+    showlegend=False, # Labels are already on the Y-axis
+    height=350,       # Slightly taller for full width
+    
+    # Axis Styling
+    yaxis=dict(
+        tickfont=dict(color="#1e293b", size=14, family="Segoe UI"),
+        title=None
+    ),
+    font=dict(family="Segoe UI", color="#1e293b")
+)
+
+# Text inside the funnel bars
+fig.update_traces(
+    textposition="inside", 
+    textinfo="value+percent initial", # Shows Count + % of users who started at Badge 1
+    insidetextfont=dict(color="white", size=14)
+)
+
+# 4. Toolbar Configuration
+my_config = {
+    'displayModeBar': 'hover',
+    'displaylogo': False,
+    'modeBarButtonsToRemove': ['lasso2d', 'select2d']
 }
-st.bar_chart(pd.DataFrame(badge_data).set_index("Stage"), color=CHART_COLOR)
+
+st.plotly_chart(fig, use_container_width=True, config=my_config)
+
 st.markdown("</div>", unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-# HEATMAP (STRICT COLOR CONTROL)
-st.markdown('<div class="dashboard-card"><div class="chart-title">Seasonal Activity Heatmap</div>', unsafe_allow_html=True)
-
-heatmap_df = filtered_df.dropna(subset=["Enroll_Month_Name", "Enroll_Year"]).groupby(["Enroll_Year", "Enroll_Month_Name"])["EMP ID"].nunique().reset_index()
-
-if not heatmap_df.empty:
-    heatmap_pivot = heatmap_df.pivot(index="Enroll_Month_Name", columns="Enroll_Year", values="EMP ID").fillna(0)
-    month_order_map = {m: i for i, m in enumerate(["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"])}
-    heatmap_pivot = heatmap_pivot.sort_index(key=lambda x: x.map(month_order_map))
-    
-    # Matplotlib Figure with Transparent BG and DARK Text
-    fig, ax = plt.subplots(figsize=(12, 4))
-    fig.patch.set_alpha(0)      # Transparent figure background
-    ax.patch.set_alpha(0)       # Transparent axis background
-    
-    im = ax.imshow(heatmap_pivot, aspect="auto", cmap=HEATMAP_CMAP)
-    
-    # Axes Styling - FORCE DARK COLORS
-    ax.set_xticks(range(len(heatmap_pivot.columns)))
-    ax.set_xticklabels(heatmap_pivot.columns, color="#334155", fontweight="bold")
-    ax.set_yticks(range(len(heatmap_pivot.index)))
-    ax.set_yticklabels(heatmap_pivot.index, color="#334155", fontweight="bold")
-    
-    # Spines
-    for spine in ax.spines.values(): spine.set_visible(False)
-    
-    # Text Annotations inside Heatmap
-    for i in range(len(heatmap_pivot.index)):
-        for j in range(len(heatmap_pivot.columns)):
-            val = int(heatmap_pivot.iloc[i, j])
-            if val > 0:
-                # White text if dark block, Black text if light block
-                text_c = "white" if val > heatmap_pivot.values.max() * 0.5 else "black"
-                ax.text(j, i, val, ha="center", va="center", color=text_c, fontweight="bold")
-
-    st.pyplot(fig)
-else:
-    st.info("Insufficient data for heatmap.")
-st.markdown("</div>", unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
 
 # DATA GRID
 with st.expander("🔎 Inspect Raw Data"):
