@@ -911,49 +911,66 @@ with row3_2:
     st.markdown("</div>", unsafe_allow_html=True)
 
 
-st.markdown('<div class="dashboard-card"><div class="chart-title">Monthly Enrollment Distribution</div>', unsafe_allow_html=True)
+# ==============================================================================
+# ENROLLMENT TREND (STOCK MARKET STYLE)
+# ==============================================================================
+st.markdown('<div class="dashboard-card"><div class="chart-title">Enrollment Trend Over Time</div>', unsafe_allow_html=True)
 
 # 1. Prepare Data
-if "Enroll_Month_Name" in filtered_df.columns:
-    # Aggregate data by Month Name
-    month_data = (
-        filtered_df
-        .groupby("Enroll_Month_Name")["EMP ID"]
+# We need to combine Year and Month into a proper Date object for a time-series plot
+if "Enroll_Month_Name" in filtered_df.columns and "Enroll_Year" in filtered_df.columns:
+    
+    # Create a copy to handle dates safely
+    trend_df = filtered_df.copy()
+    
+    # Drop rows where date info is missing
+    trend_df = trend_df.dropna(subset=["Enroll_Year", "Enroll_Month_Name"])
+    
+    # Create a 'Year-Month' string column (e.g., "2024-Jan")
+    trend_df["DateStr"] = trend_df["Enroll_Year"].astype(str) + "-" + trend_df["Enroll_Month_Name"]
+    
+    # Convert to DateTime Object (Crucial for "Stock" look)
+    # format='%Y-%b' expects "2024-Jan", "2024-Feb", etc.
+    trend_df["Timeline"] = pd.to_datetime(trend_df["DateStr"], format='%Y-%b', errors='coerce')
+    
+    # Aggregate: Count unique employees per date
+    time_series = (
+        trend_df
+        .groupby("Timeline")["EMP ID"]
         .nunique()
         .reset_index()
-        .rename(columns={"EMP ID": "Count", "Enroll_Month_Name": "Month"})
-    )
-    
-    # 2. Sort Months Chronologically (Crucial)
-    month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    
-    # Filter to keep only months present in data
-    existing_months = [m for m in month_order if m in month_data["Month"].unique()]
-    
-    month_data["Month"] = pd.Categorical(month_data["Month"], categories=existing_months, ordered=True)
-    month_data = month_data.sort_values("Month")
-
-    # 3. Create Interactive Column Chart
-    fig = px.bar(
-        month_data, 
-        x="Month", 
-        y="Count",
-        text="Count", # Show numbers on top of bars
-        color="Count", # Gradient coloring based on volume
-        color_continuous_scale="Blues" # Blue gradient matches your theme
+        .rename(columns={"EMP ID": "Count"})
+        .sort_values("Timeline") # Sort chronologically (Oldest -> Newest)
     )
 
-    # 4. Apply Dark Theme Styling
+    # 2. Create Stock-Style Area Chart
+    fig = px.area(
+        time_series, 
+        x='Timeline', 
+        y='Count',
+        markers=True, # Show dots on the line
+    )
+
+    # 3. Apply "Stock Chart" Styling (Dark Mode)
+    fig.update_traces(
+        line=dict(color="#4ade80", width=3), # Bright Green line (common for growth)
+        fillcolor="rgba(74, 222, 128, 0.2)", # Semi-transparent green fill below
+        marker=dict(size=6, color="#22c55e", line=dict(width=1, color="white"))
+    )
+
     fig.update_layout(
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         margin=dict(t=20, l=0, r=0, b=0),
         
-        # X-Axis
+        # X-Axis: Time Series with Range Slider
         xaxis=dict(
             title=None,
-            tickfont=dict(color="white", size=12, family="Segoe UI"),
-            showgrid=False
+            showgrid=False,
+            tickfont=dict(color="white"),
+            # Adds the "Stock" slider at the bottom
+            rangeslider=dict(visible=True, bgcolor="#0e1117", thickness=0.1),
+            type="date" # Ensures it treats gaps correctly
         ),
         
         # Y-Axis
@@ -961,25 +978,18 @@ if "Enroll_Month_Name" in filtered_df.columns:
             title=None,
             showgrid=True,
             gridcolor="#333333",
-            tickfont=dict(color="white", size=12, family="Segoe UI")
+            tickfont=dict(color="white")
         ),
         
         font=dict(family="Segoe UI", color="white"),
-        height=350,
-        coloraxis_showscale=False # Hide the color bar for a cleaner look
-    )
-
-    # Style bars and text
-    fig.update_traces(
-        textposition="outside",
-        textfont=dict(color="white", size=12),
-        marker=dict(line=dict(width=0)) # No border
+        height=400,
+        hovermode="x unified" # Shows a vertical line across the chart on hover
     )
 
     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False})
 
 else:
-    st.warning("Column 'Enroll_Month_Name' missing.")
+    st.warning("Columns 'Enroll_Year' and 'Enroll_Month_Name' are required for this chart.")
 
 st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
