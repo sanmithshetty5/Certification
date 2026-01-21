@@ -384,7 +384,7 @@ def normalize_text(val):
         return None
     elif isinstance(val, str) and val.strip() == "":
         return None
-    return val.strip() if isInstance(val,str) else return val
+    return val.strip() if isInstance(val,str) else val
 
 
 with st.container(border=True):
