@@ -700,7 +700,7 @@ fig.update_layout(
     margin=dict(t=20, l=0, r=0, b=0),
     showlegend=False, 
     height=350,       
-    
+
     # Axis Styling
     xaxis=dict(
         title=None,
@@ -714,10 +714,11 @@ fig.update_layout(
         gridcolor="#e2e8f0"
     ),
     font=dict(family="Segoe UI", color="#1e293b")
-
+)
 # DATA GRID
 with st.expander("🔎 Inspect Raw Data"):
     st.dataframe(filtered_df, use_container_width=True, height=400)
+    
 
 # FOOTER
 st.markdown("""
@@ -725,3 +726,4 @@ st.markdown("""
     Enterprise Certification Analytics • Confidential
 </div>
 """, unsafe_allow_html=True)
+
