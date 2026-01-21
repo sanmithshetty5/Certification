@@ -878,14 +878,10 @@ with row3_1:
 # RIGHT COLUMN: Account Certification Overview (Heatmap)
 # ==============================================================================
 with row3_2:
-    st.markdown('<div class="dashboard-card"><div class="chart-title">Account-wise Certification Summary</div>', unsafe_allow_html=True)
+    st.markdown('<div class="dashboard-card"><div class="chart-title" style="color:white;">Account-wise Certification Summary</div>', unsafe_allow_html=True)
 
-    # --- FIX: Checking which column to use for Status ---
-    # We try "SnowPro Certified" first (used in Chart 2). 
-    # If that doesn't exist, change this variable to your actual status column name.
-    status_col = "SnowPro Certified" 
+    status_col = "SnowPro Certified"
     
-    # 1. Prepare Table Data
     if status_col in filtered_df.columns:
         table_df = (
             filtered_df
@@ -900,15 +896,44 @@ with row3_2:
             .sort_values(by="Certified", ascending=False)
         )
 
-        # 2. Display Interactive Table
-        st.dataframe(
-            table_df,
-            use_container_width=True,
-            height=450, 
-            hide_index=True 
+        # --- FIX: Apply Pandas Styling for Black Background ---
+        styled_table = (
+            table_df.style
+            .set_properties(**{
+                'background-color': '#000000',  # Black Background for cells
+                'color': '#ffffff',             # White Text
+                'border-color': '#333333'       # Dark Grey Borders
+            })
+            .set_table_styles([
+                # Header Styling (Dark Blue to match theme)
+                {'selector': 'th', 'props': [
+                    ('background-color', '#1e3a8a'), 
+                    ('color', 'white'),
+                    ('font-family', 'Segoe UI'),
+                    ('font-size', '14px'),
+                    ('border', '1px solid #333')
+                ]},
+                # Cell Styling
+                {'selector': 'td', 'props': [
+                    ('font-family', 'Segoe UI'),
+                    ('font-size', '13px'),
+                    ('border', '1px solid #333') # Grid lines
+                ]},
+                # Hover Effect (Optional, works in some browsers)
+                {'selector': 'tr:hover', 'props': [('background-color', '#1e293b')]}
+            ])
+            .hide(axis="index") # Hides the index column (0, 1, 2...)
         )
+
+        # Render using st.dataframe with the styling applied
+        st.dataframe(
+            styled_table,
+            use_container_width=True,
+            height=450
+        )
+        
     else:
-        st.error(f"Error: Column '{status_col}' not found. Please check your Excel column names.")
+        st.error(f"Error: Column '{status_col}' not found.")
 
     st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
