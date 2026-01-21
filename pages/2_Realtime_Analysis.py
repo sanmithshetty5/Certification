@@ -450,7 +450,7 @@ with c3:
 
 with c4:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Yearly Enrollment Trend</div>', unsafe_allow_html=True)
-    trend = (
+    trend_df = (
     filtered_df
     .dropna(subset=["Enroll_Year"])
     .groupby("Enroll_Year")["EMP ID"]
