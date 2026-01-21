@@ -6,9 +6,10 @@ Certification Tracker is an internal web application developed for Hexaware Tech
 
 The application is designed to streamline certification management by combining guided data entry with analytical views that support monitoring, review, and decision-making.
 
-⚠️_ This repository does not contain any confidential or production data and is intended strictly for internal organizational use.
-_
-****Application Views****
+⚠️_ This repository does not contain any confidential or production data and is intended strictly for internal organizational use._
+
+**Application Views**
+
 **Welcome Page**
 
 1.Serves as the entry point to the application
@@ -35,39 +36,39 @@ _
 
 1.Structured Data Entry
 
-  Standardized input fields for certification-related information
+  **.** Standardized input fields for certification-related information
   
-  Logical grouping of fields to improve usability and clarity
+   **.** Logical grouping of fields to improve usability and clarity
 
 2.Real-Time Validation
 
-  Immediate detection of duplicate employee–certification entries
+   **.** Immediate detection of duplicate employee–certification entries
   
-  Mandatory field enforcement to prevent incomplete submissions
+   **.** Mandatory field enforcement to prevent incomplete submissions
 
 3.Controlled Data Modification
 
-  Clear separation between record creation and record updates
+   **.** Clear separation between record creation and record updates
   
-  Update operations restricted to records loaded through search
+   **.** Update operations restricted to records loaded through search
 
 4.Input Normalization
 
-  Automatic handling of empty or whitespace-only inputs
+   **.** Automatic handling of empty or whitespace-only inputs
   
-  Ensures consistent data representation for downstream analysis
+   **.** Ensures consistent data representation for downstream analysis
 
 5.User Guidance & Feedback
 
-  Contextual error and warning messages
+  **.** Contextual error and warning messages
   
-  Dynamic enablement of actions based on validation state
+  **.** Dynamic enablement of actions based on validation state
 
 6.Review Before Persistence
 
-  Final verification step prior to saving data
+   **.** Final verification step prior to saving data
   
-  Reduces risk of accidental or incorrect submissions
+   **.** Reduces risk of accidental or incorrect submissions
 
 **Technology Stack**
 
@@ -105,20 +106,20 @@ The Certification Tracker is intended to:
 
 **Security & Confidentiality**
 
-  This repository does not include sensitive or proprietary data
+   **.** This repository does not include sensitive or proprietary data
   
-  Business rules and schemas are intentionally abstracted
+   **.** Business rules and schemas are intentionally abstracted
   
-  The application is designed for controlled internal environments only
+   **.** The application is designed for controlled internal environments only
 
 **Deployment Notes**
 
-  Requires appropriate internal access and configuration
+   **.** Requires appropriate internal access and configuration
   
-  Intended for deployment within organizational infrastructure
+   **.** Intended for deployment within organizational infrastructure
   
-  Not designed for public or external usage
+   **.** Not designed for public or external usage
 
 **Ownership**
   
-  Developed for Hexaware Technologies as part of an internal initiative to improve certification tracking, monitoring, and visualization.
+   **.** Developed for Hexaware Technologies as part of an internal initiative to improve certification tracking, monitoring, and visualization.
