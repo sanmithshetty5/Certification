@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import io
 import zipfile
+import plotly.express as px
 
 # -----------------------------------------
 # PAGE CONFIG
@@ -347,8 +348,40 @@ c1, c2 = st.columns(2)
 
 with c1:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Funnel</div>', unsafe_allow_html=True)
-    funnel = filtered_df.groupby("Certification")["EMP ID"].nunique().sort_values(ascending=True)
-    st.bar_chart(funnel, horizontal=True, color=CHART_COLOR)
+    
+    # 1. Prepare Data
+    funnel_data = filtered_df.groupby("Certification")["EMP ID"].nunique().reset_index()
+    funnel_data.columns = ["Certification", "Learners"]
+    funnel_data = funnel_data.sort_values("Learners", ascending=True)
+
+    # 2. Create Interactive Chart
+    fig = px.bar(
+        funnel_data, 
+        x="Learners", 
+        y="Certification", 
+        orientation='h',
+        text="Learners",
+        color_discrete_sequence=[PRIMARY_COLOR] # Uses your Blue-600
+    )
+
+    # 3. Apply "Seaborn-like" Clean Style
+    fig.update_layout(
+        plot_bgcolor="rgba(0,0,0,0)", # Transparent background
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(t=0, l=0, r=0, b=0), # Tight layout
+        xaxis=dict(showgrid=False, visible=False), # Hide x-axis clutter
+        yaxis=dict(showgrid=False, tickfont=dict(color=TEXT_COLOR)), # Dark text
+        font=dict(family="Segoe UI", color=TEXT_COLOR),
+        height=250, # Fixed height to fit card
+        hovermode="y unified"
+    )
+    
+    # 4. Hide color bar/legend if not needed
+    fig.update_traces(textposition='outside')
+
+    # 5. Render
+    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    
     st.markdown("</div>", unsafe_allow_html=True)
 
 with c2:
