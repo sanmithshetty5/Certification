@@ -385,10 +385,7 @@ with c1:
         'scrollZoom': True,        # Enable scrolling to zoom
         'displaylogo': False,      # Remove Plotly logo
         'modeBarButtonsToRemove': ['lasso2d', 'select2d'], # Remove clutter
-        'modeBarButtonsToAdd': [
-            'drawopenpath', 
-            'eraseshape'
-        ] 
+
         # Note: Pan, Zoom In/Out, Autoscale (Realign), Reset Scale, and Download Image 
         # are included by default in the toolbar.
     }
