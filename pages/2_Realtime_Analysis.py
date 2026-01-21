@@ -16,19 +16,22 @@ st.set_page_config(
 )
 
 # -----------------------------------------
-# GLOBAL THEME & CONSTANTS
+# SEABORN / MATPLOTLIB GLOBAL THEME
 # -----------------------------------------
-# Professional Palette
-PRIMARY_COLOR = "#2563eb"    # Blue-600
-SECONDARY_COLOR = "#475569"  # Slate-600
-ACCENT_COLOR = "#3b82f6"     # Blue-500
-BACKGROUND_COLOR = "#f8fafc" # Slate-50 (Very light grey)
-TEXT_COLOR = "#1e293b"# Slate-800 (Very dark grey)
-SB_TEXT="ffffff"
-SB_BACKGROUND_COLOR="000000"
-# Matplotlib Colors
-CHART_COLOR = "#2563eb"      
-HEATMAP_CMAP = "Blues"
+sns.set_theme(
+    style="whitegrid",
+    rc={
+        "figure.facecolor": "#FFFFFF",
+        "axes.facecolor": "#FFFFFF",
+        "axes.edgecolor": "#E5E7EB",
+        "grid.color": "#E5E7EB",
+        "axes.labelcolor": "#1E293B",
+        "xtick.color": "#334155",
+        "ytick.color": "#334155",
+        "text.color": "#1E293B",
+        "font.size": 10
+    }
+)
 
 # -----------------------------------------
 # GLOBAL CSS – FORCE LIGHT MODE & MODERN UI
@@ -347,12 +350,13 @@ with c1:
     # Plot
     fig, ax = plt.subplots(figsize=(8, 5))
     sns.barplot(
-        data=funnel_df,
-        x="EMP ID",
-        y="Certification",
-        orient="h",
-        ax=ax
-    )
+    data=funnel_df,
+    x="EMP ID",
+    y="Certification",
+    orient="h",
+    ax=ax,
+    color = PRIMARY_COLOR
+)
 
     # Ensure largest is on top
     ax.invert_yaxis()
@@ -371,23 +375,86 @@ with c1:
 
 with c2:
     st.markdown('<div class="dashboard-card"><div class="chart-title">SnowPro Status</div>', unsafe_allow_html=True)
-    st.bar_chart(filtered_df["SnowPro Certified"].value_counts(), color=CHART_COLOR)
-    st.markdown("</div>", unsafe_allow_html=True)
+    status_df = (
+    filtered_df["SnowPro Certified"]
+    .value_counts()
+    .reset_index()
+    .rename(columns={"index": "Status", "SnowPro Certified": "Count"}))
+    fig, ax = plt.subplots(figsize=(6, 4))
+    sns.barplot(
+    data=status_df,
+    x="Status",
+    y="Count",
+    palette=["#22c55e", "#f59e0b", "#ef4444", PRIMARY_COLOR],
+    ax=ax)
+    ax.set_xlabel("")
+    ax.set_ylabel("Employees")
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+    ax.grid(axis="x", visible=False)
 
-st.markdown("<br>", unsafe_allow_html=True)
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+    st.pyplot(fig)
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # ROW 2 CHARTS
 c3, c4 = st.columns(2)
 
 with c3:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Voucher Utilization</div>', unsafe_allow_html=True)
-    st.bar_chart(filtered_df["Voucher Status"].value_counts(), color=CHART_COLOR)
+    voucher_df = (
+    filtered_df["Voucher Status"]
+    .value_counts()
+    .reset_index()
+    .rename(columns={"index": "Status", "Voucher Status": "Count"}))
+
+    fig, ax = plt.subplots(figsize=(6, 4))
+    sns.barplot(
+        data=voucher_df,
+        x="Status",
+        y="Count",
+        color=ACCENT_COLOR,
+        ax=ax
+    )
+
+    ax.set_xlabel("")
+    ax.set_ylabel("Employees")
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+    ax.grid(axis="x", visible=False)
+
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+    
+    st.pyplot(fig)
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 with c4:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Yearly Enrollment Trend</div>', unsafe_allow_html=True)
-    trend = filtered_df.dropna(subset=["Enroll_Year"]).groupby("Enroll_Year")["EMP ID"].nunique().sort_index()
-    st.line_chart(trend, color=CHART_COLOR)
+    trend_df = trend.reset_index().rename(columns={"EMP ID": "Employees"})
+
+    fig, ax = plt.subplots(figsize=(6, 4))
+    sns.lineplot(
+        data=trend_df,
+        x="Enroll_Year",
+        y="Employees",
+        marker="o",
+        linewidth=2.5,
+        color=PRIMARY_COLOR,
+        ax=ax
+    )
+
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Unique Employees")
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+    
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+    
+    st.pyplot(fig)
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -401,10 +468,27 @@ badge_data = {
         for i in range(1, 6)
     ]
 }
-st.bar_chart(pd.DataFrame(badge_data).set_index("Stage"), color=CHART_COLOR)
-st.markdown("</div>", unsafe_allow_html=True)
+badge_df = pd.DataFrame(badge_data)
 
-st.markdown("<br>", unsafe_allow_html=True)
+fig, ax = plt.subplots(figsize=(10, 4))
+sns.barplot(
+    data=badge_df,
+    x="Stage",
+    y="Count",
+    color=PRIMARY_COLOR,
+    ax=ax)
+
+ax.set_xlabel("")
+ax.set_ylabel("Employees Completed")
+ax.grid(axis="y", linestyle="--", alpha=0.4)
+ax.grid(axis="x", visible=False)
+
+for spine in ax.spines.values():
+    spine.set_visible(False)
+
+st.pyplot(fig)
+
+st.markdown("</div>", unsafe_allow_html=True)
 
 # HEATMAP (STRICT COLOR CONTROL)
 st.markdown('<div class="dashboard-card"><div class="chart-title">Seasonal Activity Heatmap</div>', unsafe_allow_html=True)
