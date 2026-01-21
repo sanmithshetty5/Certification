@@ -912,74 +912,86 @@ with row3_2:
 
 
 # ==============================================================================
-# ROW 4: HEATMAP (Seaborn with Dark Theme Support)
+# ROW 4: MONTHLY ENROLLMENT HEATMAP (Year vs. Month)
 # ==============================================================================
-st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Distribution: Vertical vs. Certification</div>', unsafe_allow_html=True)
+st.markdown('<div class="dashboard-card"><div class="chart-title">Enrollment Trends: Month vs. Year</div>', unsafe_allow_html=True)
 
-# --- CONFIGURATION ---
-status_col = "SnowPro Certified"  # The column with "Completed", "In Progress"
-cert_name_col = "Certification"   # The column with names like "SnowPro Core", "Architect", etc.
-# Note: If you get a KeyError for 'Certification', change cert_name_col to your actual column name (e.g. 'Exam Name')
+# 1. Identify Date Column & Prepare Data
+# I am assuming your date column is named 'Enrollment Date' or similar. 
+# If your column is named differently (e.g., 'Date'), please change the name below.
+date_col = "Enrollment Date" 
 
-# 1. Prepare Data for Heatmap
-if status_col in filtered_df.columns and cert_name_col in filtered_df.columns:
+if date_col in filtered_df.columns:
+    # Create a copy to avoid SettingWithCopy warnings
+    heatmap_df = filtered_df.copy()
     
-    # Filter only for Completed certifications
-    completed_df = filtered_df[filtered_df[status_col] == "Completed"]
+    # Convert to datetime errors='coerce' turns invalid dates into NaT (null)
+    heatmap_df[date_col] = pd.to_datetime(heatmap_df[date_col], errors='coerce')
     
-    if not completed_df.empty:
-        heatmap_data = pd.pivot_table(
-            completed_df,
-            index="Vertical / SL",
-            columns=cert_name_col,
-            values="EMP ID",
-            aggfunc="nunique",
-            fill_value=0
-        )
+    # Extract Year and Month
+    heatmap_df["Year"] = heatmap_df[date_col].dt.year
+    heatmap_df["Month"] = heatmap_df[date_col].dt.month_name()
+    
+    # Define Month Order for sorting (Jan -> Dec)
+    month_order = [
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December"
+    ]
+    heatmap_df["Month"] = pd.Categorical(heatmap_df["Month"], categories=month_order, ordered=True)
 
-        # 2. Configure Plot for Dark Theme
-        import matplotlib.pyplot as plt
-        import seaborn as sns
+    # 2. Create Pivot Table (Year vs Month)
+    pivot_data = pd.pivot_table(
+        heatmap_df,
+        index="Year",
+        columns="Month",
+        values="EMP ID",
+        aggfunc="nunique",
+        fill_value=0
+    )
+    
+    # Sort index (Years) descending so recent years are on top
+    pivot_data = pivot_data.sort_index(ascending=False)
 
-        # Set figure size and background color to match Streamlit's Dark Mode (#0e1117)
-        fig, ax = plt.subplots(figsize=(12, 8))
-        fig.patch.set_facecolor('#0e1117') # Figure background
-        ax.set_facecolor('#0e1117')        # Plot area background
+    # 3. Configure Plot for Dark Theme
+    import matplotlib.pyplot as plt
+    import seaborn as sns
 
-        # 3. Create Heatmap
-        sns.heatmap(
-            heatmap_data, 
-            annot=True,          # Show numbers
-            fmt="d",             # Integer format
-            cmap="mako",         # Dark-friendly gradient (Black -> Teal)
-            linewidths=0.5,
-            linecolor='#0e1117',
-            cbar_kws={'label': 'Number of Certified Learners'}
-        )
+    fig, ax = plt.subplots(figsize=(14, 6)) # Wide layout
+    fig.patch.set_facecolor('#0e1117')      # Match dashboard background
+    ax.set_facecolor('#0e1117')
 
-        # 4. Customizing Axis Labels for White Text (Visibility)
-        ax.tick_params(colors='white', which='both')  
-        plt.xticks(color='white', fontsize=10, rotation=45, ha='right')
-        plt.yticks(color='white', fontsize=10)
+    # 4. Create Heatmap
+    sns.heatmap(
+        pivot_data, 
+        annot=True,          # Show count numbers
+        fmt="d",             # Integer format
+        cmap="mako",         # Dark-friendly gradient (Black -> Teal)
+        linewidths=0.5,
+        linecolor='#0e1117',
+        cbar_kws={'label': 'Enrollment Count'}
+    )
 
-        plt.xlabel("Certification Name", color='white', fontsize=12, labelpad=10)
-        plt.ylabel("Vertical / SL", color='white', fontsize=12, labelpad=10)
+    # 5. Styling Axis & Labels (White for visibility)
+    ax.tick_params(colors='white', which='both')
+    plt.xticks(color='white', fontsize=10)
+    plt.yticks(color='white', fontsize=10, rotation=0)
 
-        # Colorbar White Text
-        cbar = ax.collections[0].colorbar
-        cbar.ax.yaxis.set_tick_params(color='white')
-        plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
-        cbar.set_label('Count', color='white')
+    plt.xlabel("Month", color='white', fontsize=12, labelpad=10)
+    plt.ylabel("Year", color='white', fontsize=12, labelpad=10)
 
-        # Remove outer border
-        sns.despine(top=True, right=True, left=True, bottom=True)
+    # Colorbar Styling
+    cbar = ax.collections[0].colorbar
+    cbar.ax.yaxis.set_tick_params(color='white')
+    plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
+    cbar.set_label('Learner Count', color='white')
 
-        st.pyplot(fig)
-    else:
-        st.info("No 'Completed' certifications found to display in Heatmap.")
+    # Remove outer borders
+    sns.despine(top=True, right=True, left=True, bottom=True)
+
+    st.pyplot(fig)
 
 else:
-    st.error(f"Error: Columns '{status_col}' or '{cert_name_col}' not found. Please check your Excel headers.")
+    st.error(f"Error: Column '{date_col}' not found. Please check if your Excel has an 'Enrollment Date' column.")
 
 st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
