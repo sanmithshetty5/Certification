@@ -459,39 +459,41 @@ with c3:
     # 1. Prepare Data
     voucher_data = filtered_df["Voucher Status"].value_counts().reset_index()
     voucher_data.columns = ["Status", "Count"]
-    # Add a root column to group everything under one parent (optional but helps formatting)
-    voucher_data["Type"] = "Vouchers" 
 
-    # 2. Create Interactive Treemap
-    fig = px.treemap(
+    # 2. Smart Color Palette (Monochromatic Blue Gradient)
+    # This matches your background and looks strictly professional
+    smart_colors = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd", "#cbd5e1"]
+
+    # 3. Create Pie Chart
+    fig = px.pie(
         voucher_data, 
-        path=["Status"], # Hierarchy path
-        values="Count",
-        color="Status", # Color different blocks distinctly
-        # Using your palette: Blue-600, Blue-500, Slate-600, Light Slate
-        color_discrete_sequence=[PRIMARY_COLOR, ACCENT_COLOR, SECONDARY_COLOR, "#94a3b8"]
+        names="Status", 
+        values="Count", 
+        color_discrete_sequence=smart_colors # Apply the gradient
     )
 
-    # 3. Apply Professional Styling
+    # 4. Apply Clean Style
     fig.update_traces(
-        textinfo="label+value", # Show Label and Number
-        textfont=dict(family="Segoe UI", size=15),
-        hovertemplate='<b>%{label}</b><br>Count: %{value}<extra></extra>'
+        textposition='inside', 
+        textinfo='percent+label',
+        hovertemplate = "<b>%{label}</b><br>Count: %{value}<br>Share: %{percent}",
+        marker=dict(line=dict(color='#ffffff', width=2)) # White borders for a clean 'cut' look
     )
 
     fig.update_layout(
-        margin=dict(t=0, l=0, r=0, b=0), # completely fills the container
-        font=dict(family="Segoe UI", color="#ffffff"), # White text inside the colored blocks
-        height=250,
+        plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(t=20, l=0, r=0, b=20),
+        font=dict(family="Segoe UI", color="#1e293b", size=13),
+        showlegend=False, 
+        height=250
     )
 
-    # 4. Toolbar Configuration
+    # 5. Toolbar Configuration
     my_config = {
         'displayModeBar': 'hover',
         'displaylogo': False,
-        'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d'] 
-        # Zooming is handled by clicking the blocks in a Treemap
+        'modeBarButtonsToRemove': ['lasso2d', 'select2d']
     }
 
     st.plotly_chart(fig, use_container_width=True, config=my_config)
