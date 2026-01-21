@@ -478,9 +478,7 @@ with c4:
     st.pyplot(fig)
 
     st.markdown("</div>", unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
+    
 # FULL WIDTH BADGE CHART
 st.markdown('<div class="dashboard-card"><div class="chart-title">Badge Progression</div>', unsafe_allow_html=True)
 badge_data = {
