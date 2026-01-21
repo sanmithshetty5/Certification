@@ -673,56 +673,47 @@ badge_counts = [
     filtered_df[filtered_df[f"Badge {i} Status"] == "Completed"]["EMP ID"].nunique() 
     for i in range(1, 6)
 ]
+
 badge_data = pd.DataFrame({
     "Stage": ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"],
-    "Learners": badge_counts
+    "Learners": badge_counts,
+    "ColorGroup": ["B1", "B2", "B3", "B4", "B5"] # Dummy column to force different colors
 })
 
-# 2. Create Interactive Funnel Chart
-# Using a "Spectral" like palette for high contrast/variety
+# 2. Distinct Color Palette
 distinct_sequence = ["#2563eb", "#06b6d4", "#8b5cf6", "#d946ef", "#f97316"] 
 
-fig = px.funnel(
+# 3. Create Interactive Column Chart
+fig = px.bar(
     badge_data, 
-    x='Learners', 
-    y='Stage', 
-    color='Stage', # Colors each stage differently
-    color_discrete_sequence=distinct_sequence
+    x='Stage', 
+    y='Learners', 
+    color='ColorGroup', # Colors each bar differently
+    color_discrete_sequence=distinct_sequence,
+    text='Learners' # Shows the count on top
 )
 
-# 3. Apply Professional Styling
+# 4. Apply Professional Styling
 fig.update_layout(
     plot_bgcolor="rgba(0,0,0,0)",
     paper_bgcolor="rgba(0,0,0,0)",
-    margin=dict(t=20, l=0, r=0, b=20),
-    showlegend=False, # Labels are already on the Y-axis
-    height=350,       # Slightly taller for full width
+    margin=dict(t=20, l=0, r=0, b=0),
+    showlegend=False, 
+    height=350,       
     
     # Axis Styling
+    xaxis=dict(
+        title=None,
+        tickfont=dict(color="#1e293b", size=13, family="Segoe UI"),
+        showgrid=False
+    ),
     yaxis=dict(
-        tickfont=dict(color="#1e293b", size=14, family="Segoe UI"),
-        title=None
+        tickfont=dict(color="#1e293b", size=12, family="Segoe UI"),
+        title=None,
+        showgrid=True,
+        gridcolor="#e2e8f0"
     ),
     font=dict(family="Segoe UI", color="#1e293b")
-)
-
-# Text inside the funnel bars
-fig.update_traces(
-    textposition="inside", 
-    textinfo="value+percent initial", # Shows Count + % of users who started at Badge 1
-    insidetextfont=dict(color="white", size=14)
-)
-
-# 4. Toolbar Configuration
-my_config = {
-    'displayModeBar': 'hover',
-    'displaylogo': False,
-    'modeBarButtonsToRemove': ['lasso2d', 'select2d']
-}
-
-st.plotly_chart(fig, use_container_width=True, config=my_config)
-
-st.markdown("</div>", unsafe_allow_html=True)
 
 # DATA GRID
 with st.expander("🔎 Inspect Raw Data"):
