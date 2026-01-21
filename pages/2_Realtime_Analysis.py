@@ -311,6 +311,10 @@ with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
     if not filtered_df.empty:
         st.download_button("Export Report", data=export_charts_as_zip(filtered_df), file_name="analytics.zip")
+    if st.button("🔄 Refresh Data"):
+        # Force Streamlit to rerun the script and fetch fresh data
+        st.experimental_rerun()
+
 
 if filtered_df.empty:
     st.warning("⚠️ No data available matching your filters.")
