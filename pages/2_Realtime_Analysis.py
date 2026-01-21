@@ -16,6 +16,19 @@ st.set_page_config(
 )
 
 # -----------------------------------------
+# GLOBAL THEME & CONSTANTS (MUST BE DEFINED)
+# -----------------------------------------
+PRIMARY_COLOR = "#2563eb"        # Blue-600
+SECONDARY_COLOR = "#475569"      # Slate-600
+ACCENT_COLOR = "#3b82f6"         # Blue-500
+BACKGROUND_COLOR = "#f8fafc"     # Light background
+TEXT_COLOR = "#1e293b"           # Dark text
+CHART_COLOR = PRIMARY_COLOR
+HEATMAP_CMAP = "Blues"
+SB_TEXT = "#1e293b"
+
+
+# -----------------------------------------
 # SEABORN / MATPLOTLIB GLOBAL THEME
 # -----------------------------------------
 sns.set_theme(
@@ -433,7 +446,12 @@ with c3:
 
 with c4:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Yearly Enrollment Trend</div>', unsafe_allow_html=True)
-    trend_df = trend.reset_index().rename(columns={"EMP ID": "Employees"})
+    trend = (
+    filtered_df
+    .dropna(subset=["Enroll_Year"])
+    .groupby("Enroll_Year")["EMP ID"]
+    .nunique()
+    .sort_index())
 
     fig, ax = plt.subplots(figsize=(6, 4))
     sns.lineplot(
