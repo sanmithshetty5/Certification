@@ -293,7 +293,7 @@ with col_h1:
 with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
 
-    btn_col1, btn_col2 = st.columns(2)
+    btn_col1, btn_col2 = st.rows(2)
 
     with btn_col1:
         if not filtered_df.empty:
