@@ -453,52 +453,6 @@ with c2:
 # ROW 2 CHARTS
 c3, c4 = st.columns(2)
 
-# with c3:
-#     st.markdown('<div class="dashboard-card"><div class="chart-title">Voucher Utilization</div>', unsafe_allow_html=True)
-    
-#     # 1. Prepare Data
-#     voucher_data = filtered_df["Voucher Status"].value_counts().reset_index()
-#     voucher_data.columns = ["Status", "Count"]
-
-#     # 2. Smart Color Palette (Monochromatic Blue Gradient)
-#     # This matches your background and looks strictly professional
-#     smart_colors = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd", "#cbd5e1"]
-
-#     # 3. Create Pie Chart
-#     fig = px.pie(
-#         voucher_data, 
-#         names="Status", 
-#         values="Count", 
-#         color_discrete_sequence=smart_colors # Apply the gradient
-#     )
-
-#     # 4. Apply Clean Style
-#     fig.update_traces(
-#         textposition='inside', 
-#         textinfo='percent+label',
-#         hovertemplate = "<b>%{label}</b><br>Count: %{value}<br>Share: %{percent}",
-#         marker=dict(line=dict(color='#ffffff', width=2)) # White borders for a clean 'cut' look
-#     )
-
-#     fig.update_layout(
-#         plot_bgcolor="rgba(0,0,0,0)",
-#         paper_bgcolor="rgba(0,0,0,0)",
-#         margin=dict(t=20, l=0, r=0, b=20),
-#         font=dict(family="Segoe UI", color="#1e293b", size=13),
-#         showlegend=False, 
-#         height=250
-#     )
-
-#     # 5. Toolbar Configuration
-#     my_config = {
-#         'displayModeBar': 'hover',
-#         'displaylogo': False,
-#         'modeBarButtonsToRemove': ['lasso2d', 'select2d']
-#     }
-
-#     st.plotly_chart(fig, use_container_width=True, config=my_config)
-    
-#     st.markdown("</div>", unsafe_allow_html=True)
 with c3:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Voucher Utilization</div>', unsafe_allow_html=True)
     
@@ -547,8 +501,64 @@ with c3:
     st.markdown("</div>", unsafe_allow_html=True)
 with c4:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Yearly Enrollment Trend</div>', unsafe_allow_html=True)
-    trend = filtered_df.dropna(subset=["Enroll_Year"]).groupby("Enroll_Year")["EMP ID"].nunique().sort_index()
-    st.line_chart(trend, color=CHART_COLOR)
+    
+    # 1. Prepare Data
+    trend_data = filtered_df.dropna(subset=["Enroll_Year"]).groupby("Enroll_Year")["EMP ID"].nunique().reset_index()
+    trend_data.columns = ["Year", "Enrollments"]
+    trend_data = trend_data.sort_values("Year")
+
+    # 2. Create Interactive Area Chart
+    fig = px.area(
+        trend_data, 
+        x="Year", 
+        y="Enrollments",
+        markers=True, # Adds dots at data points
+        color_discrete_sequence=[PRIMARY_COLOR]
+    )
+
+    # 3. Apply Professional Styling
+    fig.update_layout(
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(t=10, l=0, r=0, b=0),
+        
+        # X-Axis Styling
+        xaxis=dict(
+            title=None, 
+            tickfont=dict(color="#1e293b", size=12),
+            showgrid=False
+        ),
+        
+        # Y-Axis Styling
+        yaxis=dict(
+            title=None, 
+            tickfont=dict(color="#1e293b", size=12),
+            showgrid=True, # Keep horizontal gridlines for reference
+            gridcolor="#e2e8f0" # Very light grey grid
+        ),
+        
+        font=dict(family="Segoe UI", color="#1e293b"),
+        height=250,
+        hovermode="x unified" # Shows a vertical line across the chart on hover
+    )
+    
+    # Style the hover tooltip background
+    fig.update_traces(
+        line=dict(width=3), 
+        marker=dict(size=8, line=dict(width=2, color="white")),
+        hovertemplate = "<b>Year: %{x}</b><br>Enrollments: %{y}<extra></extra>"
+    )
+
+    # 4. Toolbar Configuration
+    my_config = {
+        'displayModeBar': 'hover',
+        'scrollZoom': True,
+        'displaylogo': False,
+        'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+    }
+
+    st.plotly_chart(fig, use_container_width=True, config=my_config)
+    
     st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
