@@ -746,60 +746,132 @@ st.plotly_chart(fig, use_container_width=True, config=my_config)
 # -----------------------------------------
 # VERTICAL / SL – CERTIFICATION FUNNEL
 # -----------------------------------------
+# st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Completion Funnel by Vertical</div>', unsafe_allow_html=True)
+
+# # 1. Prepare Data (Your Logic)
+# vertical_data = (
+#     filtered_df[filtered_df["Completed Flag"] == True]
+#     .groupby("Vertical / SL")["EMP ID"]
+#     .nunique()
+#     .reset_index()
+#     .rename(columns={"EMP ID": "Completed Employees"})
+#     .sort_values("Completed Employees", ascending=True) # Ascending sort makes the highest value appear at the TOP in Plotly
+# )
+
+# # 2. Create Interactive Horizontal Bar
+# fig = px.bar(
+#     vertical_data,
+#     x="Completed Employees",
+#     y="Vertical / SL",
+#     orientation='h', # Horizontal Bars
+#     text="Completed Employees",
+    
+#     # --- EFFECTIVE COLORING ---
+#     # Colors bars based on value: Darker Blue = More Completions
+#     color="Completed Employees", 
+#     color_continuous_scale="Blues" 
+# )
+
+# # 3. Apply Professional Styling
+# fig.update_layout(
+#     plot_bgcolor="rgba(0,0,0,0)",
+#     paper_bgcolor="rgba(0,0,0,0)",
+#     margin=dict(t=10, l=0, r=0, b=0),
+    
+#     # Hide X-Axis (Cleaner look, since numbers are already on the bars)
+#     xaxis=dict(showgrid=False, visible=False), 
+    
+#     # Y-Axis Styling
+#     yaxis=dict(
+#         title=None,
+#         tickfont=dict(color="#1e293b", size=12, family="Segoe UI"),
+#         showgrid=False
+#     ),
+    
+#     font=dict(family="Segoe UI", color="#1e293b"),
+#     height=500, # Taller height to accommodate many Verticals
+#     coloraxis_showscale=False # Hides the color legend bar for a cleaner look
+# )
+
+# # Text styling
+# fig.update_traces(
+#     textposition='outside', 
+#     textfont=dict(color="#1e293b", size=12)
+# )
+
+# # 4. Toolbar Configuration
+# my_config = {
+#     'displayModeBar': 'hover',
+#     'displaylogo': False,
+#     'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+# }
+
+# st.plotly_chart(fig, use_container_width=True, config=my_config)
+
+# st.markdown("</div>", unsafe_allow_html=True)
+# st.markdown("<br>", unsafe_allow_html=True)
+# st.markdown("</div>", unsafe_allow_html=True)
+
+# -----------------------------------------
+# VERTICAL / SL – CERTIFICATION FUNNEL
+# -----------------------------------------
 st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Completion Funnel by Vertical</div>', unsafe_allow_html=True)
 
-# 1. Prepare Data (Your Logic)
+# 1. Prepare Data
 vertical_data = (
     filtered_df[filtered_df["Completed Flag"] == True]
     .groupby("Vertical / SL")["EMP ID"]
     .nunique()
     .reset_index()
     .rename(columns={"EMP ID": "Completed Employees"})
-    .sort_values("Completed Employees", ascending=True) # Ascending sort makes the highest value appear at the TOP in Plotly
+    .sort_values("Completed Employees", ascending=True) 
 )
 
-# 2. Create Interactive Horizontal Bar
+# 2. Calculate Dynamic Height 
+# (35 pixels per bar + 100px buffer) ensures ALL values are shown
+dynamic_height = max(400, len(vertical_data) * 35)
+
+# 3. Create Interactive Horizontal Bar
 fig = px.bar(
     vertical_data,
     x="Completed Employees",
     y="Vertical / SL",
-    orientation='h', # Horizontal Bars
+    orientation='h', 
     text="Completed Employees",
-    
-    # --- EFFECTIVE COLORING ---
-    # Colors bars based on value: Darker Blue = More Completions
     color="Completed Employees", 
-    color_continuous_scale="Blues" 
+    color_continuous_scale="Blues"
 )
 
-# 3. Apply Professional Styling
+# 4. Apply Professional Styling
 fig.update_layout(
     plot_bgcolor="rgba(0,0,0,0)",
     paper_bgcolor="rgba(0,0,0,0)",
     margin=dict(t=10, l=0, r=0, b=0),
     
-    # Hide X-Axis (Cleaner look, since numbers are already on the bars)
+    # Hide X-Axis
     xaxis=dict(showgrid=False, visible=False), 
     
-    # Y-Axis Styling
+    # Y-Axis (Force all labels to show)
     yaxis=dict(
         title=None,
         tickfont=dict(color="#1e293b", size=12, family="Segoe UI"),
-        showgrid=False
+        showgrid=False,
+        dtick=1 # Forces Plotly to show every single vertical
     ),
     
     font=dict(family="Segoe UI", color="#1e293b"),
-    height=500, # Taller height to accommodate many Verticals
-    coloraxis_showscale=False # Hides the color legend bar for a cleaner look
+    height=dynamic_height, # <--- FIX: Applies dynamic height
+    coloraxis_showscale=False 
 )
 
-# Text styling
+# 5. Fix Text Visibility
 fig.update_traces(
-    textposition='outside', 
-    textfont=dict(color="#1e293b", size=12)
+    textposition='outside', # Places number to the right of the bar
+    textfont=dict(color="#1e293b", size=12), # Forces DARK GREY text
+    cliponaxis=False # Allows text to overflow slightly if needed so it's not cut off
 )
 
-# 4. Toolbar Configuration
+# 6. Toolbar Configuration
 my_config = {
     'displayModeBar': 'hover',
     'displaylogo': False,
@@ -810,7 +882,6 @@ st.plotly_chart(fig, use_container_width=True, config=my_config)
 
 st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
-st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
 with st.expander("🔎 Inspect Raw Data"):
     st.dataframe(filtered_df, use_container_width=True, height=400)
