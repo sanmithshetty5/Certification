@@ -916,60 +916,70 @@ with row3_2:
 # ==============================================================================
 st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Distribution: Vertical vs. Certification</div>', unsafe_allow_html=True)
 
-# 1. Prepare Data for Heatmap (Pivot Table)
-# Rows: Vertical / SL
-# Columns: Certification Name
-# Values: Count of Completed Employees
-heatmap_data = pd.pivot_table(
-    filtered_df[filtered_df["Status"] == "Completed"],
-    index="Vertical / SL",
-    columns="Certification",
-    values="EMP ID",
-    aggfunc="nunique",
-    fill_value=0
-)
+# --- CONFIGURATION ---
+status_col = "SnowPro Certified"  # The column with "Completed", "In Progress"
+cert_name_col = "Certification"   # The column with names like "SnowPro Core", "Architect", etc.
+# Note: If you get a KeyError for 'Certification', change cert_name_col to your actual column name (e.g. 'Exam Name')
 
-# 2. Configure Plot for Dark Theme
-import matplotlib.pyplot as plt
-import seaborn as sns
+# 1. Prepare Data for Heatmap
+if status_col in filtered_df.columns and cert_name_col in filtered_df.columns:
+    
+    # Filter only for Completed certifications
+    completed_df = filtered_df[filtered_df[status_col] == "Completed"]
+    
+    if not completed_df.empty:
+        heatmap_data = pd.pivot_table(
+            completed_df,
+            index="Vertical / SL",
+            columns=cert_name_col,
+            values="EMP ID",
+            aggfunc="nunique",
+            fill_value=0
+        )
 
-# Set figure size and background color to match Streamlit's Dark Mode (#0e1117)
-fig, ax = plt.subplots(figsize=(12, 8))
-fig.patch.set_facecolor('#0e1117') # Figure background
-ax.set_facecolor('#0e1117')        # Plot area background
+        # 2. Configure Plot for Dark Theme
+        import matplotlib.pyplot as plt
+        import seaborn as sns
 
-# 3. Create Heatmap
-# cmap="mako": A beautiful dark-teal gradient perfect for dark backgrounds
-sns.heatmap(
-    heatmap_data, 
-    annot=True,          # Show numbers in cells
-    fmt="d",             # Integer format
-    cmap="mako",         # Dark-friendly color scheme
-    linewidths=0.5,      # Slight separation between cells
-    linecolor='#0e1117', # Lines match background color
-    cbar_kws={'label': 'Number of Certified Learners'}
-)
+        # Set figure size and background color to match Streamlit's Dark Mode (#0e1117)
+        fig, ax = plt.subplots(figsize=(12, 8))
+        fig.patch.set_facecolor('#0e1117') # Figure background
+        ax.set_facecolor('#0e1117')        # Plot area background
 
-# 4. Customizing Axis Labels for White Text
-ax.tick_params(colors='white', which='both')  # Ticks are white
-plt.xticks(color='white', fontsize=10, rotation=45, ha='right')
-plt.yticks(color='white', fontsize=10)
+        # 3. Create Heatmap
+        sns.heatmap(
+            heatmap_data, 
+            annot=True,          # Show numbers
+            fmt="d",             # Integer format
+            cmap="mako",         # Dark-friendly gradient (Black -> Teal)
+            linewidths=0.5,
+            linecolor='#0e1117',
+            cbar_kws={'label': 'Number of Certified Learners'}
+        )
 
-# Labels
-plt.xlabel("Certification Name", color='white', fontsize=12, labelpad=10)
-plt.ylabel("Vertical / SL", color='white', fontsize=12, labelpad=10)
+        # 4. Customizing Axis Labels for White Text (Visibility)
+        ax.tick_params(colors='white', which='both')  
+        plt.xticks(color='white', fontsize=10, rotation=45, ha='right')
+        plt.yticks(color='white', fontsize=10)
 
-# Colorbar adjustments (Accessing the colorbar object to make text white)
-cbar = ax.collections[0].colorbar
-cbar.ax.yaxis.set_tick_params(color='white')
-plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
-cbar.set_label('Count', color='white')
+        plt.xlabel("Certification Name", color='white', fontsize=12, labelpad=10)
+        plt.ylabel("Vertical / SL", color='white', fontsize=12, labelpad=10)
 
-# Remove outer border for a cleaner look
-sns.despine(top=True, right=True, left=True, bottom=True)
+        # Colorbar White Text
+        cbar = ax.collections[0].colorbar
+        cbar.ax.yaxis.set_tick_params(color='white')
+        plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
+        cbar.set_label('Count', color='white')
 
-# 5. Display in Streamlit
-st.pyplot(fig)
+        # Remove outer border
+        sns.despine(top=True, right=True, left=True, bottom=True)
+
+        st.pyplot(fig)
+    else:
+        st.info("No 'Completed' certifications found to display in Heatmap.")
+
+else:
+    st.error(f"Error: Columns '{status_col}' or '{cert_name_col}' not found. Please check your Excel headers.")
 
 st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
