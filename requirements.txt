@@ -4,3 +4,4 @@ snowflake-snowpark-python>=1.12.0
 requests
 matplotlib
 plotly
+seaborn
