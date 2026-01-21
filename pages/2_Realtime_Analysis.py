@@ -564,7 +564,7 @@ badge_df = pd.DataFrame(badge_data)
 
 fig, ax = plt.subplots(figsize=(10, 4))
 sns.barplot(
-    data=badge_df,fpx.bar
+    data=badge_df,px.bar
     x="Stage",
     y="Count",
     color=PRIMARY_COLOR,
