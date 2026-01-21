@@ -113,6 +113,13 @@ st.markdown(f"""
     }}
 
     
+    /* SIDEBAR EXPANDER – FORCE WHITE TEXT */
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary {{
+        color: #ffffff !important;
+    }}
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary:hover {{
+        background-color: rgba(255,255,255,0.08);
+    }}
 
     /* 7. MATPLOTLIB TRANSPARENCY FIX */
     .chart-title {{
