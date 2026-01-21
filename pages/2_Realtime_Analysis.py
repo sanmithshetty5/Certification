@@ -361,26 +361,39 @@ with c1:
         y="Certification", 
         orientation='h',
         text="Learners",
-        color_discrete_sequence=[PRIMARY_COLOR] # Uses your Blue-600
+        color_discrete_sequence=[PRIMARY_COLOR]
     )
 
-    # 3. Apply "Seaborn-like" Clean Style
+    # 3. Apply Clean Style
     fig.update_layout(
-        plot_bgcolor="rgba(0,0,0,0)", # Transparent background
+        plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        margin=dict(t=0, l=0, r=0, b=0), # Tight layout
-        xaxis=dict(showgrid=False, visible=False), # Hide x-axis clutter
-        yaxis=dict(showgrid=False, tickfont=dict(color=TEXT_COLOR)), # Dark text
+        margin=dict(t=10, l=0, r=0, b=0),
+        xaxis=dict(showgrid=False, visible=True, title=None), # Visible for zooming
+        yaxis=dict(showgrid=False, tickfont=dict(color=TEXT_COLOR), title=None),
         font=dict(family="Segoe UI", color=TEXT_COLOR),
-        height=250, # Fixed height to fit card
-        hovermode="y unified"
+        height=250,
+        hovermode="y unified",
+        dragmode="pan" # Default tool is now Pan
     )
     
-    # 4. Hide color bar/legend if not needed
     fig.update_traces(textposition='outside')
 
-    # 5. Render
-    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    # 4. Configure Toolbar (The requested options)
+    my_config = {
+        'displayModeBar': 'hover', # Toolbar appears on hover
+        'scrollZoom': True,        # Enable scrolling to zoom
+        'displaylogo': False,      # Remove Plotly logo
+        'modeBarButtonsToRemove': ['lasso2d', 'select2d'], # Remove clutter
+        'modeBarButtonsToAdd': [
+            'drawopenpath', 
+            'eraseshape'
+        ] 
+        # Note: Pan, Zoom In/Out, Autoscale (Realign), Reset Scale, and Download Image 
+        # are included by default in the toolbar.
+    }
+
+    st.plotly_chart(fig, use_container_width=True, config=my_config)
     
     st.markdown("</div>", unsafe_allow_html=True)
 
