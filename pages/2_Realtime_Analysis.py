@@ -1,10 +1,8 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 import io
 import zipfile
-import plotly.express as px
 
 # -----------------------------------------
 # PAGE CONFIG
@@ -17,35 +15,19 @@ st.set_page_config(
 )
 
 # -----------------------------------------
-# GLOBAL THEME & CONSTANTS (MUST BE DEFINED)
+# GLOBAL THEME & CONSTANTS
 # -----------------------------------------
-PRIMARY_COLOR = "#2563eb"        # Blue-600
-SECONDARY_COLOR = "#475569"      # Slate-600
-ACCENT_COLOR = "#3b82f6"         # Blue-500
-BACKGROUND_COLOR = "#f8fafc"     # Light background
-TEXT_COLOR = "#1e293b"           # Dark text
-CHART_COLOR = PRIMARY_COLOR
+# Professional Palette
+PRIMARY_COLOR = "#2563eb"    # Blue-600
+SECONDARY_COLOR = "#475569"  # Slate-600
+ACCENT_COLOR = "#3b82f6"     # Blue-500
+BACKGROUND_COLOR = "#f8fafc" # Slate-50 (Very light grey)
+TEXT_COLOR = "#1e293b"# Slate-800 (Very dark grey)
+SB_TEXT="ffffff"
+SB_BACKGROUND_COLOR="000000"
+# Matplotlib Colors
+CHART_COLOR = "#2563eb"      
 HEATMAP_CMAP = "Blues"
-SB_TEXT = "#ffffff"
-
-
-# -----------------------------------------
-# SEABORN / MATPLOTLIB GLOBAL THEME
-# -----------------------------------------
-sns.set_theme(
-    style="whitegrid",
-    rc={
-        "figure.facecolor": "#FFFFFF",
-        "axes.facecolor": "#FFFFFF",
-        "axes.edgecolor": "#E5E7EB",
-        "grid.color": "#E5E7EB",
-        "axes.labelcolor": "#1E293B",
-        "xtick.color": "#334155",
-        "ytick.color": "#334155",
-        "text.color": "#1E293B",
-        "font.size": 10
-    }
-)
 
 # -----------------------------------------
 # GLOBAL CSS – FORCE LIGHT MODE & MODERN UI
@@ -59,7 +41,7 @@ st.markdown(f"""
     
     /* 2. TYPOGRAPHY & TEXT COLORS */
     h1, h2, h3, h4, h5, h6, p, div, span, label {{
-        color: {TEXT_COLOR} !important;
+        color: {SB_TEXT} !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }}
     
@@ -185,29 +167,14 @@ session = cnx.session()
 # -----------------------------------------
 # LOAD DATA
 # -----------------------------------------
-# @st.cache_data(show_spinner="Connecting to Database...")
-# def load_data():
-#     return session.sql("""
-#         SELECT *
-#         FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-#     """).to_pandas()
-
-# df = load_data()
-
+@st.cache_data(show_spinner="Connecting to Database...")
 def load_data():
-    # Always fetch fresh data from Snowflake
     return session.sql("""
         SELECT *
         FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
     """).to_pandas()
 
-# If refresh was pressed, reset flag after fetching
-if st.session_state.refresh:
-    df = load_data()  # fetch fresh data
-    st.session_state.refresh = False
-else:
-    df = load_data()  # or load normally if needed
-
+df = load_data()
 
 if df.empty:
     st.error("⚠️ No data available.")
@@ -326,14 +293,6 @@ with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
     if not filtered_df.empty:
         st.download_button("Export Report", data=export_charts_as_zip(filtered_df), file_name="analytics.zip")
-    # Initialize refresh flag
-    if "refresh" not in st.session_state:
-        st.session_state.refresh = False
-    
-    # Refresh button
-    if st.button("🔄 Refresh Data"):
-        st.session_state.refresh = True
-
 
 if filtered_df.empty:
     st.warning("⚠️ No data available matching your filters.")
@@ -369,211 +328,35 @@ st.markdown("<br>", unsafe_allow_html=True)
 # ROW 1 CHARTS
 c1, c2 = st.columns(2)
 
-# with c1:
-#     st.markdown(
-#         '<div class="dashboard-card"><div class="chart-title">Certification Funnel</div>',
-#         unsafe_allow_html=True
-#     )
-
-#     # Prepare funnel data
-#     funnel_df = (
-#         filtered_df
-#         .groupby("Certification")["EMP ID"]
-#         .nunique()
-#         .reset_index()
-#         .sort_values(by="EMP ID", ascending=False)
-#     )
-
-#     # Plot
-#     fig, ax = plt.subplots(figsize=(8, 5))
-#     sns.barplot(
-#     data=funnel_df,
-#     x="EMP ID",
-#     y="Certification",
-#     orient="h",
-#     ax=ax,
-#     color = PRIMARY_COLOR
-# )
-
-#     # Ensure largest is on top
-#     ax.invert_yaxis()
-
-#     # Styling (Power BI–like)
-#     ax.set_xlabel("Number of Employees", fontsize=10)
-#     ax.set_ylabel("")
-#     ax.grid(axis="x", linestyle="--", alpha=0.3)
-
-#     for spine in ax.spines.values():
-#         spine.set_visible(False)
-
-#     st.pyplot(fig)
-
-#     st.markdown("</div>", unsafe_allow_html=True)
-
-
 with c1:
-    st.markdown(
-        '<div class="dashboard-card"><div class="chart-title">Certification Funnel</div>',
-        unsafe_allow_html=True
-    )
-
-    # Prepare funnel data (same logic, no change)
-    funnel_df = (
-        filtered_df
-        .groupby("Certification")["EMP ID"]
-        .nunique()
-        .reset_index()
-        .sort_values(by="EMP ID", ascending=False)
-    )
-
-    # Plotly bar chart (funnel-style)
-    fig = px.bar(
-        funnel_df,
-        x="EMP ID",
-        y="Certification",
-        orientation="h",
-        text="EMP ID",
-        color_discrete_sequence=[PRIMARY_COLOR]
-    )
-
-    # Ensure largest is at top
-    fig.update_yaxes(autorange="reversed")
-
-    # Layout styling to match your page theme
-    fig.update_layout(
-        height=420,
-        margin=dict(l=20, r=20, t=10, b=20),
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        xaxis_title="Number of Employees",
-        yaxis_title="",
-        font=dict(color=TEXT_COLOR),
-        hovermode="closest"
-    )
-
-    # Hover + text formatting
-    # fig.update_traces(
-    #     hovertemplate=(
-    #         "<b>Certification:</b> %{y}<br>"
-    #         "<b>Employees:</b> %{x}<extra></extra>"
-    #     ),
-    #     textposition="outside"
-    # )
-    fig.update_traces(
-        hovertemplate=(
-            "<b>Certification:</b> %{y}<br>"
-            "<b>Employees:</b> %{x}<extra></extra>"
-        ),
-        textposition="outside",
-        textfont=dict(
-            color=TEXT_COLOR,   # 🔥 FORCE DARK TEXT
-            size=12,
-            family="Segoe UI"
-        ),
-        marker=dict(
-            line=dict(width=0)  # cleaner bars (Power BI style)
-        ))
-
-
-    # Enable zoom & pan (default Plotly behavior)
-    st.plotly_chart(fig, use_container_width=True)
-
+    st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Funnel</div>', unsafe_allow_html=True)
+    funnel = (filtered_df.groupby("Certification")["EMP ID"].nunique().sort_values(ascending=False).iloc[::-1] )
+    st.bar_chart(funnel, horizontal=True, color=CHART_COLOR)
     st.markdown("</div>", unsafe_allow_html=True)
+
 with c2:
     st.markdown('<div class="dashboard-card"><div class="chart-title">SnowPro Status</div>', unsafe_allow_html=True)
-    status_df = (
-    filtered_df["SnowPro Certified"]
-    .value_counts()
-    .reset_index()
-    )
-
-    status_df.columns = ["Status", "Count"]
-
-    fig, ax = plt.subplots(figsize=(6, 4))
-    sns.barplot(
-    data=status_df,
-    x="Status",
-    y="Count",
-    palette=["#22c55e", "#f59e0b", "#ef4444", PRIMARY_COLOR],
-    ax=ax)
-    ax.set_xlabel("")
-    ax.set_ylabel("Employees")
-    ax.grid(axis="y", linestyle="--", alpha=0.4)
-    ax.grid(axis="x", visible=False)
-
-    for spine in ax.spines.values():
-        spine.set_visible(False)
-
-    st.pyplot(fig)
-
+    st.bar_chart(filtered_df["SnowPro Certified"].value_counts(), color=CHART_COLOR)
     st.markdown("</div>", unsafe_allow_html=True)
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 # ROW 2 CHARTS
 c3, c4 = st.columns(2)
 
 with c3:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Voucher Utilization</div>', unsafe_allow_html=True)
-    voucher_df = (
-    filtered_df["Voucher Status"]
-    .value_counts()
-    .reset_index())
-
-    voucher_df.columns = ["Status", "Count"]
-
-    fig, ax = plt.subplots(figsize=(6, 4))
-    sns.barplot(
-        data=voucher_df,
-        x="Status",
-        y="Count",
-        color=ACCENT_COLOR,
-        ax=ax
-    )
-
-    ax.set_xlabel("")
-    ax.set_ylabel("Employees")
-    ax.grid(axis="y", linestyle="--", alpha=0.4)
-    ax.grid(axis="x", visible=False)
-
-    for spine in ax.spines.values():
-        spine.set_visible(False)
-    
-    st.pyplot(fig)
-
+    st.bar_chart(filtered_df["Voucher Status"].value_counts(), color=CHART_COLOR)
     st.markdown("</div>", unsafe_allow_html=True)
 
 with c4:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Yearly Enrollment Trend</div>', unsafe_allow_html=True)
-    trend = (
-    filtered_df
-    .dropna(subset=["Enroll_Year"])
-    .groupby("Enroll_Year")["EMP ID"]
-    .nunique()
-    .sort_index())
-
-    trend_df = trend.reset_index().rename(columns={"EMP ID": "Employees"})
-
-    fig, ax = plt.subplots(figsize=(6, 4))
-    sns.lineplot(
-        data=trend_df,
-        x="Enroll_Year",
-        y="Employees",
-        marker="o",
-        linewidth=2.5,
-        color=PRIMARY_COLOR,
-        ax=ax
-    )
-
-    ax.set_xlabel("Year")
-    ax.set_ylabel("Unique Employees")
-    ax.grid(axis="y", linestyle="--", alpha=0.4)
-    
-    for spine in ax.spines.values():
-        spine.set_visible(False)
-    
-    st.pyplot(fig)
-
+    trend = filtered_df.dropna(subset=["Enroll_Year"]).groupby("Enroll_Year")["EMP ID"].nunique().sort_index()
+    st.line_chart(trend, color=CHART_COLOR)
     st.markdown("</div>", unsafe_allow_html=True)
-    
+
+st.markdown("<br>", unsafe_allow_html=True)
+
 # FULL WIDTH BADGE CHART
 st.markdown('<div class="dashboard-card"><div class="chart-title">Badge Progression</div>', unsafe_allow_html=True)
 badge_data = {
@@ -583,27 +366,10 @@ badge_data = {
         for i in range(1, 6)
     ]
 }
-badge_df = pd.DataFrame(badge_data)
-
-fig, ax = plt.subplots(figsize=(10, 4))
-sns.barplot(
-    data=badge_df,
-    x="Stage",
-    y="Count",
-    color=PRIMARY_COLOR,
-    ax=ax)
-
-ax.set_xlabel("")
-ax.set_ylabel("Employees Completed")
-ax.grid(axis="y", linestyle="--", alpha=0.4)
-ax.grid(axis="x", visible=False)
-
-for spine in ax.spines.values():
-    spine.set_visible(False)
-
-st.pyplot(fig)
-
+st.bar_chart(pd.DataFrame(badge_data).set_index("Stage"), color=CHART_COLOR)
 st.markdown("</div>", unsafe_allow_html=True)
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 # HEATMAP (STRICT COLOR CONTROL)
 st.markdown('<div class="dashboard-card"><div class="chart-title">Seasonal Activity Heatmap</div>', unsafe_allow_html=True)
