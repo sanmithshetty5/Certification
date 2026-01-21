@@ -912,8 +912,8 @@ with row3_2:
 
 
 
-# ==============================================================================
-# CHART: ENROLLMENT TREND (Stock Market Line Style)
+## ==============================================================================
+# CHART: ENROLLMENT TREND (FIXED VISIBILITY)
 # ==============================================================================
 st.markdown('<div class="dashboard-card"><div class="chart-title">Enrollment Trend Over Time</div>', unsafe_allow_html=True)
 
@@ -929,7 +929,7 @@ if "Enroll_Month_Name" in filtered_df.columns and "Enroll_Year" in filtered_df.c
     # Create a Date String (e.g., "2024-Jan")
     trend_df["DateStr"] = trend_df["Enroll_Year"].astype(str) + "-" + trend_df["Enroll_Month_Name"]
     
-    # Convert to DateTime Object (Crucial for chronological "Stock" sorting)
+    # Convert to DateTime Object
     trend_df["Timeline"] = pd.to_datetime(trend_df["DateStr"], format='%Y-%b', errors='coerce')
     
     # Aggregate: Count unique employees per date
@@ -942,7 +942,7 @@ if "Enroll_Month_Name" in filtered_df.columns and "Enroll_Year" in filtered_df.c
         .sort_values("Timeline") # Sort Oldest -> Newest
     )
 
-    # 2. Create Line Chart (No Area Fill)
+    # 2. Create Line Chart
     fig = px.line(
         time_series, 
         x='Timeline', 
@@ -950,41 +950,45 @@ if "Enroll_Month_Name" in filtered_df.columns and "Enroll_Year" in filtered_df.c
         markers=True, # Show dots at data points
     )
 
-    # 3. Apply High-Contrast "Stock" Styling
-    fig.update_traces(
-        line=dict(color="#06b6d4", width=3), # Neon Cyan Line (High Visibility)
-        marker=dict(size=7, color="#06b6d4", line=dict(width=2, color="white")) # White border on dots makes them pop
-    )
-
+    # 3. Apply High-Contrast "Dark Mode" Styling
     fig.update_layout(
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        margin=dict(t=30, l=0, r=0, b=0),
+        # --- FIX: Force Dark Background Colors (Not Transparent) ---
+        plot_bgcolor="#0e1117",  # Dark Grey/Black plot area
+        paper_bgcolor="#0e1117", # Dark Grey/Black outer area
         
-        # X-Axis: Time Series with Range Slider
+        margin=dict(t=30, l=10, r=10, b=0),
+        
+        # X-Axis Styling
         xaxis=dict(
             title=None,
             showgrid=True,
-            gridcolor="#333333",  # Subtle grid lines
-            gridwidth=1,
-            tickfont=dict(color="white", size=12, family="Segoe UI"), # White Text
-            # The "Stock Market" Slider
-            rangeslider=dict(visible=True, bgcolor="#0e1117", thickness=0.1),
+            gridcolor="#333333",      # Dark grey grid lines (subtle)
+            tickformat="%b %Y",       # Formats date as "Jan 2024"
+            tickfont=dict(color="white", size=12),
+            rangeslider=dict(visible=True, bgcolor="#1e293b", thickness=0.1), # Visible slider
             type="date"
         ),
         
-        # Y-Axis
+        # Y-Axis Styling
         yaxis=dict(
             title=None,
             showgrid=True,
-            gridcolor="#333333",
-            gridwidth=1,
-            tickfont=dict(color="white", size=12, family="Segoe UI") # White Text
+            gridcolor="#333333",      # Dark grey grid lines
+            tickfont=dict(color="white", size=12),
+            zerolinecolor="#333333"
         ),
         
+        # Font & Hover Styling
         font=dict(family="Segoe UI", color="white"),
         height=450,
-        hovermode="x unified" # Creates a vertical line across the chart on hover
+        hovermode="x unified"
+    )
+
+    # Line & Marker Styling (Neon Cyan for Pop)
+    fig.update_traces(
+        line=dict(color="#22d3ee", width=3), # Bright Neon Cyan
+        marker=dict(size=8, color="#22d3ee", line=dict(width=2, color="#0e1117")), # Cyan dot with black border
+        hovertemplate='%{y} Employees<extra></extra>' # Clean hover text
     )
 
     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False})
