@@ -26,7 +26,7 @@ BACKGROUND_COLOR = "#f8fafc"     # Light background
 TEXT_COLOR = "#1e293b"           # Dark text
 CHART_COLOR = PRIMARY_COLOR
 HEATMAP_CMAP = "Blues"
-SB_TEXT = "#1e293b"
+SB_TEXT = "#ffffff"
 
 
 # -----------------------------------------
@@ -429,13 +429,28 @@ with c1:
     )
 
     # Hover + text formatting
+    # fig.update_traces(
+    #     hovertemplate=(
+    #         "<b>Certification:</b> %{y}<br>"
+    #         "<b>Employees:</b> %{x}<extra></extra>"
+    #     ),
+    #     textposition="outside"
+    # )
     fig.update_traces(
         hovertemplate=(
             "<b>Certification:</b> %{y}<br>"
             "<b>Employees:</b> %{x}<extra></extra>"
         ),
-        textposition="outside"
-    )
+        textposition="outside",
+        textfont=dict(
+            color=TEXT_COLOR,   # 🔥 FORCE DARK TEXT
+            size=12,
+            family="Segoe UI"
+        ),
+        marker=dict(
+            line=dict(width=0)  # cleaner bars (Power BI style)
+        ))
+
 
     # Enable zoom & pan (default Plotly behavior)
     st.plotly_chart(fig, use_container_width=True)
@@ -549,7 +564,7 @@ badge_df = pd.DataFrame(badge_data)
 
 fig, ax = plt.subplots(figsize=(10, 4))
 sns.barplot(
-    data=badge_df,
+    data=badge_df,fpx.bar
     x="Stage",
     y="Count",
     color=PRIMARY_COLOR,
