@@ -21,7 +21,7 @@ st.markdown("""
 <style>
     /* 1. Global Page Settings */
     .stApp {
-        background-color: #F8FAFC; /* Light Blue-Grey Background */
+        background-color: #F8FAFC; /* Light Blue-Gy Background */
         font-family: 'Inter', sans-serif;
     }
     
@@ -30,7 +30,7 @@ st.markdown("""
         background-color: #FFFFFF;
         border: 1.5px solid #1E293B;
         border-radius: 8px;
-        padding: 2rem;
+        padding: 2m;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
     }
@@ -125,7 +125,7 @@ for key in [
     "pending_action",
     "last_emp_id",
     "save_completed",
-    "autofill_emp_name"
+    "autofill_emp_name",
     "duplicate_exists"
 
 ]:
@@ -384,7 +384,7 @@ def normalize_text(val):
         return None
     elif isinstance(val, str) and val.strip() == "":
         return None
-    return val.strip() if isInstance(val,str) else val
+    return val.strip() if isinstance(val,str) else val
 
 
 with st.container(border=True):
