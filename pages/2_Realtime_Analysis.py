@@ -457,6 +457,8 @@ with c4:
     .nunique()
     .sort_index())
 
+    trend_df = trend.reset_index().rename(columns={"EMP ID": "Employees"})
+
     fig, ax = plt.subplots(figsize=(6, 4))
     sns.lineplot(
         data=trend_df,
@@ -467,8 +469,6 @@ with c4:
         color=PRIMARY_COLOR,
         ax=ax
     )
-
-    trend_df = trend.reset_index().rename(columns={"EMP ID": "Employees"})
 
     ax.set_xlabel("Year")
     ax.set_ylabel("Unique Employees")
