@@ -139,8 +139,21 @@ st.markdown(f"""
         font-weight: 600;
         padding: 0.6rem 1rem;
     }}
-    div.stDownloadButton > button:hover {{
+    div.stButton > button:hover {{
         background-color: #4ED95E;
+        transform: translateY(-3px);
+        color: #ffffff !important;
+    }}
+    div.stButton > button {{
+        background-color: #2563eb;
+        color: #ffffff !important;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        padding: 0.6rem 1rem;
+    }}
+    div.stDownloadButton > button:hover {{
+        background-color: #2563eb;
         transform: translateY(-3px);
         color: #ffffff !important;
     }}
