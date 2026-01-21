@@ -453,6 +453,52 @@ with c2:
 # ROW 2 CHARTS
 c3, c4 = st.columns(2)
 
+# with c3:
+#     st.markdown('<div class="dashboard-card"><div class="chart-title">Voucher Utilization</div>', unsafe_allow_html=True)
+    
+#     # 1. Prepare Data
+#     voucher_data = filtered_df["Voucher Status"].value_counts().reset_index()
+#     voucher_data.columns = ["Status", "Count"]
+
+#     # 2. Smart Color Palette (Monochromatic Blue Gradient)
+#     smart_colors = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd", "#cbd5e1"]
+
+#     # 3. Create Pie Chart
+#     fig = px.pie(
+#         voucher_data, 
+#         names="Status", 
+#         values="Count", 
+#         color_discrete_sequence=smart_colors
+#     )
+
+#     # 4. Apply Clean Style with HORIZONTAL Text
+#     fig.update_traces(
+#         textposition='inside', 
+#         textinfo='percent+label',
+#         insidetextorientation='horizontal', # <--- FIX: Forces text to be straight
+#         hovertemplate = "<b>%{label}</b><br>Count: %{value}<br>Share: %{percent}",
+#         marker=dict(line=dict(color='#ffffff', width=2))
+#     )
+
+#     fig.update_layout(
+#         plot_bgcolor="rgba(0,0,0,0)",
+#         paper_bgcolor="rgba(0,0,0,0)",
+#         margin=dict(t=20, l=0, r=0, b=20),
+#         font=dict(family="Segoe UI", color="#1e293b", size=13),
+#         showlegend=False, 
+#         height=250
+#     )
+
+#     # 5. Toolbar Configuration
+#     my_config = {
+#         'displayModeBar': 'hover',
+#         'displaylogo': False,
+#         'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+#     }
+
+#     st.plotly_chart(fig, use_container_width=True, config=my_config)
+    
+#     st.markdown("</div>", unsafe_allow_html=True)
 with c3:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Voucher Utilization</div>', unsafe_allow_html=True)
     
@@ -460,22 +506,22 @@ with c3:
     voucher_data = filtered_df["Voucher Status"].value_counts().reset_index()
     voucher_data.columns = ["Status", "Count"]
 
-    # 2. Smart Color Palette (Monochromatic Blue Gradient)
-    smart_colors = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd", "#cbd5e1"]
+    # 2. Distinct Color Palette (Blue, Green, Amber, Slate, Red)
+    distinct_colors = ["#2563eb", "#10b981", "#f59e0b", "#64748b", "#ef4444"]
 
     # 3. Create Pie Chart
     fig = px.pie(
         voucher_data, 
         names="Status", 
         values="Count", 
-        color_discrete_sequence=smart_colors
+        color_discrete_sequence=distinct_colors # Applies the distinct colors
     )
 
-    # 4. Apply Clean Style with HORIZONTAL Text
+    # 4. Apply Clean Style with Horizontal Text
     fig.update_traces(
         textposition='inside', 
         textinfo='percent+label',
-        insidetextorientation='horizontal', # <--- FIX: Forces text to be straight
+        insidetextorientation='horizontal', # Keeps text straight
         hovertemplate = "<b>%{label}</b><br>Count: %{value}<br>Share: %{percent}",
         marker=dict(line=dict(color='#ffffff', width=2))
     )
