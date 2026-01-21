@@ -174,6 +174,7 @@ def load_data():
         FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
     """).to_pandas()
 
+
 df = load_data()
 
 if df.empty:
@@ -291,8 +292,21 @@ with col_h1:
 
 with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
-    if not filtered_df.empty:
-        st.download_button("Export Report", data=export_charts_as_zip(filtered_df), file_name="analytics.zip")
+
+    btn_col1, btn_col2 = st.columns(2)
+
+    with btn_col1:
+        if not filtered_df.empty:
+            st.download_button(
+                "Export Report",
+                data=export_charts_as_zip(filtered_df),
+                file_name="analytics.zip"
+            )
+
+    with btn_col2:
+        if st.button("🔄 Refresh Data"):
+            st.cache_data.clear()
+            st.rerun()
 
 if filtered_df.empty:
     st.warning("⚠️ No data available matching your filters.")
