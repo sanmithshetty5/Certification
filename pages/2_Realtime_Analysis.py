@@ -622,61 +622,47 @@ with c4:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# FULL WIDTH BADGE CHART
-# st.markdown('<div class="dashboard-card"><div class="chart-title">Badge Progression</div>', unsafe_allow_html=True)
-# badge_data = {
-#     "Stage": ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"],
-#     "Count": [
-#         filtered_df[filtered_df[f"Badge {i} Status"] == "Completed"]["EMP ID"].nunique() 
-#         for i in range(1, 6)
-#     ]
-# }
-# st.bar_chart(pd.DataFrame(badge_data).set_index("Stage"), color=CHART_COLOR)
+# # HEATMAP (STRICT COLOR CONTROL)
+# st.markdown('<div class="dashboard-card"><div class="chart-title">Seasonal Activity Heatmap</div>', unsafe_allow_html=True)
+
+# heatmap_df = filtered_df.dropna(subset=["Enroll_Month_Name", "Enroll_Year"]).groupby(["Enroll_Year", "Enroll_Month_Name"])["EMP ID"].nunique().reset_index()
+
+# if not heatmap_df.empty:
+#     heatmap_pivot = heatmap_df.pivot(index="Enroll_Month_Name", columns="Enroll_Year", values="EMP ID").fillna(0)
+#     month_order_map = {m: i for i, m in enumerate(["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"])}
+#     heatmap_pivot = heatmap_pivot.sort_index(key=lambda x: x.map(month_order_map))
+    
+#     # Matplotlib Figure with Transparent BG and DARK Text
+#     fig, ax = plt.subplots(figsize=(12, 4))
+#     fig.patch.set_alpha(0)      # Transparent figure background
+#     ax.patch.set_alpha(0)       # Transparent axis background
+    
+#     im = ax.imshow(heatmap_pivot, aspect="auto", cmap=HEATMAP_CMAP)
+    
+#     # Axes Styling - FORCE DARK COLORS
+#     ax.set_xticks(range(len(heatmap_pivot.columns)))
+#     ax.set_xticklabels(heatmap_pivot.columns, color="#334155", fontweight="bold")
+#     ax.set_yticks(range(len(heatmap_pivot.index)))
+#     ax.set_yticklabels(heatmap_pivot.index, color="#334155", fontweight="bold")
+    
+#     # Spines
+#     for spine in ax.spines.values(): spine.set_visible(False)
+    
+#     # Text Annotations inside Heatmap
+#     for i in range(len(heatmap_pivot.index)):
+#         for j in range(len(heatmap_pivot.columns)):
+#             val = int(heatmap_pivot.iloc[i, j])
+#             if val > 0:
+#                 # White text if dark block, Black text if light block
+#                 text_c = "white" if val > heatmap_pivot.values.max() * 0.5 else "black"
+#                 ax.text(j, i, val, ha="center", va="center", color=text_c, fontweight="bold")
+
+#     st.pyplot(fig)
+# else:
+#     st.info("Insufficient data for heatmap.")
 # st.markdown("</div>", unsafe_allow_html=True)
 
 # st.markdown("<br>", unsafe_allow_html=True)
-
-# HEATMAP (STRICT COLOR CONTROL)
-st.markdown('<div class="dashboard-card"><div class="chart-title">Seasonal Activity Heatmap</div>', unsafe_allow_html=True)
-
-heatmap_df = filtered_df.dropna(subset=["Enroll_Month_Name", "Enroll_Year"]).groupby(["Enroll_Year", "Enroll_Month_Name"])["EMP ID"].nunique().reset_index()
-
-if not heatmap_df.empty:
-    heatmap_pivot = heatmap_df.pivot(index="Enroll_Month_Name", columns="Enroll_Year", values="EMP ID").fillna(0)
-    month_order_map = {m: i for i, m in enumerate(["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"])}
-    heatmap_pivot = heatmap_pivot.sort_index(key=lambda x: x.map(month_order_map))
-    
-    # Matplotlib Figure with Transparent BG and DARK Text
-    fig, ax = plt.subplots(figsize=(12, 4))
-    fig.patch.set_alpha(0)      # Transparent figure background
-    ax.patch.set_alpha(0)       # Transparent axis background
-    
-    im = ax.imshow(heatmap_pivot, aspect="auto", cmap=HEATMAP_CMAP)
-    
-    # Axes Styling - FORCE DARK COLORS
-    ax.set_xticks(range(len(heatmap_pivot.columns)))
-    ax.set_xticklabels(heatmap_pivot.columns, color="#334155", fontweight="bold")
-    ax.set_yticks(range(len(heatmap_pivot.index)))
-    ax.set_yticklabels(heatmap_pivot.index, color="#334155", fontweight="bold")
-    
-    # Spines
-    for spine in ax.spines.values(): spine.set_visible(False)
-    
-    # Text Annotations inside Heatmap
-    for i in range(len(heatmap_pivot.index)):
-        for j in range(len(heatmap_pivot.columns)):
-            val = int(heatmap_pivot.iloc[i, j])
-            if val > 0:
-                # White text if dark block, Black text if light block
-                text_c = "white" if val > heatmap_pivot.values.max() * 0.5 else "black"
-                ax.text(j, i, val, ha="center", va="center", color=text_c, fontweight="bold")
-
-    st.pyplot(fig)
-else:
-    st.info("Insufficient data for heatmap.")
-st.markdown("</div>", unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
 
 # FULL WIDTH BADGE CHART
 st.markdown('<div class="dashboard-card"><div class="chart-title">Badge Progression</div>', unsafe_allow_html=True)
@@ -923,6 +909,69 @@ with row3_2:
         st.error(f"Error: Column '{status_col}' not found. Please check your Excel column names.")
 
     st.markdown("</div>", unsafe_allow_html=True)
+
+
+# ==============================================================================
+# ROW 4: HEATMAP (Seaborn with Dark Theme Support)
+# ==============================================================================
+st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Distribution: Vertical vs. Certification</div>', unsafe_allow_html=True)
+
+# 1. Prepare Data for Heatmap (Pivot Table)
+# Rows: Vertical / SL
+# Columns: Certification Name
+# Values: Count of Completed Employees
+heatmap_data = pd.pivot_table(
+    filtered_df[filtered_df["Status"] == "Completed"],
+    index="Vertical / SL",
+    columns="Certification",
+    values="EMP ID",
+    aggfunc="nunique",
+    fill_value=0
+)
+
+# 2. Configure Plot for Dark Theme
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Set figure size and background color to match Streamlit's Dark Mode (#0e1117)
+fig, ax = plt.subplots(figsize=(12, 8))
+fig.patch.set_facecolor('#0e1117') # Figure background
+ax.set_facecolor('#0e1117')        # Plot area background
+
+# 3. Create Heatmap
+# cmap="mako": A beautiful dark-teal gradient perfect for dark backgrounds
+sns.heatmap(
+    heatmap_data, 
+    annot=True,          # Show numbers in cells
+    fmt="d",             # Integer format
+    cmap="mako",         # Dark-friendly color scheme
+    linewidths=0.5,      # Slight separation between cells
+    linecolor='#0e1117', # Lines match background color
+    cbar_kws={'label': 'Number of Certified Learners'}
+)
+
+# 4. Customizing Axis Labels for White Text
+ax.tick_params(colors='white', which='both')  # Ticks are white
+plt.xticks(color='white', fontsize=10, rotation=45, ha='right')
+plt.yticks(color='white', fontsize=10)
+
+# Labels
+plt.xlabel("Certification Name", color='white', fontsize=12, labelpad=10)
+plt.ylabel("Vertical / SL", color='white', fontsize=12, labelpad=10)
+
+# Colorbar adjustments (Accessing the colorbar object to make text white)
+cbar = ax.collections[0].colorbar
+cbar.ax.yaxis.set_tick_params(color='white')
+plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
+cbar.set_label('Count', color='white')
+
+# Remove outer border for a cleaner look
+sns.despine(top=True, right=True, left=True, bottom=True)
+
+# 5. Display in Streamlit
+st.pyplot(fig)
+
+st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
 with st.expander("🔎 Inspect Raw Data"):
     st.dataframe(filtered_df, use_container_width=True, height=400)
