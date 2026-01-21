@@ -330,7 +330,7 @@ c1, c2 = st.columns(2)
 
 with c1:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Funnel</div>', unsafe_allow_html=True)
-    funnel = (filtered_df.groupby("Certification")["EMP ID"].nunique().sort_values(ascending=False).iloc[::-1] )
+    funnel = filtered_df.groupby("Certification")["EMP ID"].nunique().sort_values(ascending=True)
     st.bar_chart(funnel, horizontal=True, color=CHART_COLOR)
     st.markdown("</div>", unsafe_allow_html=True)
 
