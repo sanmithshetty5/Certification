@@ -25,7 +25,7 @@ ACCENT_COLOR = "#3b82f6"         # Blue-500
 BACKGROUND_COLOR = "#f8fafc"     # Light background
 TEXT_COLOR = "#1e293b"           # Dark text
 CHART_COLOR = PRIMARY_COLOR
-HEATMAPf_CMAP = "Blues"
+HEATMAP_CMAP = "Blues"
 SB_TEXT = "#ffffff"
 
 
