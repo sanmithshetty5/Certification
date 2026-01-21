@@ -346,6 +346,53 @@ st.markdown("<br>", unsafe_allow_html=True)
 # ROW 1 CHARTS
 c1, c2 = st.columns(2)
 
+# with c1:
+#     st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Funnel</div>', unsafe_allow_html=True)
+    
+#     # 1. Prepare Data
+#     funnel_data = filtered_df.groupby("Certification")["EMP ID"].nunique().reset_index()
+#     funnel_data.columns = ["Certification", "Learners"]
+#     funnel_data = funnel_data.sort_values("Learners", ascending=True)
+
+#     # 2. Create Interactive Chart
+#     fig = px.bar(
+#         funnel_data, 
+#         x="Learners", 
+#         y="Certification", 
+#         orientation='h',
+#         text="Learners",
+#         color_discrete_sequence=[PRIMARY_COLOR]
+#     )
+
+#     # 3. Apply Clean Style
+#     fig.update_layout(
+#         plot_bgcolor="rgba(0,0,0,0)",
+#         paper_bgcolor="rgba(0,0,0,0)",
+#         margin=dict(t=10, l=0, r=0, b=0),
+#         xaxis=dict(showgrid=False, visible=True, title=None), # Visible for zooming
+#         yaxis=dict(showgrid=False, tickfont=dict(color=TEXT_COLOR), title=None),
+#         font=dict(family="Segoe UI", color=TEXT_COLOR),
+#         height=250,
+#         hovermode="y unified",
+#         dragmode="pan" # Default tool is now Pan
+#     )
+    
+#     fig.update_traces(textposition='outside')
+
+#     # 4. Configure Toolbar (The requested options)
+#     my_config = {
+#         'displayModeBar': 'hover', # Toolbar appears on hover
+#         'scrollZoom': True,        # Enable scrolling to zoom
+#         'displaylogo': False,      # Remove Plotly logo
+#         'modeBarButtonsToRemove': ['lasso2d', 'select2d'], # Remove clutter
+
+#         # Note: Pan, Zoom In/Out, Autoscale (Realign), Reset Scale, and Download Image 
+#         # are included by default in the toolbar.
+#     }
+
+#     st.plotly_chart(fig, use_container_width=True, config=my_config)
+    
+#     st.markdown("</div>", unsafe_allow_html=True)
 with c1:
     st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Funnel</div>', unsafe_allow_html=True)
     
@@ -364,30 +411,42 @@ with c1:
         color_discrete_sequence=[PRIMARY_COLOR]
     )
 
-    # 3. Apply Clean Style
+    # 3. Apply Clean Style with EXPLICIT Colors
     fig.update_layout(
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         margin=dict(t=10, l=0, r=0, b=0),
-        xaxis=dict(showgrid=False, visible=True, title=None), # Visible for zooming
-        yaxis=dict(showgrid=False, tickfont=dict(color=TEXT_COLOR), title=None),
-        font=dict(family="Segoe UI", color=TEXT_COLOR),
+        
+        # --- FIX: Force Dark Color on X-Axis Ticks ---
+        xaxis=dict(
+            showgrid=False, 
+            visible=True, 
+            title=None, 
+            tickfont=dict(color="#1e293b", size=12) 
+        ),
+        
+        # --- Force Dark Color on Y-Axis Ticks ---
+        yaxis=dict(
+            showgrid=False, 
+            title=None,
+            tickfont=dict(color="#1e293b", size=12)
+        ),
+        
+        font=dict(family="Segoe UI", color="#1e293b"), # Global font color
         height=250,
         hovermode="y unified",
-        dragmode="pan" # Default tool is now Pan
+        dragmode="pan"
     )
     
-    fig.update_traces(textposition='outside')
+    # Dark text for the numbers outside the bars
+    fig.update_traces(textposition='outside', textfont_color="#1e293b")
 
-    # 4. Configure Toolbar (The requested options)
+    # 4. Configure Toolbar
     my_config = {
-        'displayModeBar': 'hover', # Toolbar appears on hover
-        'scrollZoom': True,        # Enable scrolling to zoom
-        'displaylogo': False,      # Remove Plotly logo
-        'modeBarButtonsToRemove': ['lasso2d', 'select2d'], # Remove clutter
-
-        # Note: Pan, Zoom In/Out, Autoscale (Realign), Reset Scale, and Download Image 
-        # are included by default in the toolbar.
+        'displayModeBar': 'hover',
+        'scrollZoom': True,
+        'displaylogo': False,
+        'modeBarButtonsToRemove': ['lasso2d', 'select2d'],
     }
 
     st.plotly_chart(fig, use_container_width=True, config=my_config)
