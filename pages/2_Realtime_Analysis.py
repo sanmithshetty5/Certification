@@ -423,8 +423,9 @@ with c3:
     voucher_df = (
     filtered_df["Voucher Status"]
     .value_counts()
-    .reset_index()
-    .rename(columns={"index": "Status", "Voucher Status": "Count"}))
+    .reset_index())
+
+    voucher_df.columns = ["Status", "Count"]
 
     fig, ax = plt.subplots(figsize=(6, 4))
     sns.barplot(
