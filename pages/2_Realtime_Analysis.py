@@ -5,6 +5,10 @@ import io
 import zipfile
 import plotly.express as px
 
+import streamlit as st
+st.write("Streamlit version:", st.__version__)
+
+
 # -----------------------------------------
 # PAGE CONFIG
 # -----------------------------------------
