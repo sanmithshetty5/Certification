@@ -325,8 +325,9 @@ if st.session_state.page_mode == "ADD":
         "💾 Add New Certification",
         type="primary",
         use_container_width=True,
-        disabled=st.session_state.duplicate_exists
+        # disabled=st.session_state.duplicate_exists
     ):
+    
         if validate_emp(emp_id, emp_name):
             session.create_dataframe([Row(**payload)]) \
                 .write.mode("append") \
