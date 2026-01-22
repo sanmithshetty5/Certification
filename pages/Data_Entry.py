@@ -407,14 +407,22 @@ with st.container(border=True):
     with r2:
         vertical_options = get_vertical_options()
         
-        vertical = st.combobox(
+        vertical_selection = st.multiselect(
            "Vertical / SL",
-           vertical_options,
+           options = vertical_options,
+            max_selections = 1,
+            allow_new = True,
            placeholder = "Select or type a new Vertical / SL"
         )
 
-        vertical = vertical.strip() if vertical else None
-    
+        vertical = (
+            vertical_selection[0].strip()
+            if vertical_selection
+            else None
+        )
+
+        if vertical_selection and len(vertical_selection) > 1:
+            st.error("Please select only one Vertical / SL")
         
     comment = st.text_area("Comment", height=100)
 
