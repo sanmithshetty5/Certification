@@ -5,10 +5,6 @@ from datetime import datetime, date
 import pandas as pd
 from snowflake.snowpark import Row
 
-import streamlit as st
-st.write("Streamlit version:", st.__version__)
-
-
 # -----------------------------------------
 # Page Config
 # -----------------------------------------
