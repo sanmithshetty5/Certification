@@ -1,4 +1,3 @@
-
 import streamlit as st
 import re
 from datetime import datetime, date
@@ -411,7 +410,7 @@ with st.container(border=True):
            "Vertical / SL",
            options = vertical_options,
             max_selections = 1,
-            allow_new = True,
+            accept_new_options = True,
            placeholder = "Select or type a new Vertical / SL"
         )
 
@@ -421,8 +420,8 @@ with st.container(border=True):
             else None
         )
 
-        if vertical_selection and len(vertical_selection) > 1:
-            st.error("Please select only one Vertical / SL")
+        # if vertical_selection and len(vertical_selection) > 1:
+        #     st.error("Please select only one Vertical / SL")
         
     comment = st.text_area("Comment", height=100)
 
