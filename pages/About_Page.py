@@ -20,39 +20,55 @@ LOGO_HEXAWARE = "https://raw.githubusercontent.com/sanmithshetty5/Certification/
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+/* ===== REMOVE STREAMLIT SIDEBAR COMPLETELY (THIS PAGE ONLY) ===== */
 
-    .top-nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 64px;
-        background-color: #0F172A;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 2rem;
-        z-index: 9999;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    .nav-left {
-        color: #FFFFFF;
-        font-size: 1.3rem;
-        font-weight: 700;
-    }
-    .nav-links a {
-        color: #E5E7EB;
-        margin-left: 1.5rem;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.95rem;
-    }
-    .nav-links a:hover {
-        color: #38BDF8;
-    }
-    .page-spacer {
-        height: 80px;
-    }
+/* Hide the entire sidebar container */
+section[data-testid="stSidebar"] {
+    display: none !important;
+}
+
+/* Remove the space reserved for the sidebar */
+div[data-testid="stAppViewContainer"] {
+    margin-left: 0 !important;
+}
+
+/* Ensure main content uses full width */
+div[data-testid="stMainBlockContainer"] {
+    padding-left: 2rem !important;
+    max-width: 100% !important;
+}
+.top-nav {
+position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background-color: #0F172A;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.nav-left {
+    color: #FFFFFF;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+.nav-links a {
+    color: #E5E7EB;
+    margin-left: 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.nav-links a:hover {
+    color: #38BDF8;
+}
+.page-spacer {
+    height: 80px;
+}
 
 /* --- Main Container --- */
 .stApp {
