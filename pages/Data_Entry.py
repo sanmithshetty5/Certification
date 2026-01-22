@@ -139,10 +139,6 @@ for key in [
 ]:
     if key not in st.session_state:
         st.session_state[key] = None
-if "page_mode" not in st.session_state:
-    st.session_state.page_mode = "ENTRY"  
-    # ENTRY | ADD | UPDATE
-
 
 # -----------------------------------------
 # Helper Functions (UNCHANGED)
@@ -198,6 +194,53 @@ def autofill_employee_name(emp_id):
     return df.iloc[0]["EMP Name"] if not df.empty else ""
 
 # -----------------------------------------
+# Sidebar – Search (UNCHANGED LOGIC)
+# -----------------------------------------
+with st.sidebar:
+    # MODIFIED: Use inline HTML span to style the markdown header text directly
+    st.markdown(
+        '<div style="font-size: 1.5rem; font-weight: 600; color: #ffffff; margin-bottom: 1rem;">🔍 Search Employee</div>',
+        unsafe_allow_html=True
+    )
+    # The label color here is now controlled by the CSS block above
+    emp_id = st.text_input("Employee ID (10 digits)")
+
+    certifications = (
+        "Advanced Analyst",
+        "Advanced Architect",
+        "Advanced Data Engineer",
+        "Core",
+        "Associate",
+        "Speciality Gen AI",
+        "Speciality Native App",
+        "Advanced Data Scientist",
+        "Speciality Snowpark"
+    )
+
+    certification = st.selectbox("Certification", certifications)
+
+    if st.button("Search", type="primary", use_container_width=True):
+        if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
+            st.error("Enter valid 10-digit EMP ID")
+            st.stop()
+
+        result = session.sql(f"""
+            SELECT *
+            FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+            WHERE "EMP ID" = '{emp_id}'
+              AND "Certification" = '{certification}'
+        """).to_pandas()
+
+        if result.empty:
+            st.session_state.edit_mode = False
+            st.session_state.record = {}
+            st.toast("No record found. Add new.", icon="➕")
+        else:
+            st.session_state.edit_mode = True
+            st.session_state.record = result.iloc[0].to_dict()
+            st.toast("Record loaded", icon="✅")
+
+# -----------------------------------------
 # Reset on EMP ID change (UNCHANGED)
 # -----------------------------------------
 if st.session_state.last_emp_id != emp_id:
@@ -220,76 +263,9 @@ with title_col:
 
 with logo_col:
     st.image(
-        "https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/image.png",
+        "https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/logo.png",
         width=200,
     )
-
-# SEARCH 
-st.subheader("🔍 Find Employee")
-
-emp_id_input = st.text_input(
-    "Enter Employee ID (10 digits)",
-    max_chars=10,
-    key="entry_emp_id"
-)
-
-search_clicked = st.button("Search Employee", type="primary")
-employee_records = pd.DataFrame()
-
-if search_clicked:
-    if not emp_id_input.isdigit() or len(emp_id_input) != 10:
-        st.error("❌ Employee ID must be exactly 10 digits.")
-        st.stop()
-
-    employee_records = session.sql(f"""
-        SELECT *
-        FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-        WHERE "EMP ID" = '{emp_id_input}'
-    """).to_pandas()
-    
-if search_clicked and employee_records.empty:
-    st.warning("⚠️ No data found for this Employee ID.")
-
-    if st.button("➕ Add New Certification"):
-        st.session_state.page_mode = "ADD"
-        st.session_state.edit_mode = False
-        st.session_state.record = {}
-        st.session_state.last_emp_id = emp_id_input
-if search_clicked and not employee_records.empty:
-    st.success("✅ Employee data found")
-
-    st.dataframe(
-        employee_records[["Certification", "Enrolment Month", "SnowPro Certified"]],
-        use_container_width=True
-    )
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("➕ Add New Certification"):
-            st.session_state.page_mode = "ADD"
-            st.session_state.edit_mode = False
-            st.session_state.record = {}
-            st.session_state.last_emp_id = emp_id_input
-
-    with col2:
-        selected_cert = st.selectbox(
-            "Select Certification to Update",
-            employee_records["Certification"].tolist()
-        )
-
-        if st.button("✏️ Update Selected"):
-            selected_row = employee_records[
-                employee_records["Certification"] == selected_cert
-            ].iloc[0]
-
-            st.session_state.page_mode = "UPDATE"
-            st.session_state.edit_mode = True
-            st.session_state.record = selected_row.to_dict()
-            st.session_state.last_emp_id = emp_id_input
-
-if st.session_state.page_mode in ("ADD", "UPDATE"):
-
 st.markdown("---")
 
 # -----------------------------------------
