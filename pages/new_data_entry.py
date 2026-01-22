@@ -223,8 +223,10 @@ if st.session_state.page_mode == "ADD":
         else:
             certification = st.selectbox(
                 "Certification",
-                available_certs
+                available_certs,
+                key=f"cert_select_{emp_id}_{len(existing_certs)}"
             )
+
 
   
     if certification is None:
@@ -331,8 +333,10 @@ if st.session_state.page_mode == "ADD":
     ):
     
         if certification is None:
-            st.error("❌ No available certification left for this employee.")
+            st.warning("⚠️ No available certification to add for this employee.")
+            st.button("⬅ Back to Search")
             st.stop()
+
     
         if validate_emp(emp_id, emp_name):
     
@@ -344,5 +348,7 @@ if st.session_state.page_mode == "ADD":
             session.sql("SELECT 1").collect()  # force execution
     
             st.success("✅ Certification added successfully")
-            st.session_state.page_mode = "ENTRY"
+            st.session_state.last_emp_id = emp_id
+            st.session_state.autofill_emp_name = emp_name
             st.rerun()
+
