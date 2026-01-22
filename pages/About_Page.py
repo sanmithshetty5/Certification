@@ -349,7 +349,7 @@ with p2:
     with pp1:
         st.markdown(f"""
         <div class="partner-logo-container">
-            <img src="{LOGO_HEXAWARE}" class="partner-img" alt="Hexaware">
+            <img src="{LOGO_HEXAWARE}" style = "height:30px;" alt="Hexaware">
             <div style="font-weight:600; color:#334155;">Hexaware Technologies</div>
             <div style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">Driving Digital Transformation</div>
         </div>
