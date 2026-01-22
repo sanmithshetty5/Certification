@@ -234,7 +234,7 @@ row1_col1, row1_col2 = st.columns(2, gap="medium")
 with row1_col1:
     st.markdown("""
     <div class="feature-card-v">
-        <div class="icon-box" style="background: #e0e7ff; color: #4338ca;">📝</div>
+        <div class="icon-box" style="background: #e0e7ff; color: #4338ca;">&#128221;</div>
         <div class="card-title">Streamlined Tracking</div>
         <div class="card-desc">
             Effortlessly log employee details, certification tracks, and exam statuses. 
@@ -246,7 +246,7 @@ with row1_col1:
 with row1_col2:
     st.markdown("""
     <div class="feature-card-v">
-        <div class="icon-box" style="background: #fce7f3; color: #be185d;">📊</div>
+        <div class="icon-box" style="background: #fce7f3; color: #be185d;">&#128202;</div>
         <div class="card-title">Intelligent Analytics</div>
         <div class="card-desc">
             Visualize completion rates and skill distribution. 
@@ -264,7 +264,7 @@ row2_col1, row2_col2 = st.columns(2, gap="medium")
 with row2_col1:
     st.markdown("""
     <div class="feature-card-v">
-        <div class="icon-box" style="background: #f3e8ff; color: #7c3aed;">🤖</div>
+        <div class="icon-box" style="background: #f3e8ff; color: #7c3aed;">&#129302;</div>
         <div class="card-title">AI-Assisted Insights</div>
         <div class="card-desc">
            Use intelligent analysis to uncover skill gaps, flag potential compliance risks, and deliver focused, actionable recommendations.
@@ -275,7 +275,7 @@ with row2_col1:
 with row2_col2:
     st.markdown("""
     <div class="feature-card-v">
-        <div class="icon-box" style="background: #dcfce7; color: #15803d;">☁️</div>
+        <div class="icon-box" style="background: #dcfce7; color: #15803d;">&#9729;&#65039;</div>
         <div class="card-title">Cloud Native</div>
         <div class="card-desc">
             Powered by <b>Snowflake</b> for infinite scalability. 
@@ -295,7 +295,7 @@ c_pad1, c_center, c_pad2 = st.columns([1, 2, 1])
 with c_center:
     st.markdown("""
     <div class="feature-card-h">
-        <div class="icon-box" style="background: #e0f2fe; color: #0369a1;">📥</div>
+        <div class="icon-box" style="background: #e0f2fe; color: #0369a1;">&#128229;</div>
         <div>
             <div class="card-title" style="margin-bottom:0.25rem;">Instant Export Utility</div>
             <div class="card-desc">Download complete datasets and visual reports with one click for offline analysis.</div>
