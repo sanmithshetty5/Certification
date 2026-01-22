@@ -408,17 +408,13 @@ with st.container(border=True):
         vertical_options = get_vertical_options()
         vertical_options.append("➕ Add New")
         
-        selected_vertical = st.selectbox(
+        selected_vertical = st.combobox(
            "Vertical / SL",
-           vertical_options
+           vertical_options,
+           placeholder = "Select or type a new Vertical / SL"
         )
 
-        if selected_vertical == "➕ Add New":
-            new_vertical = st.text_input("Enter New Vertical / SL")
-            vertical = new_vertical.strip() if new_vertical else None
-
-        else:
-            vertical = selected_vertical
+        vertical = certical.strip() if vertical else None
     
         
     comment = st.text_area("Comment", height=100)
