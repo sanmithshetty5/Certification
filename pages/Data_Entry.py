@@ -289,7 +289,7 @@ if search_clicked and not employee_records.empty:
             st.session_state.record = selected_row.to_dict()
             st.session_state.last_emp_id = emp_id_input
 
-if st.session_state.page_mode in ("ADD", "UPDATE"):
+    if st.session_state.page_mode in ("ADD", "UPDATE"):
 
 st.markdown("---")
 
