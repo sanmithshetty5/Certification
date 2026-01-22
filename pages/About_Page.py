@@ -20,6 +20,16 @@ LOGO_HEXAWARE = "https://raw.githubusercontent.com/sanmithshetty5/Certification/
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+/* --- REMOVE STREAMLIT TOP HEADER COMPLETELY --- */
+header[data-testid="stHeader"] {
+    display: none;
+}
+
+/* --- REMOVE DEFAULT TOP PADDING STREAMLIT ADDS --- */
+.block-container {
+    padding-top: 0rem !important;
+}
+
 /* ===== REMOVE STREAMLIT SIDEBAR COMPLETELY (THIS PAGE ONLY) ===== */
 
 /* Hide the entire sidebar container */
@@ -48,7 +58,7 @@ div[data-testid="stMainBlockContainer"] {
     align-items: center;
     justify-content: space-between;
     padding: 0 2rem;
-    z-index: 9999;
+    z-index: 10000;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 /* --- PUSH CONTENT BELOW NAVBAR --- */
