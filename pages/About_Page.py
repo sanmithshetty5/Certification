@@ -364,7 +364,7 @@ with p2:
         st.markdown(f"""
         <div class="partner-logo-container">
             <div class="partner-logo">
-                <img src="{LOGO_HEXAWARE}" style="height:30px;" alt="Hexaware">
+                <img src="{LOGO_HEXAWARE}" style="height:15px;" alt="Hexaware">
             </div>
             <div style="font-weight:600; color:#334155;">Hexaware Technologies</div>
             <div style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">
@@ -378,7 +378,7 @@ with p2:
         st.markdown(f"""
         <div class="partner-logo-container">
             <div class="partner-logo">
-                <img src="{LOGO_SNOWFLAKE}" style="height:45px;" alt="Snowflake">
+                <img src="{LOGO_SNOWFLAKE}" style="height:60px;" alt="Snowflake">
             </div>
             <div style="font-weight:600; color:#334155;">Snowflake Data Cloud</div>
             <div style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">
