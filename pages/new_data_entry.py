@@ -293,6 +293,8 @@ if st.session_state.page_mode == "ADD":
                 accept_new_options=True
             )
             vertical = vertical_sel[0] if vertical_sel else None
+            batch = st.text_input("Batch")
+           
 
         comment = st.text_area("Comment")
 
@@ -317,6 +319,7 @@ if st.session_state.page_mode == "ADD":
         "Account": normalize(account),
         "Account SPOC": normalize(account_spoc),
         "Vertical / SL": normalize(vertical),
+        "Batch":normalize(batch),
         "Comment": normalize(comment)
     }
 
