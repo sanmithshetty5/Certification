@@ -74,6 +74,18 @@ if not st.session_state.page_mode:
 # -----------------------------------------
 # Helper Functions
 # -----------------------------------------
+def get_existing_certifications(emp_id):
+    if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
+        return []
+
+    df = session.sql(f"""
+        SELECT DISTINCT "Certification"
+        FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+        WHERE "EMP ID" = '{emp_id}'
+    """).to_pandas()
+
+    return df["Certification"].tolist() if not df.empty else []
+
 def validate_emp(emp_id, emp_name):
     if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
         st.error("❌ Employee ID must be exactly 10 digits")
@@ -196,13 +208,28 @@ if st.session_state.page_mode == "ADD":
                 value=st.session_state.autofill_emp_name or ""
             )
 
-        certification = st.selectbox("Certification", CERTIFICATIONS)
+        # Fetch existing certs for this EMP ID
+        existing_certs = get_existing_certifications(emp_id)
+        
+        # Filter out already-used certifications
+        available_certs = [
+            cert for cert in CERTIFICATIONS
+            if cert not in existing_certs
+        ]
+        
+        if not available_certs:
+            st.warning("⚠️ All certifications are already assigned to this employee.")
+            certification = None
+        else:
+            certification = st.selectbox(
+                "Certification",
+                available_certs
+            )
 
-    # Duplicate check (real-time)
-    st.session_state.duplicate_exists = check_duplicate(emp_id, certification)
-
-    if st.session_state.duplicate_exists:
-        st.error("⚠️ This Employee ID & Certification already exists.")
+  
+    if certification is None:
+        st.error("❌ No available certification to add for this employee.")
+        st.stop()
 
     # ---------------- Schedule & Status ----------------
     with st.container(border=True):
