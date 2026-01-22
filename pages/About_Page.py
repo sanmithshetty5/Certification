@@ -24,21 +24,21 @@ st.markdown("""
 
 /* Hide the entire sidebar container */
 section[data-testid="stSidebar"] {
-    display: none !important;
+    display: none;
 }
 
 /* Remove the space reserved for the sidebar */
 div[data-testid="stAppViewContainer"] {
-    margin-left: 0 !important;
+    margin-left: 0;
 }
 
 /* Ensure main content uses full width */
 div[data-testid="stMainBlockContainer"] {
-    padding-left: 2rem !important;
-    max-width: 100% !important;
+    padding-left: 2rem;
+    max-width: 100%;
 }
 .top-nav {
-position: fixed;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -50,6 +50,10 @@ position: fixed;
     padding: 0 2rem;
     z-index: 9999;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+/* --- PUSH CONTENT BELOW NAVBAR --- */
+.page-spacer {
+    height: 90px;
 }
 .nav-left {
     color: #FFFFFF;
