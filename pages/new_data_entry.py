@@ -1,6 +1,6 @@
 import streamlit as st
-from datetime import date
 import pandas as pd
+from datetime import date
 from snowflake.snowpark import Row
 
 # -----------------------------------------
@@ -9,25 +9,26 @@ from snowflake.snowpark import Row
 st.set_page_config(
     page_title="Certification Tracker",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # -----------------------------------------
-# CSS (UNCHANGED UI)
+# Global CSS
 # -----------------------------------------
 st.markdown("""
 <style>
-.stApp { background-color: #F8FAFC; font-family: 'Inter', sans-serif; }
+.stApp {
+    background-color: #F8FAFC;
+    font-family: 'Inter', sans-serif;
+}
 .section-header {
     color: #0F172A;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     border-bottom: 2px solid #E2E8F0;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
 }
-.stButton > button { border-radius: 6px; font-weight: 600; height: 3em; }
-h1,h2,h3,h4,h5,h6 { color:#0F172A !important; font-weight:700; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -41,9 +42,15 @@ session = cnx.session()
 # Constants
 # -----------------------------------------
 CERTIFICATIONS = (
-    "Advanced Analyst","Advanced Architect","Advanced Data Engineer",
-    "Advanced Data Scientist","Core","Associate",
-    "Speciality Gen AI","Speciality Native App","Speciality Snowpark"
+    "Advanced Analyst",
+    "Advanced Architect",
+    "Advanced Data Engineer",
+    "Advanced Data Scientist",
+    "Core",
+    "Associate",
+    "Speciality Gen AI",
+    "Speciality Native App",
+    "Speciality Snowpark"
 )
 
 MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -51,27 +58,24 @@ MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec
 # -----------------------------------------
 # Session State
 # -----------------------------------------
-for k in [
-    "record","last_emp_id","pending_data",
-    "pending_action","save_completed",
-    "autofill_emp_name","duplicate_exists","add_mode"
+for key in [
+    "page_mode",
+    "last_emp_id",
+    "autofill_emp_name",
+    "pending_data",
+    "duplicate_exists",
+    "save_completed"
 ]:
-    st.session_state.setdefault(k, None)
+    st.session_state.setdefault(key, None)
 
-if st.session_state.add_mode is None:
-    st.session_state.add_mode = False
+if not st.session_state.page_mode:
+    st.session_state.page_mode = "ENTRY"
 
 # -----------------------------------------
-# Helpers
+# Helper Functions
 # -----------------------------------------
-def normalize(val):
-    return val.strip() if isinstance(val,str) and val.strip() else None
-
-def date_str(d):
-    return d.strftime("%d-%m-%Y") if d else None
-
-def validate(emp_id, emp_name):
-    if not emp_id.isdigit() or len(emp_id) != 10:
+def validate_emp(emp_id, emp_name):
+    if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
         st.error("❌ Employee ID must be exactly 10 digits")
         return False
     if not emp_name.strip():
@@ -79,161 +83,229 @@ def validate(emp_id, emp_name):
         return False
     return True
 
-def duplicate_exists(emp_id, cert):
-    if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
-        return False
-    df = session.sql(f"""
-        SELECT 1 FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-        WHERE "EMP ID"='{emp_id}' AND "Certification"='{cert}'
-        LIMIT 1
-    """).to_pandas()
-    return not df.empty
-
-def autofill_name(emp_id):
+def autofill_employee_name(emp_id):
     if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
         return ""
     df = session.sql(f"""
         SELECT DISTINCT "EMP Name"
         FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-        WHERE "EMP ID"='{emp_id}'
+        WHERE "EMP ID" = '{emp_id}'
     """).to_pandas()
     return df.iloc[0]["EMP Name"] if not df.empty else ""
 
-# -----------------------------------------
-# Sidebar – Search + Add New
-# -----------------------------------------
-with st.sidebar:
-    st.markdown(
-        '<div style="font-size:1.5rem;font-weight:600;color:white;">🔍 Search Employee</div>',
-        unsafe_allow_html=True
-    )
+def check_duplicate(emp_id, certification):
+    if not emp_id or not certification:
+        return False
+    df = session.sql(f"""
+        SELECT 1
+        FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+        WHERE "EMP ID" = '{emp_id}'
+          AND "Certification" = '{certification}'
+        LIMIT 1
+    """).to_pandas()
+    return not df.empty
 
-    search_emp_id = st.text_input("Employee ID (10 digits)")
-    search_cert = st.selectbox("Certification", CERTIFICATIONS)
+def fmt_date(d):
+    return d.strftime("%d-%m-%Y") if d else None
 
-    if st.button("Search", type="primary", use_container_width=True):
-        if not search_emp_id.isdigit() or len(search_emp_id) != 10:
-            st.error("Enter valid 10-digit EMP ID")
-            st.stop()
+def get_vertical_options():
+    df = session.sql("""
+        SELECT DISTINCT "Vertical / SL"
+        FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+        WHERE "Vertical / SL" IS NOT NULL
+        ORDER BY "Vertical / SL"
+    """).to_pandas()
+    return sorted(df["Vertical / SL"].dropna().tolist())
 
-        df = session.sql(f"""
-            SELECT *
-            FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-            WHERE "EMP ID"='{search_emp_id}'
-              AND "Certification"='{search_cert}'
-        """).to_pandas()
+def normalize(val):
+    if val is None:
+        return None
+    if isinstance(val, str) and val.strip() == "":
+        return None
+    return val.strip() if isinstance(val, str) else val
 
-        st.session_state.record = df.iloc[0].to_dict() if not df.empty else {}
-        st.session_state.autofill_emp_name = autofill_name(search_emp_id)
-        st.session_state.add_mode = False
+# =========================================================
+# ENTRY MODE
+# =========================================================
+if st.session_state.page_mode == "ENTRY":
 
-    if st.button("➕ Add New Certification", use_container_width=True):
-        st.session_state.record = {}
-        st.session_state.autofill_emp_name = ""
-        st.session_state.add_mode = True
-        st.toast("Add new certification mode", icon="➕")
+    st.subheader("🔍 Find Employee")
 
-# -----------------------------------------
-# Header
-# -----------------------------------------
-title_col, logo_col = st.columns([7,1])
-with title_col:
-    st.title("🎓 Certification Tracker")
-with logo_col:
-    st.image(
-        "https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/logo.png",
-        width=200
-    )
+    c1, c2, c3 = st.columns([2.5, 1.5, 3])
 
-st.markdown("---")
+    with c1:
+        emp_id_search = st.text_input("Employee ID", max_chars=10)
 
-# -----------------------------------------
-# Employee Details
-# -----------------------------------------
-with st.container(border=True):
-    st.markdown('<div class="section-header">👤 Employee Details</div>', unsafe_allow_html=True)
-    c1,c2,c3 = st.columns([1,2,2])
+    with c2:
+        search_clicked = st.button("🔍 Search", type="primary", use_container_width=True)
 
-    emp_id = c1.text_input(
-        "Employee ID",
-        value="" if st.session_state.add_mode else search_emp_id
-    )
+    with c3:
+        add_clicked = st.button("➕ Add New Certification", use_container_width=True)
 
-    emp_name = c2.text_input(
-        "Employee Name",
-        value="" if st.session_state.add_mode else (
-            st.session_state.record.get("EMP Name")
-            or st.session_state.autofill_emp_name
-            or ""
-        )
-    )
+    if search_clicked:
+        if not emp_id_search or not emp_id_search.isdigit() or len(emp_id_search) != 10:
+            st.error("❌ Enter valid 10-digit Employee ID")
+        else:
+            df = session.sql(f"""
+                SELECT *
+                FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+                WHERE "EMP ID" = '{emp_id_search}'
+            """).to_pandas()
 
-    certification = c3.selectbox(
-        "Certification",
-        CERTIFICATIONS,
-        index=0 if st.session_state.add_mode else (
-            CERTIFICATIONS.index(search_cert)
-            if search_cert in CERTIFICATIONS else 0
-        )
-    )
+            if df.empty:
+                st.warning("No records found")
+            else:
+                st.success("Employee records found")
+                st.dataframe(
+                    df[["Certification","Enrolment Month","SnowPro Certified"]],
+                    use_container_width=True
+                )
 
-# -----------------------------------------
-# Duplicate Check
-# -----------------------------------------
-st.session_state.duplicate_exists = duplicate_exists(emp_id, certification)
-
-if st.session_state.duplicate_exists:
-    st.error("⚠️ Employee ID + Certification already exists.")
-
-# -----------------------------------------
-# Schedule & Status
-# -----------------------------------------
-with st.container(border=True):
-    st.markdown('<div class="section-header">🗓️ Schedule & Status</div>', unsafe_allow_html=True)
-    m1,m2 = st.columns(2)
-
-    enrol_month = m1.selectbox("Enrolment Month", MONTHS)
-    enrol_year = m1.selectbox(
-        "Enrolment Year",
-        [str(y) for y in range(date.today().year-5, date.today().year+5)]
-    )
-    planned_date = m1.date_input("Planned Certification Date", date.today())
-
-    completed = m2.checkbox("Certification Completed?")
-    actual_date = m2.date_input("Actual Completion Date", max_value=date.today()) if completed else None
-    snowpro = m2.selectbox("SnowPro Certified",("Completed","Failed")) if completed else "Incomplete"
-    voucher_status = m2.selectbox("Voucher Status",("Voucher Received","Voucher Applied","Own Payment"))
-
-# -----------------------------------------
-# Payload
-# -----------------------------------------
-payload = {
-    "EMP ID": emp_id,
-    "EMP Name": emp_name,
-    "Enrolment Month": f"{enrol_month}-{enrol_year}",
-    "Certification": certification,
-    "Planned Certification date": date_str(planned_date),
-    "Actual Date of completion": date_str(actual_date),
-    "Voucher Status": voucher_status,
-    "SnowPro Certified": snowpro,
-}
-
-# -----------------------------------------
-# Add Button (INSERT ONLY)
-# -----------------------------------------
-st.markdown("---")
-
-if st.button(
-    "➕ Add New Certification",
-    type="primary",
-    use_container_width=True,
-    disabled=st.session_state.duplicate_exists
-):
-    if validate(emp_id, emp_name):
-        session.create_dataframe([Row(**payload)]) \
-            .write.mode("append") \
-            .save_as_table("USE_CASE.CERTIFICATION.NEW_CERTIFICATION")
-
-        st.success("✅ Record added successfully")
-        st.session_state.add_mode = False
+    if add_clicked:
+        st.session_state.last_emp_id = emp_id_search.strip() if emp_id_search else ""
+        st.session_state.autofill_emp_name = autofill_employee_name(st.session_state.last_emp_id)
+        st.session_state.page_mode = "ADD"
         st.rerun()
+
+# =========================================================
+# ADD MODE
+# =========================================================
+if st.session_state.page_mode == "ADD":
+
+    if st.button("⬅ Back"):
+        st.session_state.page_mode = "ENTRY"
+        st.session_state.pending_data = None
+        st.rerun()
+
+    st.markdown("---")
+
+    # ---------------- Employee Details ----------------
+    with st.container(border=True):
+        st.markdown('<div class="section-header">👤 Employee Details</div>', unsafe_allow_html=True)
+        c1, c2 = st.columns(2)
+
+        with c1:
+            emp_id = st.text_input(
+                "Employee ID",
+                value=st.session_state.last_emp_id
+            )
+
+        with c2:
+            emp_name = st.text_input(
+                "Employee Name",
+                value=st.session_state.autofill_emp_name or ""
+            )
+
+        certification = st.selectbox("Certification", CERTIFICATIONS)
+
+    # Duplicate check (real-time)
+    st.session_state.duplicate_exists = check_duplicate(emp_id, certification)
+
+    if st.session_state.duplicate_exists:
+        st.error("⚠️ This Employee ID & Certification already exists.")
+
+    # ---------------- Schedule & Status ----------------
+    with st.container(border=True):
+        st.markdown('<div class="section-header">🗓️ Schedule & Status</div>', unsafe_allow_html=True)
+        m1, m2 = st.columns(2)
+
+        with m1:
+            c_m, c_y = st.columns(2)
+            enrol_month = c_m.selectbox("Enrolment Month", MONTHS)
+            enrol_year = c_y.selectbox(
+                "Enrolment Year",
+                [str(y) for y in range(date.today().year - 5, date.today().year + 5)]
+            )
+            planned_date = st.date_input("Planned Certification Date", date.today())
+
+        with m2:
+            completed = st.checkbox("Certification Completed?")
+            if completed:
+                actual_date = st.date_input("Actual Completion Date", max_value=date.today())
+                snowpro = st.selectbox("SnowPro Certified", ("Completed","Failed"))
+            else:
+                actual_date = None
+                snowpro = "Incomplete"
+
+            voucher_status = st.selectbox(
+                "Voucher Status",
+                ("Voucher Received","Voucher Applied","Own Payment")
+            )
+
+    # ---------------- Badges ----------------
+    with st.container(border=True):
+        st.markdown('<div class="section-header">🏅 Badges & Progress</div>', unsafe_allow_html=True)
+        badge_opts = ("Completed","In-Progress")
+        b1, b2, b3, b4, b5 = st.columns(5)
+        badge1 = b1.selectbox("Badge 1", badge_opts)
+        badge2 = b2.selectbox("Badge 2", badge_opts)
+        badge3 = b3.selectbox("Badge 3", badge_opts)
+        badge4 = b4.selectbox("Badge 4", badge_opts)
+        badge5 = b5.selectbox("Badge 5", badge_opts)
+
+        p1, p2, p3 = st.columns(3)
+        cert_prep = p1.selectbox("CertPrepOD", badge_opts)
+        level_up = p2.selectbox("Level Up Courses", ("Completed","Not Started"))
+        trial_exam = p3.selectbox("Trial Exams", ("Completed","Not Started"))
+
+    # ---------------- Department ----------------
+    with st.container(border=True):
+        st.markdown('<div class="section-header">🏢 Department Info</div>', unsafe_allow_html=True)
+        r1, r2 = st.columns(2)
+
+        with r1:
+            account = st.text_input("Account")
+            account_spoc = st.text_input("Account SPOC")
+
+        with r2:
+            vertical_opts = get_vertical_options()
+            vertical_sel = st.multiselect(
+                "Vertical / SL",
+                vertical_opts,
+                max_selections=1,
+                accept_new_options=True
+            )
+            vertical = vertical_sel[0] if vertical_sel else None
+
+        comment = st.text_area("Comment")
+
+    # ---------------- Prepare Payload ----------------
+    payload = {
+        "EMP ID": emp_id,
+        "EMP Name": emp_name,
+        "Certification": certification,
+        "Enrolment Month": f"{enrol_month}-{enrol_year}",
+        "Planned Certification date": fmt_date(planned_date),
+        "Actual Date of completion": fmt_date(actual_date),
+        "SnowPro Certified": snowpro,
+        "Voucher Status": voucher_status,
+        "Badge 1 Status": badge1,
+        "Badge 2 Status": badge2,
+        "Badge 3 Status": badge3,
+        "Badge 4 Status": badge4,
+        "Badge 5 Status": badge5,
+        "CertPrepOD Course": cert_prep,
+        "Level Up Courses": level_up,
+        "# Trial Exams": trial_exam,
+        "Account": normalize(account),
+        "Account SPOC": normalize(account_spoc),
+        "Vertical / SL": normalize(vertical),
+        "Comment": normalize(comment)
+    }
+
+    # ---------------- Save ----------------
+    if st.button(
+        "💾 Add New Certification",
+        type="primary",
+        use_container_width=True,
+        disabled=st.session_state.duplicate_exists
+    ):
+        if validate_emp(emp_id, emp_name):
+            session.create_dataframe([Row(**payload)]) \
+                .write.mode("append") \
+                .save_as_table("USE_CASE.CERTIFICATION.NEW_CERTIFICATION")
+
+            st.success("✅ Certification added successfully")
+            st.session_state.page_mode = "ENTRY"
+            st.session_state.pending_data = None
+            st.rerun()
