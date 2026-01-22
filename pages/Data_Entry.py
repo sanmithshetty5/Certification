@@ -139,6 +139,7 @@ for key in [
 ]:
     if key not in st.session_state:
         st.session_state[key] = None
+        
 if "page_mode" not in st.session_state:
     st.session_state.page_mode = "ENTRY"  
     # ENTRY | ADD | UPDATE
