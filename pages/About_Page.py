@@ -200,10 +200,10 @@ h1, h2, h3 {
 <div class="top-nav">
     <div class="nav-left">🎓 Certification Tracker</div>
     <div class="nav-links">
-        <a href="/Welcome" target="_self">Welcome</a>
+        <a href="/streamlit_app (2)" target="_self">Welcome Page</a>
         <a href="/Data_Entry" target="_self">Data Entry</a>
-        <a href="/Realtime_Analysis" target="_self">Realtime Analysis</a>
-        <a href="/About" target="_self">About</a>
+        <a href="/2_Realtime_Analysis" target="_self">Realtime Analysis</a>
+        <a href="/About_Page" target="_self">About</a>
     </div>
 </div>
 
