@@ -107,56 +107,61 @@ if st.session_state.page_mode == "ENTRY":
 
     st.subheader("🔍 Find Employee")
 
-    c1, c2, c3 = st.columns([2, 1, 7])
+    c1, c2, c3 = st.columns([2.5, 1.5, 6])
+    
     with c1:
-        emp_id_input = st.text_input("Employee ID", max_chars=10)
+        emp_id_input = st.text_input(
+            "Employee ID",
+            max_chars=10,
+            placeholder="10-digit ID"
+        )
+    
     with c2:
-        search = st.button("Search", type="primary")
-
-    if search:
+        search_clicked = st.button(
+            "🔍 Search",
+            type="primary",
+            use_container_width=True
+        )
+    
+    with c3:
+        add_clicked = st.button(
+            "➕ Add New Certification",
+            use_container_width=True
+        )
+    
+    # -----------------------------------------
+    # Button Logic
+    # -----------------------------------------
+    if search_clicked:
         if not emp_id_input.isdigit() or len(emp_id_input) != 10:
-            st.error("Invalid Employee ID")
+            st.error("❌ Employee ID must be exactly 10 digits")
             st.stop()
-
+    
         df = session.sql(f"""
             SELECT *
             FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
             WHERE "EMP ID" = '{emp_id_input}'
         """).to_pandas()
-
+    
         if df.empty:
-            st.warning("No records found")
-            if st.button("➕ Add New Certification"):
-                reset_state()
-                st.session_state.last_emp_id = emp_id_input
-                st.session_state.page_mode = "ADD"
-                st.rerun()
+            st.warning("No records found for this Employee ID")
         else:
-            st.success("Employee records found")
+            st.success("Employee data found")
             st.dataframe(
                 df[["Certification","Enrolment Month","SnowPro Certified"]],
                 use_container_width=True
             )
+    
+    if add_clicked:
+        if not emp_id_input.isdigit() or len(emp_id_input) != 10:
+            st.error("❌ Enter valid Employee ID before adding certification")
+            st.stop()
+    
+        reset_state()
+        st.session_state.last_emp_id = emp_id_input
+        st.session_state.page_mode = "ADD"
+        st.rerun()
 
-            c1, c2 = st.columns(2)
-            with c1:
-                if st.button("➕ Add New Certification"):
-                    reset_state()
-                    st.session_state.last_emp_id = emp_id_input
-                    st.session_state.page_mode = "ADD"
-                    st.rerun()
-
-            with c2:
-                cert = st.selectbox("Update Certification", df["Certification"])
-                if st.button("✏️ Update"):
-                    st.session_state.record = (
-                        df[df["Certification"] == cert]
-                        .iloc[0]
-                        .to_dict()
-                    )
-                    st.session_state.last_emp_id = emp_id_input
-                    st.session_state.page_mode = "UPDATE"
-                    st.rerun()
 
 # =========================================================
 # ADD / UPDATE MODE
