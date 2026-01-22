@@ -30,7 +30,7 @@ st.markdown("""
         background-color: #FFFFFF;
         border: 1.5px solid #1E293B;
         border-radius: 8px;
-        padding: 2m;
+        padding: 2rem;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
     }
@@ -115,6 +115,15 @@ st.markdown("""
 cnx = st.connection("snowflake")
 session = cnx.session()
 
+def get_vertical_options():
+    df = session.sql("""
+    SELECT DISTINCT "Vertical / SL"
+    FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+    WHERE "Vertical / SL" IS NOT NULL 
+    ORDER BY "Vertical / SL"
+    """).to_pandas()
+    return sorted(df["Vertical / SL"].dropna().tolist())
+
 # -----------------------------------------
 # Session State Initialization (UNCHANGED)
 # -----------------------------------------
@@ -149,6 +158,7 @@ def check_duplicate_emp_cert(emp_id, certification):
     """).to_pandas()
 
     return not df.empty
+    
 
 def cert_date_to_str(val):
     return val.strftime("%d-%m-%Y") if val else None
@@ -395,8 +405,21 @@ with st.container(border=True):
         account = st.text_input("Account")
         account_spoc = st.text_input("Account SPOC")
     with r2:
-        vertical = st.text_input("Vertical / SL")
+        vertical_options = get_vertical_options()
+        vertical_options.append("➕ Add New")
         
+        selected_vertical = st.selectbox(
+           "Vertical / SL",
+           vertical_options
+        )
+
+        if selected_vertical == "➕ Add New":
+            new_vertical = st.text_input("Enter New Vertical / SL")
+            vertical = new_vertical.strip() if new_vertical else None
+
+        else:
+            vertical = selected_vertical
+    
         
     comment = st.text_area("Comment", height=100)
 
