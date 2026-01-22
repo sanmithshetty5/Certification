@@ -207,6 +207,13 @@ h1, h2, h3 {
     text-align: center;
 }
 
+.partner-logo img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+
 .partner-logo-container {
     background: white;
     padding: 2rem;
@@ -356,24 +363,29 @@ with p2:
     with pp1:
         st.markdown(f"""
         <div class="partner-logo-container">
-            <img src="{LOGO_HEXAWARE}" style = "height:30px;" alt="Hexaware">
+            <div class="partner-logo">
+                <img src="{LOGO_HEXAWARE}" style="height:30px;" alt="Hexaware">
+            </div>
             <div style="font-weight:600; color:#334155;">Hexaware Technologies</div>
-            <div style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">Driving Digital Transformation</div>
+            <div style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">
+                Driving Digital Transformation
+            </div>
         </div>
         """, unsafe_allow_html=True)
+
     
     with pp2:
         st.markdown(f"""
         <div class="partner-logo-container">
             <div class="partner-logo">
-                <img src="{LOGO_SNOWFLAKE}" class="partner-img" alt="Snowflake">
-                <div style="font-weight:600; color:#334155;">Snowflake Data Cloud</div>
-                <div style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">Secure & Scalable Storage</div>
+                <img src="{LOGO_SNOWFLAKE}" style="height:45px;" alt="Snowflake">
+            </div>
+            <div style="font-weight:600; color:#334155;">Snowflake Data Cloud</div>
+            <div style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">
+                Secure & Scalable Storage
             </div>
         </div>
         """, unsafe_allow_html=True)
-
-st.markdown("</div>", unsafe_allow_html=True)
 
 # -------------------------------
 # FOOTER
