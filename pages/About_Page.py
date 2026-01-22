@@ -198,7 +198,7 @@ h1, h2, h3 {
 """, unsafe_allow_html=True)
 
 <div class="top-nav">
-    <div class="nav-left">🎓 Certification Tracker</div>
+    <div class="nav-left">Certification Tracker</div>
     <div class="nav-links">
         <a href="/streamlit_app (2)" target="_self">Welcome Page</a>
         <a href="/Data_Entry" target="_self">Data Entry</a>
