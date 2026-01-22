@@ -325,18 +325,24 @@ if st.session_state.page_mode == "ADD":
 
     # ---------------- Save ----------------
     if st.button(
-        "💾 Add New Certification",
-        type="primary",
-        use_container_width=True,
-        # disabled=st.session_state.duplicate_exists
-    ):
-    
-        if validate_emp(emp_id, emp_name):
-            session.create_dataframe([Row(**payload)]) \
-                .write.mode("append") \
-                .save_as_table("USE_CASE.CERTIFICATION.NEW_CERTIFICATION")
+    "💾 Add New Certification",
+    type="primary",
+    use_container_width=True
+):
 
-            st.success("✅ Certification added successfully")
-            st.session_state.page_mode = "ENTRY"
-            st.session_state.pending_data = None
-            st.rerun()
+    if certification is None:
+        st.error("❌ No available certification left for this employee.")
+        st.stop()
+
+    if validate_emp(emp_id, emp_name):
+
+        session.create_dataframe([Row(**payload)]) \
+            .write \
+            .mode("append") \
+            .save_as_table("USE_CASE.CERTIFICATION.NEW_CERTIFICATION")
+
+        session.sql("SELECT 1").collect()  # force execution
+
+        st.success("✅ Certification added successfully")
+        st.session_state.page_mode = "ENTRY"
+        st.rerun()
