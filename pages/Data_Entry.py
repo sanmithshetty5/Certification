@@ -406,9 +406,8 @@ with st.container(border=True):
         account_spoc = st.text_input("Account SPOC")
     with r2:
         vertical_options = get_vertical_options()
-        vertical_options.append("➕ Add New")
         
-        selected_vertical = st.combobox(
+        vertical = st.combobox(
            "Vertical / SL",
            vertical_options,
            placeholder = "Select or type a new Vertical / SL"
