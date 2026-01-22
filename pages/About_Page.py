@@ -195,6 +195,13 @@ h1, h2, h3 {
 }
 
 /* --- Partners Section --- */
+.partner-logo {
+    height: 60px;             
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
 .partner-section {
     margin-top: 4rem;
     text-align: center;
@@ -358,9 +365,11 @@ with p2:
     with pp2:
         st.markdown(f"""
         <div class="partner-logo-container">
-            <img src="{LOGO_SNOWFLAKE}" class="partner-img" alt="Snowflake">
-            <div style="font-weight:600; color:#334155;">Snowflake Data Cloud</div>
-            <div style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">Secure & Scalable Storage</div>
+            <div class="partner-logo">
+                <img src="{LOGO_SNOWFLAKE}" class="partner-img" alt="Snowflake">
+                <div style="font-weight:600; color:#334155;">Snowflake Data Cloud</div>
+                <div style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">Secure & Scalable Storage</div>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
