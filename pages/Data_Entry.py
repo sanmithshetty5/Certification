@@ -413,7 +413,7 @@ with st.container(border=True):
            placeholder = "Select or type a new Vertical / SL"
         )
 
-        vertical = certical.strip() if vertical else None
+        vertical = vertical.strip() if vertical else None
     
         
     comment = st.text_area("Comment", height=100)
