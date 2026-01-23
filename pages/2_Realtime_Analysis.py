@@ -36,6 +36,65 @@ HEATMAP_CMAP = "Blues"
 # -----------------------------------------
 st.markdown(f"""
 <style>
+    /* 1. HIDE DEFAULT STREAMLIT SIDEBAR BUTTONS */
+    [data-testid="sidebar-navs"] {{display: none;}}
+    [data-testid="stSidebarNav"] {{display: none;}}
+    [data-testid="stSidebarCollapseButton"] {{display: none;}}
+    
+    /* 2. CUSTOM SIDEBAR CONTAINER STYLING */
+    section[data-testid="stSidebar"] {{
+        background-color: #111827 !important; /* Darker professional grey/black */
+        min-width: 80px !important;
+        max-width: 80px !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-x: hidden;
+        z-index: 100;
+        border-right: 1px solid #1f2937;
+    }}
+
+    /* 3. EXPAND SIDEBAR ON HOVER */
+    section[data-testid="stSidebar"]:hover {{
+        min-width: 320px !important;
+        max-width: 320px !important;
+        box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.5);
+    }}
+
+    /* 4. HIDE WIDGETS WHEN COLLAPSED, SHOW ON HOVER */
+    section[data-testid="stSidebar"] .stMultiSelect, 
+    section[data-testid="stSidebar"] .stSelectbox,
+    section[data-testid="stSidebar"] .stMarkdown,
+    section[data-testid="stSidebar"] .stExpander {{
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none; /* Prevent clicking when hidden */
+    }}
+
+    section[data-testid="stSidebar"]:hover .stMultiSelect,
+    section[data-testid="stSidebar"]:hover .stSelectbox,
+    section[data-testid="stSidebar"]:hover .stMarkdown,
+    section[data-testid="stSidebar"]:hover .stExpander {{
+        opacity: 1;
+        pointer-events: auto;
+    }}
+
+    /* 5. SIDEBAR ICON (Visible when collapsed) */
+    .sidebar-icon {{
+        text-align: center;
+        padding: 20px 0;
+        font-size: 24px;
+        color: white;
+    }}
+
+    /* 6. STYLE THE WIDGETS INSIDE SIDEBAR */
+    section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p {{
+        color: #9ca3af !important; /* Light grey text */
+    }}
+    
+    /* Improve Sidebar Scrollbar */
+    section[data-testid="stSidebar"] > div:first-child {{
+        overflow-x: hidden;
+    }}
+    
     /* 1. FORCE LIGHT THEME BASE */
     .stApp {{
         background-color: {BACKGROUND_COLOR};
@@ -232,8 +291,50 @@ df["Completed Flag"] = df["Actual Date of completion"].notna()
 # -----------------------------------------
 # SIDEBAR
 # -----------------------------------------
+# with st.sidebar:
+#     st.image("https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analytics.png", width=60) # Placeholder Logo
+#     st.markdown("## Analytics Console")
+#     st.markdown("---")
+    
+#     # Month & Year
+#     st.caption("TIME PERIOD")
+#     col1, col2 = st.columns(2)
+#     with col1:
+#         available_years = sorted(df["Enroll_Year"].dropna().unique())
+#         selected_years = st.multiselect("Year", available_years)
+#     with col2:
+#         month_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+#         available_months = sorted(
+#             df["Enroll_Month_Name"].dropna().unique(),
+#             key=lambda x: month_order.index(x) if x in month_order else 99
+#         )
+#         selected_months = st.multiselect("Month", available_months)
+
+#     st.markdown("---")
+#     st.caption("FILTERS")
+    
+#     cert_filter = st.multiselect("Certification", sorted(df["Certification"].dropna().unique()))
+#     snowpro_filter = st.multiselect("SnowPro Status", sorted(df["SnowPro Certified"].dropna().unique()))
+#     voucher_filter = st.multiselect("Voucher Status", sorted(df["Voucher Status"].dropna().unique()))
+
+#     with st.expander("🎖️ Badge Details"):
+#         badge_status_values = ["Completed", "In-Progress"]
+#         b1 = st.multiselect("Badge 1", badge_status_values)
+#         b2 = st.multiselect("Badge 2", badge_status_values)
+#         b3 = st.multiselect("Badge 3", badge_status_values)
+#         b4 = st.multiselect("Badge 4", badge_status_values)
+#         b5 = st.multiselect("Badge 5", badge_status_values)
+#         certprep = st.multiselect("CertPrepOD", ["Completed", "Not Started"])
+
+# -----------------------------------------
+# CUSTOM COLLAPSIBLE SIDEBAR
+# -----------------------------------------
 with st.sidebar:
-    st.image("https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analytics.png", width=60) # Placeholder Logo
+    # This icon stays visible when the sidebar is 80px wide
+    st.markdown('<div class="sidebar-icon">📊</div>', unsafe_allow_html=True)
+    
+    # Everything below this will "fade in" when hovering
+    st.image("https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analytics.png", width=60)
     st.markdown("## Analytics Console")
     st.markdown("---")
     
