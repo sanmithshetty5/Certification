@@ -123,38 +123,36 @@ st.markdown(f"""
         cursor: pointer;
     }}
 
-    /* 4. DASHBOARD TYPOGRAPHY & CARDS */
-    /* 4. DASHBOARD TYPOGRAPHY & CARDS */
-.stApp {{
-    background-color: {BACKGROUND_COLOR};
-}}
-
-/* Target main content text BUT exclude Streamlit icons */
-[data-testid="stMain"] h1, 
-[data-testid="stMain"] h2, 
-[data-testid="stMain"] h3, 
-[data-testid="stMain"] p, 
-[data-testid="stMain"] label,
-[data-testid="stMain"] .stMarkdown {{
-    color: {TEXT_COLOR} !important;
-    font-family: 'Segoe UI', sans-serif !important;
-}}
-
-/* Apply font to spans/divs ONLY if they aren't icons */
-[data-testid="stMain"] span:not([data-testid="stIconMaterial"]), 
-[data-testid="stMain"] div:not([data-testid="stIconMaterial"]) {{
-    font-family: 'Segoe UI', sans-serif;
-}}
-
-    /* Main Content Area Text: Dark Slate for readability */
-    [data-testid="stMain"] h1, [data-testid="stMain"] h2, [data-testid="stMain"] h3, 
-    [data-testid="stMain"] p, [data-testid="stMain"] span, [data-testid="stMain"] label,
-    [data-testid="stMain"] .stMarkdown {{
-        color: {TEXT_COLOR} !important;
-        font-family: 'Segoe UI', Tahoma, sans-serif;
+   /* 4. CONSOLIDATED TYPOGRAPHY & ICON FIX */
+    .stApp {{
+        background-color: {BACKGROUND_COLOR};
     }}
 
-    /* Sidebar Content Text: Forced to White */
+    /* Target specific text elements with your custom font */
+    [data-testid="stMain"] h1, 
+    [data-testid="stMain"] h2, 
+    [data-testid="stMain"] h3, 
+    [data-testid="stMain"] p, 
+    [data-testid="stMain"] label,
+    [data-testid="stMain"] .stMarkdown {{
+        color: {TEXT_COLOR} !important;
+        font-family: 'Segoe UI', Tahoma, sans-serif !important;
+    }}
+
+    /* EXPLICIT FIX: Apply font to spans/divs ONLY if they are NOT icons */
+    [data-testid="stMain"] span:not([data-testid="stIconMaterial"]), 
+    [data-testid="stMain"] div:not([data-testid="stIconMaterial"]),
+    [data-testid="stMain"] small {{
+        font-family: 'Segoe UI', Tahoma, sans-serif !important;
+        color: {TEXT_COLOR};
+    }}
+
+    /* FORCE ICONS TO USE STREAMLIT'S NATIVE FONT */
+    [data-testid="stIconMaterial"] {{
+        font-family: "Material Symbols Outlined" !important;
+    }}
+
+    /* Sidebar Content Text: Stay White */
     section[data-testid="stSidebar"] * {{
         color: #ffffff !important;
     }}
