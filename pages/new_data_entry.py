@@ -148,7 +148,7 @@ for key in [
     "review_payload"
 ]:
     st.session_state.setdefault(key, None)
-st.session_state.setdefault("last_autofill_emp_id", "")
+st.session_state.setdefault("last_autofill_emp_id", None)
 st.session_state.setdefault("autofill_profile", None)
 st.session_state.setdefault("review_mode", False)
 st.session_state.setdefault("review_payload", None)
