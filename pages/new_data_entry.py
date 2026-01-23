@@ -168,6 +168,15 @@ if st.session_state.page_mode == "ENTRY":
                 st.warning("No records found")
             else:
                 st.success("Employee records found")
+                with st.expander("🔎 Filter Results", expanded=False):
+                    search_text = st.text_input("Search across all columns")
+                
+                if search_text:
+                    df = df[df.apply(
+                        lambda row: row.astype(str).str.contains(search_text, case=False).any(),
+                        axis=1
+                    )]
+
                 st.dataframe(
                     df,
                     use_container_width=True,
