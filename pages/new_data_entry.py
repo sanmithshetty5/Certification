@@ -434,10 +434,10 @@ if st.session_state.page_mode == "ADD":
     # ---------------- Badges ----------------
     with st.container(border=True):
         st.markdown('<div class="section-header">🏅 Badges & Progress</div>', unsafe_allow_html=True)
-        badge_opts = ("Completed","In-Progress")
+        badge_opts = ("Completed","In Progress")
         b1, b2, b3, b4, b5 = st.columns(5)
         def badge_index(val):
-            return badge_opts.index(val) if val in badge_opts else badge_opts.index("In-Progress")
+            return badge_opts.index(val) if val in badge_opts else badge_opts.index("In Progress")
 
         badge1 = b1.selectbox(
             "Badge 1",
