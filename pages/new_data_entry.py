@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import date
+import time
 from snowflake.snowpark import Row
 
 # -----------------------------------------
@@ -588,6 +589,7 @@ if st.session_state.page_mode == "ADD":
                 if st.session_state.get("save_completed"):
                     st.success("🎉 Certification saved successfully")
                     st.session_state.save_completed = False
+                time.sleep(3)
 
                 
                 # 4. Rerun so UI fully refreshes
