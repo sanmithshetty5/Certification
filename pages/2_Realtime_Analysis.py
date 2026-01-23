@@ -343,9 +343,6 @@ st.markdown(f"""
 st.markdown(f"""
 <div class="top-nav">
     <div class="nav-left">
-        <span class="sidebar-toggle-nav" onclick="toggleSidebar()">
-            {"▶" if sidebar_collapsed else "◀"}
-        </span>
         <span class="nav-title">Certification Tracker</span>
     </div>
 
