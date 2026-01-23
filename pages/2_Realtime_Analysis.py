@@ -353,7 +353,6 @@ function toggleSidebar() {
     document.getElementById("sidebar-toggle-hidden").click();
 }
 </script>
-""", unsafe_allow_html=True)
 
 # -----------------------------------------
 # SNOWFLAKE CONNECTION
