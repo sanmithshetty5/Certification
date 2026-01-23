@@ -848,7 +848,7 @@ sidebar_collapsed = st.session_state.sidebar_state == 'collapsed'
 st.markdown(f"""
 <style>
     /* HIDE STREAMLIT BRANDING */
-  /*  [data-testid="stSidebarNav"] {{display: none;}}*/
+    [data-testid="stSidebarNav"] {{display: none;}}
     [data-testid="stHeader"] {{display: none;}} 
     [data-testid="stToolbar"] {{display: none;}}
     
