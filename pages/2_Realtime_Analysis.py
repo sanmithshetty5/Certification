@@ -114,15 +114,6 @@ st.markdown(f"""
         pointer-events: auto;
     }}
 
-    /* The '📊' or icon that stays visible when collapsed */
-    .sidebar-icon {{
-        text-align: center;
-        padding-top: 80px; /* Space for Navbar */
-        font-size: 26px;
-        color: white;
-        cursor: pointer;
-    }}
-
    /* 4. CONSOLIDATED TYPOGRAPHY & ICON FIX */
     .stApp {{
         background-color: {BACKGROUND_COLOR};
@@ -145,11 +136,6 @@ st.markdown(f"""
     [data-testid="stMain"] small {{
         font-family: 'Segoe UI', Tahoma, sans-serif !important;
         color: {TEXT_COLOR};
-    }}
-
-    /* FORCE ICONS TO USE STREAMLIT'S NATIVE FONT */
-    [data-testid="stIconMaterial"] {{
-        font-family: "Material Symbols Outlined" !important;
     }}
 
     /* Sidebar Content Text: Stay White */
