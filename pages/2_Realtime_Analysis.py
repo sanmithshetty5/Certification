@@ -809,7 +809,6 @@
 
 # # st.markdown("<br>", unsafe_allow_html=True)
 
-
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -828,6 +827,12 @@ st.set_page_config(
 )
 
 # -----------------------------------------
+# SESSION STATE FOR SIDEBAR
+# -----------------------------------------
+if 'sidebar_state' not in st.session_state:
+    st.session_state.sidebar_state = 'expanded'
+
+# -----------------------------------------
 # GLOBAL THEME & CONSTANTS
 # -----------------------------------------
 PRIMARY_COLOR = "#2563eb"
@@ -837,12 +842,20 @@ BACKGROUND_COLOR = "#f8fafc"
 TEXT_COLOR = "#1e293b"
 SIDEBAR_BG = "#2C3E50"
 
+# Determine if sidebar should be shown
+sidebar_collapsed = st.session_state.sidebar_state == 'collapsed'
+
 st.markdown(f"""
 <style>
     /* HIDE STREAMLIT BRANDING */
     [data-testid="stSidebarNav"] {{display: none;}}
     [data-testid="stHeader"] {{display: none;}} 
     [data-testid="stToolbar"] {{display: none;}}
+    
+    /* Hide native collapse button */
+    [data-testid="stSidebarCollapseButton"] {{
+        display: none !important;
+    }}
     
     /* TOP NAVBAR */
     .top-nav {{
@@ -885,17 +898,12 @@ st.markdown(f"""
     section[data-testid="stSidebar"] {{
         background: linear-gradient(180deg, {SIDEBAR_BG} 0%, #1a252f 100%) !important;
         padding-top: 60px !important;
+        {'display: none !important;' if sidebar_collapsed else ''}
     }}
     
     section[data-testid="stSidebar"] > div {{
         background: transparent !important;
         padding-top: 1rem;
-    }}
-
-    /* Sidebar collapse button */
-    [data-testid="stSidebarCollapseButton"] {{
-        color: white !important;
-        background-color: transparent !important;
     }}
 
     /* Sidebar content styling */
@@ -934,6 +942,32 @@ st.markdown(f"""
         letter-spacing: 0.05em !important;
         margin-top: 1rem !important;
         margin-bottom: 0.5rem !important;
+    }}
+
+    /* Custom Toggle Button */
+    .sidebar-toggle {{
+        position: fixed;
+        left: {'0' if sidebar_collapsed else '21rem'};
+        top: 120px;
+        width: 40px;
+        height: 40px;
+        background-color: {SIDEBAR_BG};
+        border-radius: 0 8px 8px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10000;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+        color: white;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }}
+    
+    .sidebar-toggle:hover {{
+        background-color: #34495E;
+        width: 45px;
     }}
 
     /* User profile at bottom */
@@ -1150,62 +1184,114 @@ df.loc[~df["Enroll_Year"].str.isdigit(), "Enroll_Year"] = None
 df["Completed Flag"] = df["Actual Date of completion"].notna()
 
 # -----------------------------------------
+# TOGGLE BUTTON (BEFORE SIDEBAR)
+# -----------------------------------------
+toggle_col1, toggle_col2, toggle_col3 = st.columns([0.05, 0.9, 0.05])
+with toggle_col1:
+    if st.button("◀" if not sidebar_collapsed else "▶", key="sidebar_toggle"):
+        st.session_state.sidebar_state = 'collapsed' if st.session_state.sidebar_state == 'expanded' else 'expanded'
+        st.rerun()
+
+# Add CSS for the toggle button positioning
+st.markdown(f"""
+<style>
+    /* Position the toggle button */
+    div[data-testid="column"]:first-child button {{
+        position: fixed !important;
+        left: {'0' if sidebar_collapsed else '21rem'} !important;
+        top: 120px !important;
+        width: 40px !important;
+        height: 40px !important;
+        background-color: {SIDEBAR_BG} !important;
+        border-radius: 0 8px 8px 0 !important;
+        border: none !important;
+        z-index: 10000 !important;
+        padding: 0 !important;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.3) !important;
+        transition: all 0.3s ease !important;
+        color: white !important;
+        font-size: 1.2rem !important;
+        font-weight: bold !important;
+    }}
+    
+    div[data-testid="column"]:first-child button:hover {{
+        background-color: #34495E !important;
+        width: 45px !important;
+    }}
+</style>
+""", unsafe_allow_html=True)
+
+# -----------------------------------------
 # SIDEBAR
 # -----------------------------------------
-with st.sidebar:
-    # Logo
-    st.image("https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analytics.png", width=60)
-    st.markdown("## Analytics Console")
-    st.markdown("---")
-    
-    # Time Period
-    st.caption("⏱️ TIME PERIOD")
-    col1, col2 = st.columns(2)
-    with col1:
-        available_years = sorted(df["Enroll_Year"].dropna().unique())
-        selected_years = st.multiselect("Year", available_years, key="year_filter")
-    with col2:
-        month_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-        available_months = sorted(
-            df["Enroll_Month_Name"].dropna().unique(),
-            key=lambda x: month_order.index(x) if x in month_order else 99
-        )
-        selected_months = st.multiselect("Month", available_months, key="month_filter")
+if not sidebar_collapsed:
+    with st.sidebar:
+        # Logo
+        st.image("https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analytics.png", width=60)
+        st.markdown("## Analytics Console")
+        st.markdown("---")
+        
+        # Time Period
+        st.caption("⏱️ TIME PERIOD")
+        col1, col2 = st.columns(2)
+        with col1:
+            available_years = sorted(df["Enroll_Year"].dropna().unique())
+            selected_years = st.multiselect("Year", available_years, key="year_filter")
+        with col2:
+            month_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+            available_months = sorted(
+                df["Enroll_Month_Name"].dropna().unique(),
+                key=lambda x: month_order.index(x) if x in month_order else 99
+            )
+            selected_months = st.multiselect("Month", available_months, key="month_filter")
 
-    st.markdown("---")
-    
-    # Main Filters
-    st.caption("🔍 FILTERS")
-    cert_filter = st.multiselect("Certification", sorted(df["Certification"].dropna().unique()), key="cert_filter")
-    snowpro_filter = st.multiselect("SnowPro Status", sorted(df["SnowPro Certified"].dropna().unique()), key="snowpro_filter")
-    voucher_filter = st.multiselect("Voucher Status", sorted(df["Voucher Status"].dropna().unique()), key="voucher_filter")
+        st.markdown("---")
+        
+        # Main Filters
+        st.caption("🔍 FILTERS")
+        cert_filter = st.multiselect("Certification", sorted(df["Certification"].dropna().unique()), key="cert_filter")
+        snowpro_filter = st.multiselect("SnowPro Status", sorted(df["SnowPro Certified"].dropna().unique()), key="snowpro_filter")
+        voucher_filter = st.multiselect("Voucher Status", sorted(df["Voucher Status"].dropna().unique()), key="voucher_filter")
 
-    st.markdown("---")
-    
-    # Badge Details
-    st.caption("🎖️ BADGE DETAILS")
-    with st.expander("Badge Filters", expanded=False):
-        badge_status_values = ["Completed", "In-Progress"]
-        b1 = st.multiselect("Badge 1", badge_status_values, key="b1")
-        b2 = st.multiselect("Badge 2", badge_status_values, key="b2")
-        b3 = st.multiselect("Badge 3", badge_status_values, key="b3")
-        b4 = st.multiselect("Badge 4", badge_status_values, key="b4")
-        b5 = st.multiselect("Badge 5", badge_status_values, key="b5")
-        certprep = st.multiselect("CertPrepOD", ["Completed", "Not Started"], key="certprep")
+        st.markdown("---")
+        
+        # Badge Details
+        st.caption("🎖️ BADGE DETAILS")
+        with st.expander("Badge Filters", expanded=False):
+            badge_status_values = ["Completed", "In-Progress"]
+            b1 = st.multiselect("Badge 1", badge_status_values, key="b1")
+            b2 = st.multiselect("Badge 2", badge_status_values, key="b2")
+            b3 = st.multiselect("Badge 3", badge_status_values, key="b3")
+            b4 = st.multiselect("Badge 4", badge_status_values, key="b4")
+            b5 = st.multiselect("Badge 5", badge_status_values, key="b5")
+            certprep = st.multiselect("CertPrepOD", ["Completed", "Not Started"], key="certprep")
 
-    # Add space for footer
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
+        # Add space for footer
+        st.markdown("<br><br><br>", unsafe_allow_html=True)
 
-# User Profile Footer
-st.markdown("""
-<div class="sidebar-footer">
-    <div class="user-avatar">J</div>
-    <div>
-        <p class="user-name">SR JOSE FRANCISCO</p>
-        <p class="user-contract">Contrato n° 029491</p>
+    # User Profile Footer
+    st.markdown("""
+    <div class="sidebar-footer">
+        <div class="user-avatar">J</div>
+        <div>
+            <p class="user-name">SR JOSE FRANCISCO</p>
+            <p class="user-contract">Contrato n° 029491</p>
+        </div>
     </div>
-</div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+else:
+    # Set default values when sidebar is collapsed
+    selected_years = []
+    selected_months = []
+    cert_filter = []
+    snowpro_filter = []
+    voucher_filter = []
+    b1 = []
+    b2 = []
+    b3 = []
+    b4 = []
+    b5 = []
+    certprep = []
 
 # -----------------------------------------
 # FILTERING LOGIC
