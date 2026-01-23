@@ -81,7 +81,7 @@ st.markdown(f"""
     }}
     
     .page-spacer {{
-        height: 20px; 
+        height: 75px; 
     }}
 
     /* CUSTOM SIDEBAR STYLING */
