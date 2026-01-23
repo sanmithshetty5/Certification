@@ -196,21 +196,34 @@ if st.session_state.page_mode == "ENTRY":
                         lambda row: row.astype(str).str.contains(search_text, case=False).any(),
                         axis=1
                     )]
+                df_display = df.copy()
+                
+                # Tick / cross for SnowPro Certified
+                df_display["SnowPro Status"] = df_display["SnowPro Certified"].map({
+                    "Completed": "✔ Completed",
+                    "Failed": "✖ Failed",
+                    "Incomplete": "⏳ Incomplete"
+                }).fillna("⏳ Incomplete")
+                
+                # Optional: Certification completion flag
+                df_display["Completed?"] = df_display["SnowPro Certified"] == "Completed"
 
                 st.dataframe(
-                    df,
+                    df_display,
                     use_container_width=True,
                     hide_index=True,
                     column_config={
-                        col: st.column_config.TextColumn(
-                            col,
-                            help=col.replace("_", " "),
+                        "SnowPro Status": st.column_config.TextColumn(
+                            "SnowPro Status",
+                            help="Certification result",
                             width="medium"
+                        ),
+                        "Completed?": st.column_config.CheckboxColumn(
+                            "Completed",
+                            help="✔ = Completed, ✖ = Not completed"
                         )
-                        for col in df.columns
                     }
                 )
-
 
     if add_clicked:
         emp_id_val = emp_id_search.strip() if emp_id_search else ""
