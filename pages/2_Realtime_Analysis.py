@@ -31,430 +31,244 @@ SB_BACKGROUND_COLOR="000000"
 CHART_COLOR = "#2563eb"      
 HEATMAP_CMAP = "Blues"
 
-# st.markdown(f"""
-# <style>
-#     /* 1. HIDE NATIVE STREAMLIT INTERFACE */
-#     [data-testid="sidebar-navs"] {{display: none;}}
-#     [data-testid="stSidebarNav"] {{display: none;}}
-#     [data-testid="stHeader"] {{display: block !important; background: transparent !important;}} 
-#     [data-testid="stToolbar"] {{display: none;}} /* Hides the 'Deploy' and 'Made with Streamlit' footer */
-
-#     /* 2. TOP NAVBAR STYLING */
-#     .top-nav {{
-#         position: fixed;
-#         top: 0;
-#         left: 0;
-#         right: 0;
-#         height: 60px;
-#         background-color: #0F172A; /* Dark Navy */
-#         display: flex;
-#         align-items: center;
-#         justify-content: space-between;
-#         padding: 0 2rem;
-#         z-index: 10001; /* Stays above sidebar */
-#         box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-#     }}
-#     .nav-left {{
-#         color: white !important;
-#         font-size: 1.2rem;
-#         font-weight: 700;
-#         font-family: 'Segoe UI', sans-serif;
-#     }}
-#     .nav-links a {{
-#         color: #E5E7EB !important;
-#         margin-left: 1.5rem;
-#         text-decoration: none !important;
-#         font-weight: 600;
-#         font-size: 0.9rem;
-#         transition: color 0.3s;
-#     }}
-#     .nav-links a:hover {{
-#         color: #38BDF8 !important; /* Sky blue hover */
-#     }}
-    
-#     /* Content Spacer: Pushes dashboard below the fixed Navbar */
-#     .page-spacer {{
-#         height: 75px; 
-#     }}
-
-#     /* ===============================
-#    SIDEBAR — CLEAN & STABLE
-# ================================ */
-
-# /* Hide Streamlit default nav menu */
-# [data-testid="sidebar-navs"],
-# [data-testid="stSidebarNav"] {{
-#     display: none !important;
-# }}
-
-# /* Sidebar container */
-# section[data-testid="stSidebar"] {{
-#     background-color: #111827 !important;
-#     min-width: 300px !important;
-#     max-width: 300px !important;
-#     width: 300px !important;
-#     border-right: 1px solid #1f2937;
-#     transition: none !important;
-#     overflow: visible !important;
-# }}
-
-# /* Ensure sidebar content is always visible */
-# section[data-testid="stSidebar"] * {{
-#     opacity: 1 !important;
-#     pointer-events: auto !important;
-# }}
-
-# /* Sidebar text color */
-# section[data-testid="stSidebar"] *,
-# section[data-testid="stSidebar"] label,
-# section[data-testid="stSidebar"] p,
-# section[data-testid="stSidebar"] span {{
-#     color: #ffffff !important;
-# }}
-
-# /* Sidebar expanders */
-# section[data-testid="stSidebar"] div[data-testid="stExpander"] summary {{
-#     color: #ffffff !important;
-#     border-radius: 6px;
-# }}
-
-# section[data-testid="stSidebar"] div[data-testid="stExpander"] summary:hover {
-#     background-color: rgba(255,255,255,0.08);
-# }
-
-# /* ===============================
-#    NATIVE SIDEBAR TOGGLE BUTTON
-# ================================ */
-
-# [data-testid="stSidebarCollapseButton"] {{
-#     position: fixed !important;
-#     top: 12px !important;
-#     left: 10px !important;
-#     z-index: 100000 !important;
-#     background-color: #2563eb  !important;
-#     color: #ffffff !important;
-#     border-radius: 6px !important;
-#     padding: 6px 8px !important;
-#     box-shadow: 0 4px 12px rgba(0,0,0,0.35);
-# }}
-
-# /* When sidebar is EXPANDED, push toggle right */
-# section[data-testid="stSidebar"][aria-expanded="true"]
-# ~ div [data-testid="stSidebarCollapseButton"] {{
-#     left: 314px !important; /* 300px sidebar + spacing */
-# }}
-
-#    /* 4. CONSOLIDATED TYPOGRAPHY & ICON FIX */
-#     .stApp {{
-#         background-color: {BACKGROUND_COLOR};
-#     }}
-
-#     /* Target specific text elements with your custom font */
-#     [data-testid="stMain"] h1, 
-#     [data-testid="stMain"] h2, 
-#     [data-testid="stMain"] h3, 
-#     [data-testid="stMain"] p, 
-#     [data-testid="stMain"] label,
-#     [data-testid="stMain"] .stMarkdown {{
-#         color: {TEXT_COLOR} !important;
-#         font-family: 'Segoe UI', Tahoma, sans-serif !important;
-#     }}
-
-#     /* EXPLICIT FIX: Apply font to spans/divs ONLY if they are NOT icons */
-#     [data-testid="stMain"] span:not([data-testid="stIconMaterial"]), 
-#     [data-testid="stMain"] div:not([data-testid="stIconMaterial"]),
-#     [data-testid="stMain"] small {{
-#         font-family: 'Segoe UI', Tahoma, sans-serif !important;
-#         color: {TEXT_COLOR};
-#     }}
-
-#     /* Sidebar Content Text: Stay White */
-#     section[data-testid="stSidebar"] * {{
-#         color: #ffffff !important;
-#     }}
-#     /* 3. MODERN CARD DESIGN */
-#     .dashboard-card {{
-#         background-color: #ffffff;
-#         padding: 1.5rem;
-#         border-radius: 10px;
-#         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-#         border: 1px solid #e2e8f0;
-#         transition: all 0.2s ease-in-out;
-#         height: 100%;
-#     }}
-    
-#     .dashboard-card:hover {{
-#         transform: translateY(-3px);
-#         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-#         border-color: {PRIMARY_COLOR};
-#     }}
-
-#     /* 4. KPI CARDS WITH ACCENT BORDER */
-#     .kpi-card {{
-#         background-color: #ffffff;
-#         padding: 1.25rem;
-#         border-radius: 8px;
-#         border-left: 5px solid {PRIMARY_COLOR}; /* Left accent bar */
-#         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-#         height: 100%;
-#     }}
-#     .kpi-label {{
-#         font-size: 0.85rem;
-#         color: {SECONDARY_COLOR} !important;
-#         text-transform: uppercase;
-#         letter-spacing: 0.05em;
-#         font-weight: 600;
-#         margin-bottom: 0.5rem;
-#     }}
-#     .kpi-value {{
-#         font-size: 2.2rem;
-#         font-weight: 800;
-#         color: {TEXT_COLOR} !important;
-#     }}
-
-#     /* 5. HEADER STYLING */
-#     .main-header {{
-#         background: rgba(255, 255, 255, 0.9);
-#         backdrop-filter: blur(10px);
-#         padding: 1.5rem;
-#         border-radius: 12px;
-#         margin-bottom: 2rem;
-#         border-bottom: 2px solid {PRIMARY_COLOR};
-#         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-#     }}
-#     .header-title {{
-#         font-size: 2rem;
-#         font-weight: 800;
-#         color: {TEXT_COLOR} !important;
-#         margin: 0;
-#     }}
-#     .header-subtitle {{
-#         font-size: 1rem;
-#         color: {SECONDARY_COLOR} !important;
-#         margin-top: 5px;
-#     }}
-
-    
-#     /* SIDEBAR EXPANDER – FORCE WHITE TEXT */
-#     section[data-testid="stSidebar"] div[data-testid="stExpander"] summary {{
-#         color: #ffffff !important;
-#     }}
-#     section[data-testid="stSidebar"] div[data-testid="stExpander"] summary:hover {{
-#         background-color: rgba(255,255,255,0.08);
-#     }}
-
-#     /* 7. MATPLOTLIB TRANSPARENCY FIX */
-#     .chart-title {{
-#         font-weight: 700;
-#         font-size: 1.1rem;
-#         color: {TEXT_COLOR};
-#         margin-bottom: 1rem;
-#     }}
-
-#     /* BUTTONS */
-#     div.stDownloadButton > button {{
-#         background-color: #4ED95E;
-#         color: #ffffff !important;
-#         border-radius: 8px;
-#         border: none;
-#         font-weight: 600;
-#         padding: 0.6rem 1rem;
-#     }}
-#     div.stButton > button:hover {{
-#         background-color: #2563eb;
-#         transform: translateY(-3px);
-#         color: #ffffff !important;
-#     }}
-#     div.stButton > button {{
-#         background-color: #2563eb;
-#         color: #ffffff !important;
-#         border-radius: 8px;
-#         border: none;
-#         font-weight: 600;
-#         padding: 0.6rem 1rem;
-#     }}
-#     div.stDownloadButton > button:hover {{
-#         background-color: #4ED95E;
-#         transform: translateY(-3px);
-#         color: #ffffff !important;
-#     }}
-
-#         /* EXPANDER HEADER */
-#     div[data-testid="stExpander"] summary {{
-#         background-color: transparent;
-#         color: #1e293b;
-#         border-radius: 6px;
-#     }}
-    
-#     /* HOVER */
-#     div[data-testid="stExpander"] summary:hover {{
-#         background-color: #e2e8f0;  /* Light slate */
-#     }}
-    
-#     /* EXPANDER CONTENT */
-#     div[data-testid="stExpander"] > div {{
-#         background-color: #ffffff;
-#         border-radius: 6px;
-#     }}
-
-# </style>
-# """, unsafe_allow_html=True)
-
 st.markdown(f"""
 <style>
+    /* 1. HIDE NATIVE STREAMLIT INTERFACE */
+    [data-testid="sidebar-navs"] {{display: none;}}
+    [data-testid="stSidebarNav"] {{display: none;}}
+    [data-testid="stSidebarCollapseButton"] {{display: none;}}
+    [data-testid="stHeader"] {{display: none;}} 
+    [data-testid="stToolbar"] {{display: none;}} /* Hides the 'Deploy' and 'Made with Streamlit' footer */
 
-/* ===============================
-   1. REMOVE STREAMLIT CHROME
-================================ */
+    /* 2. TOP NAVBAR STYLING */
+    .top-nav {{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background-color: #0F172A; /* Dark Navy */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+        z-index: 10001; /* Stays above sidebar */
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }}
+    .nav-left {{
+        color: white !important;
+        font-size: 1.2rem;
+        font-weight: 700;
+        font-family: 'Segoe UI', sans-serif;
+    }}
+    .nav-links a {{
+        color: #E5E7EB !important;
+        margin-left: 1.5rem;
+        text-decoration: none !important;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+    }}
+    .nav-links a:hover {{
+        color: #38BDF8 !important; /* Sky blue hover */
+    }}
+    
+    /* Content Spacer: Pushes dashboard below the fixed Navbar */
+    .page-spacer {{
+        height: 75px; 
+    }}
 
-[data-testid="stToolbar"] {{ display: none !important; }}
-[data-testid="stStatusWidget"] {{ display: none !important; }}
-[data-testid="stSidebarNav"] {{ display: none !important; }}
-[data-testid="sidebar-navs"] {{ display: none !important; }}
+    /* 3. CUSTOM COLLAPSIBLE SIDEBAR */
+    section[data-testid="stSidebar"] {{
+        background-color: #111827 !important; /* Near black */
+        min-width: 80px !important;
+        max-width: 80px !important;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 10000;
+        overflow: hidden;
+        border-right: 1px solid #1f2937;
+    }}
 
-header[data-testid="stHeader"] {{
-    background: transparent !important;
-    height: 0 !important;
-    padding: 0 !important;
-}}
+    section[data-testid="stSidebar"]:hover {{
+        min-width: 320px !important;
+        max-width: 320px !important;
+    }}
 
-/* ===============================
-   2. FORCE FULL-WIDTH MAIN AREA
-================================ */
+    /* Hide sidebar content by default, fade in on hover */
+    section[data-testid="stSidebar"] .stMultiSelect, 
+    section[data-testid="stSidebar"] .stSelectbox,
+    section[data-testid="stSidebar"] .stMarkdown,
+    section[data-testid="stSidebar"] .stExpander,
+    section[data-testid="stSidebar"] img {{
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }}
 
-div[data-testid="stAppViewContainer"] {{
-    padding-left: 0 !important;
-}}
+    section[data-testid="stSidebar"]:hover .stMultiSelect,
+    section[data-testid="stSidebar"]:hover .stSelectbox,
+    section[data-testid="stSidebar"]:hover .stMarkdown,
+    section[data-testid="stSidebar"]:hover .stExpander,
+    section[data-testid="stSidebar"]:hover img {{
+        opacity: 1;
+        pointer-events: auto;
+    }}
 
-section[data-testid="stSidebar"][aria-expanded="false"]
-~ div[data-testid="stAppViewContainer"] {{
-    margin-left: 0 !important;
-}}
+   /* 4. CONSOLIDATED TYPOGRAPHY & ICON FIX */
+    .stApp {{
+        background-color: {BACKGROUND_COLOR};
+    }}
 
-[data-testid="stMain"] {{
-    padding-top: 80px !important; /* space for navbar */
-}}
+    /* Target specific text elements with your custom font */
+    [data-testid="stMain"] h1, 
+    [data-testid="stMain"] h2, 
+    [data-testid="stMain"] h3, 
+    [data-testid="stMain"] p, 
+    [data-testid="stMain"] label,
+    [data-testid="stMain"] .stMarkdown {{
+        color: {TEXT_COLOR} !important;
+        font-family: 'Segoe UI', Tahoma, sans-serif !important;
+    }}
 
-/* ===============================
-   3. TOP NAVBAR
-================================ */
+    /* EXPLICIT FIX: Apply font to spans/divs ONLY if they are NOT icons */
+    [data-testid="stMain"] span:not([data-testid="stIconMaterial"]), 
+    [data-testid="stMain"] div:not([data-testid="stIconMaterial"]),
+    [data-testid="stMain"] small {{
+        font-family: 'Segoe UI', Tahoma, sans-serif !important;
+        color: {TEXT_COLOR};
+    }}
 
-.top-nav {{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background-color: #0F172A;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-    z-index: 100000;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}}
+    /* Sidebar Content Text: Stay White */
+    section[data-testid="stSidebar"] * {{
+        color: #ffffff !important;
+    }}
+    /* 3. MODERN CARD DESIGN */
+    .dashboard-card {{
+        background-color: #ffffff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease-in-out;
+        height: 100%;
+    }}
+    
+    .dashboard-card:hover {{
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        border-color: {PRIMARY_COLOR};
+    }}
 
-.nav-left {{
-    color: #ffffff;
-    font-size: 1.2rem;
-    font-weight: 700;
-}}
+    /* 4. KPI CARDS WITH ACCENT BORDER */
+    .kpi-card {{
+        background-color: #ffffff;
+        padding: 1.25rem;
+        border-radius: 8px;
+        border-left: 5px solid {PRIMARY_COLOR}; /* Left accent bar */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        height: 100%;
+    }}
+    .kpi-label {{
+        font-size: 0.85rem;
+        color: {SECONDARY_COLOR} !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }}
+    .kpi-value {{
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: {TEXT_COLOR} !important;
+    }}
 
-.nav-links a {{
-    color: #E5E7EB !important;
-    margin-left: 1.5rem;
-    text-decoration: none !important;
-    font-weight: 600;
-    font-size: 0.9rem;
-}}
+    /* 5. HEADER STYLING */
+    .main-header {{
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid {PRIMARY_COLOR};
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }}
+    .header-title {{
+        font-size: 2rem;
+        font-weight: 800;
+        color: {TEXT_COLOR} !important;
+        margin: 0;
+    }}
+    .header-subtitle {{
+        font-size: 1rem;
+        color: {SECONDARY_COLOR} !important;
+        margin-top: 5px;
+    }}
 
-.nav-links a:hover {{
-    color: #38BDF8 !important;
-}}
+    
+    /* SIDEBAR EXPANDER – FORCE WHITE TEXT */
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary {{
+        color: #ffffff !important;
+    }}
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary:hover {{
+        background-color: rgba(255,255,255,0.08);
+    }}
 
-/* ===============================
-   4. SIDEBAR STYLING
-================================ */
+    /* 7. MATPLOTLIB TRANSPARENCY FIX */
+    .chart-title {{
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: {TEXT_COLOR};
+        margin-bottom: 1rem;
+    }}
 
-section[data-testid="stSidebar"] {{
-    background-color: #111827 !important;
-    width: 300px !important;
-    min-width: 300px !important;
-    max-width: 300px !important;
-    border-right: 1px solid #1f2937;
-}}
+    /* BUTTONS */
+    div.stDownloadButton > button {{
+        background-color: #4ED95E;
+        color: #ffffff !important;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        padding: 0.6rem 1rem;
+    }}
+    div.stButton > button:hover {{
+        background-color: #2563eb;
+        transform: translateY(-3px);
+        color: #ffffff !important;
+    }}
+    div.stButton > button {{
+        background-color: #2563eb;
+        color: #ffffff !important;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        padding: 0.6rem 1rem;
+    }}
+    div.stDownloadButton > button:hover {{
+        background-color: #4ED95E;
+        transform: translateY(-3px);
+        color: #ffffff !important;
+    }}
 
-section[data-testid="stSidebar"] * {{
-    color: #ffffff !important;
-}}
-
-/* ===============================
-   5. SIDEBAR TOGGLE BUTTON
-================================ */
-
-button[data-testid="stSidebarCollapseButton"] {{
-    position: fixed !important;
-    top: 14px !important;
-    left: 12px !important;
-    z-index: 100001 !important;
-    background-color: #2563eb !important;
-    color: #ffffff !important;
-    border-radius: 6px !important;
-    padding: 6px 8px !important;
-}}
-
-/* When sidebar is open, push toggle right */
-section[data-testid="stSidebar"][aria-expanded="true"]
-~ div button[data-testid="stSidebarCollapseButton"] {{
-    left: 312px !important;
-}}
-
-/* ===============================
-   6. TYPOGRAPHY
-================================ */
-
-.stApp {{
-    background-color: {BACKGROUND_COLOR};
-}}
-
-[data-testid="stMain"] h1,
-[data-testid="stMain"] h2,
-[data-testid="stMain"] h3,
-[data-testid="stMain"] p,
-[data-testid="stMain"] label {{
-    color: {TEXT_COLOR} !important;
-    font-family: 'Segoe UI', Tahoma, sans-serif !important;
-}}
-
-/* ===============================
-   7. CARDS & BUTTONS
-================================ */
-
-.dashboard-card {{
-    background: #ffffff;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}}
-
-.dashboard-card:hover {{
-    transform: translateY(-3px);
-}}
-
-div.stButton > button {{
-    background-color: #2563eb;
-    color: #ffffff !important;
-    border-radius: 8px;
-    font-weight: 600;
-}}
-
-div.stButton > button:hover {{
-    background-color: #1d4ed8;
-}}
+        /* EXPANDER HEADER */
+    div[data-testid="stExpander"] summary {{
+        background-color: transparent;
+        color: #1e293b;
+        border-radius: 6px;
+    }}
+    
+    /* HOVER */
+    div[data-testid="stExpander"] summary:hover {{
+        background-color: #e2e8f0;  /* Light slate */
+    }}
+    
+    /* EXPANDER CONTENT */
+    div[data-testid="stExpander"] > div {{
+        background-color: #ffffff;
+        border-radius: 6px;
+    }}
 
 </style>
 """, unsafe_allow_html=True)
-
 
 st.markdown("""
 <div class="top-nav">
@@ -467,14 +281,8 @@ st.markdown("""
         <a href="/About_Page" target="_self">About</a>
     </div>
 </div>
-<div class="page-spacer"></div>
 
-<!-- UX Toggle Button (Guides User) -->
-<div style="padding-left:2rem; margin-bottom:1rem;">
-    <div class="fake-toggle">
-        ☰ Filters
-    </div>
-</div>
+<div class="page-spacer"></div>
 """, unsafe_allow_html=True)
 
 # -----------------------------------------
@@ -1345,4 +1153,3 @@ st.markdown("""
     Enterprise Certification Analytics • Confidential
 </div>
 """, unsafe_allow_html=True)
-
