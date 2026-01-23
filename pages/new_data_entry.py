@@ -161,7 +161,7 @@ if not st.session_state.page_mode:
 # -----------------------------------------
 def get_latest_employee_profile(emp_id):
     if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
-        return None
+        return ""
 
     df = session.sql(f"""
         SELECT *
