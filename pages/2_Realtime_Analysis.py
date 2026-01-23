@@ -94,6 +94,43 @@ st.markdown(f"""
     section[data-testid="stSidebar"] > div:first-child {{
         overflow-x: hidden;
     }}
+
+    .top-nav {{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background-color: #0F172A;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    z-index: 10000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}}
+/* --- PUSH CONTENT BELOW NAVBAR --- */
+.page-spacer {{
+    height: 90px;
+}}
+.nav-left {{
+    color: #FFFFFF;
+    font-size: 1.3rem;
+    font-weight: 700;
+}}
+.nav-links a {{
+    color: #E5E7EB;
+    margin-left: 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+}}
+.nav-links a:hover {{
+    color: #38BDF8;
+}}
+.page-spacer {{
+    height: 80px;
+}}
     
     /* 1. FORCE LIGHT THEME BASE */
     .stApp {{
