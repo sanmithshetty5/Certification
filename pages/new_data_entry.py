@@ -61,13 +61,15 @@ MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec
 for key in [
     "page_mode",
     "last_emp_id",
-    "autofill_emp_name",
+    "autofill_profile",
+    "last_autofill_emp_id",
     "pending_data",
     "duplicate_exists",
     "save_completed"
 ]:
     st.session_state.setdefault(key, None)
-    st.session_state.setdefault("autofill_profile", None)
+st.session_state.setdefault("last_autofill_emp_id", None)
+st.session_state.setdefault("autofill_profile", None)
 
 
 if not st.session_state.page_mode:
@@ -223,50 +225,23 @@ if st.session_state.page_mode == "ENTRY":
 
 # =========================================================
 # ADD MODE
-# =========================================================
-profile = st.session_state.autofill_profile or {}
-emp_name = st.text_input(
-    "Employee Name",
-    value=profile.get("EMP Name", "")
-)
-badge1 = b1.selectbox("Badge 1", badge_opts, index=badge_opts.index(profile.get("Badge 1 Status", "In-Progress")))
-badge2 = b2.selectbox("Badge 2", badge_opts, index=badge_opts.index(profile.get("Badge 2 Status", "In-Progress")))
-badge3 = b3.selectbox("Badge 3", badge_opts, index=badge_opts.index(profile.get("Badge 3 Status", "In-Progress")))
-badge4 = b4.selectbox("Badge 4", badge_opts, index=badge_opts.index(profile.get("Badge 4 Status", "In-Progress")))
-badge5 = b5.selectbox("Badge 5", badge_opts, index=badge_opts.index(profile.get("Badge 5 Status", "In-Progress")))
-account = st.text_input(
-    "Account",
-    value=profile.get("Account", "") or ""
-)
-
-account_spoc = st.text_input(
-    "Account SPOC",
-    value=profile.get("Account SPOC", "") or ""
-)
-existing_vertical = profile.get("Vertical / SL")
-
-vertical_sel = st.multiselect(
-    "Vertical / SL",
-    vertical_opts,
-    default=[existing_vertical] if existing_vertical in vertical_opts else [],
-    max_selections=1,
-    accept_new_options=True
-)
-
-vertical = vertical_sel[0] if vertical_sel else None
+# ========================================================
+ 
 
 if st.session_state.page_mode == "ADD":
-
+    profile = st.session_state.autofill_profile or {}
     if st.button("⬅ Back"):
         st.session_state.page_mode = "ENTRY"
-        st.session_state.pending_data = None
+        st.session_state.last_autofill_emp_id = None
+        st.session_state.autofill_profile = {}
         st.rerun()
-
     st.markdown("---")
 
     # ---------------- Employee Details ----------------
     with st.container(border=True):
         st.markdown('<div class="section-header">👤 Employee Details</div>', unsafe_allow_html=True)
+        
+        
         c1, c2 = st.columns(2)
 
         with c1:
@@ -274,11 +249,26 @@ if st.session_state.page_mode == "ADD":
                 "Employee ID",
                 value=st.session_state.last_emp_id
             )
+            if (
+                emp_id
+                and emp_id.isdigit()
+                and len(emp_id) == 10
+                and emp_id != st.session_state.last_autofill_emp_id
+            ):
+                profile = get_latest_employee_profile(emp_id)
+            
+                st.session_state.autofill_profile = profile or {}
+                st.session_state.last_autofill_emp_id = emp_id
+            
 
         with c2:
+            # emp_name = st.text_input(
+            #     "Employee Name",
+            #     value=st.session_state.autofill_emp_name or ""
+            # )
             emp_name = st.text_input(
                 "Employee Name",
-                value=st.session_state.autofill_emp_name or ""
+                value=profile.get("EMP Name", "")
             )
 
         # Fetch existing certs for this EMP ID
@@ -379,19 +369,25 @@ if st.session_state.page_mode == "ADD":
         r1, r2 = st.columns(2)
 
         with r1:
-            account = st.text_input("Account")
-            account_spoc = st.text_input("Account SPOC")
+            account = st.text_input(
+                "Account",
+                value=profile.get("Account", "") or ""
+            )
+
+            account_spoc = st.text_input("Account SPOC",value=profile.get("Account SPOC", "") or "")
 
         with r2:
             vertical_opts = get_vertical_options()
+            existing_vertical = profile.get("Vertical / SL")
             vertical_sel = st.multiselect(
                 "Vertical / SL",
                 vertical_opts,
+                default=[existing_vertical] if existing_vertical in vertical_opts else [],
                 max_selections=1,
                 accept_new_options=True
             )
             vertical = vertical_sel[0] if vertical_sel else None
-            batch = st.text_input("Batch")
+            batch = st.text_input("Batch",value=profile.get("Batch", "") or "")
            
 
         comment = st.text_area("Comment")
