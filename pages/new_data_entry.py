@@ -554,7 +554,7 @@ if st.session_state.page_mode == "ADD":
 
         st.markdown("### 🔍 Review Before Saving")
     
-       review_df = pd.DataFrame([st.session_state.review_payload])
+        review_df = pd.DataFrame([st.session_state.review_payload])
 
         st.dataframe(
             review_df,
