@@ -144,7 +144,6 @@ for key in [
     "pending_data",
     "duplicate_exists",
     "save_completed",
-    "review_mode",
     "review_payload"
 ]:
     st.session_state.setdefault(key, None)
