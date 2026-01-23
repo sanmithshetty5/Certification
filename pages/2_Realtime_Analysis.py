@@ -334,9 +334,29 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # Top Navigation Bar
-st.markdown("""
+# st.markdown("""
+# <div class="top-nav">
+#     <div class="nav-left">Certification Tracker</div>
+#     <div class="nav-links">
+#         <a href="/" target="_self">Welcome Page</a>
+#         <a href="/Data_Entry" target="_self">Data Entry</a>
+#         <a href="/Realtime_Analysis" target="_self">Realtime Analysis</a>
+#         <a href="/new_data_entry" target="_self">New Data Entry</a>
+#         <a href="/About_Page" target="_self">About</a>
+#     </div>
+# </div>
+# <div class="page-spacer"></div>
+# """, unsafe_allow_html=True)
+
+st.markdown(f"""
 <div class="top-nav">
-    <div class="nav-left">Certification Tracker</div>
+    <div class="nav-left">
+        <span class="sidebar-toggle-nav" onclick="toggleSidebar()">
+            {"▶" if sidebar_collapsed else "◀"}
+        </span>
+        <span class="nav-title">Certification Tracker</span>
+    </div>
+
     <div class="nav-links">
         <a href="/" target="_self">Welcome Page</a>
         <a href="/Data_Entry" target="_self">Data Entry</a>
@@ -345,14 +365,17 @@ st.markdown("""
         <a href="/About_Page" target="_self">About</a>
     </div>
 </div>
+
 <div class="page-spacer"></div>
-""", unsafe_allow_html=True)
 
 <script>
 function toggleSidebar() {
     document.getElementById("sidebar-toggle-hidden").click();
 }
 </script>
+""", unsafe_allow_html=True)
+
+
 
 # -----------------------------------------
 # SNOWFLAKE CONNECTION
