@@ -17,66 +17,6 @@ st.set_page_config(
 # -----------------------------------------
 st.markdown("""
 <style>
-/* --- REMOVE DEFAULT TOP PADDING STREAMLIT ADDS --- */
-.block-container {
-    padding-top: 0rem !important;
-}
-
-/* ===== REMOVE STREAMLIT SIDEBAR COMPLETELY (THIS PAGE ONLY) ===== */
-
-/* Hide the entire sidebar container */
-section[data-testid="stSidebar"] {
-    display: none;
-}
-
-/* Remove the space reserved for the sidebar */
-div[data-testid="stAppViewContainer"] {
-    margin-left: 0;
-}
-
-/* Ensure main content uses full width */
-div[data-testid="stMainBlockContainer"] {
-    padding-left: 2rem;
-    max-width: 100%;
-}
-.top-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 64px;
-    background-color: #0F172A;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-    z-index: 10000;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-/* --- PUSH CONTENT BELOW NAVBAR --- */
-.page-spacer {
-    height: 90px;
-}
-.nav-left {
-    color: #FFFFFF;
-    font-size: 1.3rem;
-    font-weight: 700;
-}
-.nav-links a {
-    color: #E5E7EB;
-    margin-left: 1.5rem;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-}
-.nav-links a:hover {
-    color: #38BDF8;
-}
-.page-spacer {
-    height: 80px;
-}
-
-
 .stApp {
     background-color: #F8FAFC;
     font-family: 'Inter', sans-serif;
@@ -97,27 +37,6 @@ div[data-testid="stMainBlockContainer"] {
 # -----------------------------------------
 cnx = st.connection("snowflake")
 session = cnx.session()
-
-
-
-# ------------------------------
-# NAVBAR
-# ------------------------------
-
-st.markdown("""
-<div class="top-nav">
-    <div class="nav-left">Certification Tracker</div>
-    <div class="nav-links">
-        <a href="/" target="_self">Welcome Page</a>
-        <a href="/Data_Entry" target="_self">Data Entry</a>
-        <a href="/Realtime_Analysis" target="_self">Realtime Analysis</a>
-        <a href="/new_data_entry" target="_self">New Data Entry</a>
-        <a href="/About_Page" target="_self">About</a>
-    </div>
-</div>
-
-<div class="page-spacer"></div>
-""", unsafe_allow_html=True)
 
 # -----------------------------------------
 # Constants
@@ -146,11 +65,15 @@ for key in [
     "last_autofill_emp_id",
     "pending_data",
     "duplicate_exists",
-    "save_completed"
+    "save_completed",
+    "review_mode",
+    "review_payload"
 ]:
     st.session_state.setdefault(key, None)
 st.session_state.setdefault("last_autofill_emp_id", None)
 st.session_state.setdefault("autofill_profile", None)
+st.session_state.setdefault("review_mode", False)
+st.session_state.setdefault("review_payload", None)
 
 
 if not st.session_state.page_mode:
@@ -326,6 +249,7 @@ if st.session_state.page_mode == "ENTRY":
 
 if st.session_state.page_mode == "ADD":
     profile = st.session_state.autofill_profile or {}
+    
     if st.button("⬅ Back"):
         st.session_state.page_mode = "ENTRY"
         st.session_state.last_autofill_emp_id = None
@@ -343,7 +267,9 @@ if st.session_state.page_mode == "ADD":
         with c1:
             emp_id = st.text_input(
                 "Employee ID",
-                value=st.session_state.last_emp_id
+                value=st.session_state.last_emp_id,
+                disabled=st.session_state.review_mode
+
             )
             if (
                 emp_id
@@ -364,7 +290,8 @@ if st.session_state.page_mode == "ADD":
             # )
             emp_name = st.text_input(
                 "Employee Name",
-                value=profile.get("EMP Name", "")
+                value=profile.get("EMP Name", ""),
+                disabled=st.session_state.review_mode
             )
 
         # Fetch existing certs for this EMP ID
@@ -383,7 +310,8 @@ if st.session_state.page_mode == "ADD":
             certification = st.selectbox(
                 "Certification",
                 available_certs,
-                key=f"cert_select_{emp_id}_{len(existing_certs)}"
+                key=f"cert_select_{emp_id}_{len(existing_certs)}",
+                disabled=st.session_state.review_mode
             )
 
 
@@ -399,25 +327,29 @@ if st.session_state.page_mode == "ADD":
 
         with m1:
             c_m, c_y = st.columns(2)
-            enrol_month = c_m.selectbox("Enrolment Month", MONTHS)
+            enrol_month = c_m.selectbox("Enrolment Month", MONTHS,disabled=st.session_state.review_mode)
             enrol_year = c_y.selectbox(
                 "Enrolment Year",
-                [str(y) for y in range(date.today().year - 5, date.today().year + 5)]
+                [str(y) for y in range(date.today().year - 5, date.today().year + 5)],disabled=st.session_state.review_mode
             )
-            planned_date = st.date_input("Planned Certification Date", date.today())
+            planned_date = st.date_input("Planned Certification Date", date.today(),disabled=st.session_state.review_mode)
 
         with m2:
-            completed = st.checkbox("Certification Completed?")
+            completed = st.checkbox(
+                "Certification Completed?",
+                disabled=st.session_state.review_mode
+            )
+
             if completed:
-                actual_date = st.date_input("Actual Completion Date", max_value=date.today())
-                snowpro = st.selectbox("SnowPro Certified", ("Completed","Failed"))
+                actual_date = st.date_input("Actual Completion Date", max_value=date.today(),disabled=st.session_state.review_mode)
+                snowpro = st.selectbox("SnowPro Certified", ("Completed","Failed"),disabled=st.session_state.review_mode)
             else:
                 actual_date = None
                 snowpro = "Incomplete"
 
             voucher_status = st.selectbox(
                 "Voucher Status",
-                ("Voucher Received","Voucher Applied","Own Payment")
+                ("Voucher Received","Voucher Applied","Own Payment"),disabled=st.session_state.review_mode
             )
 
     # ---------------- Badges ----------------
@@ -431,33 +363,42 @@ if st.session_state.page_mode == "ADD":
         badge1 = b1.selectbox(
             "Badge 1",
             badge_opts,
-            index=badge_index(profile.get("Badge 1 Status"))
+            index=badge_index(profile.get("Badge 1 Status")),disabled=st.session_state.review_mode
         )
         badge2 = b2.selectbox(
             "Badge 2",
             badge_opts,
-            index=badge_index(profile.get("Badge 2 Status"))
+            index=badge_index(profile.get("Badge 2 Status")),disabled=st.session_state.review_mode
+
         )
         badge3 = b3.selectbox(
             "Badge 3",
             badge_opts,
-            index=badge_index(profile.get("Badge 3 Status"))
+            index=badge_index(profile.get("Badge 3 Status")),disabled=st.session_state.review_mode
+
         )
         badge4 = b4.selectbox(
             "Badge 4",
             badge_opts,
-            index=badge_index(profile.get("Badge 4 Status"))
+            index=badge_index(profile.get("Badge 4 Status")),disabled=st.session_state.review_mode
+
         )
         badge5 = b5.selectbox(
             "Badge 5",
             badge_opts,
-            index=badge_index(profile.get("Badge 5 Status"))
+            index=badge_index(profile.get("Badge 5 Status")),disabled=st.session_state.review_mode
+
         )
 
         p1, p2, p3 = st.columns(3)
-        cert_prep = p1.selectbox("CertPrepOD", badge_opts)
-        level_up = p2.selectbox("Level Up Courses", ("Completed","Not Started"))
-        trial_exam = p3.selectbox("Trial Exams", ("Completed","Not Started"))
+        cert_prep = p1.selectbox("CertPrepOD", badge_opts,disabled=st.session_state.review_mode)
+        level_up = p2.selectbox("Level Up Courses", ("Completed","Not Started"),disabled=st.session_state.review_mode)
+        trial_exam = p3.selectbox(
+            "Trial Exams",
+            ("Completed","Not Started"),
+            disabled=st.session_state.review_mode
+        )
+
 
     # ---------------- Department ----------------
     with st.container(border=True):
@@ -467,10 +408,11 @@ if st.session_state.page_mode == "ADD":
         with r1:
             account = st.text_input(
                 "Account",
-                value=profile.get("Account", "") or ""
+                value=profile.get("Account", "") or "",disabled=st.session_state.review_mode
+
             )
 
-            account_spoc = st.text_input("Account SPOC",value=profile.get("Account SPOC", "") or "")
+            account_spoc = st.text_input("Account SPOC",value=profile.get("Account SPOC", "") or "",disabled=st.session_state.review_mode)
 
         with r2:
             vertical_opts = get_vertical_options()
@@ -479,14 +421,15 @@ if st.session_state.page_mode == "ADD":
                 "Vertical / SL",
                 vertical_opts,
                 default=[existing_vertical] if existing_vertical in vertical_opts else [],
+                disabled=st.session_state.review_mode,
                 max_selections=1,
                 accept_new_options=True
             )
             vertical = vertical_sel[0] if vertical_sel else None
-            batch = st.text_input("Batch",value=profile.get("Batch", "") or "")
+            batch = st.text_input("Batch",value=profile.get("Batch", "") or "",disabled=st.session_state.review_mode)
            
 
-        comment = st.text_area("Comment")
+        comment = st.text_area("Comment",disabled=st.session_state.review_mode)
 
     # ---------------- Prepare Payload ----------------
     payload = {
@@ -517,25 +460,72 @@ if st.session_state.page_mode == "ADD":
     if st.button(
         "💾 Add New Certification",
         type="primary",
-        use_container_width=True
+        use_container_width=True,
+        disabled=st.session_state.review_mode
     ):
-    
         if certification is None:
-            st.warning("⚠️ No available certification to add for this employee.")
-            st.button("⬅ Back to Search")
+            st.error("❌ No available certification")
             st.stop()
 
-    
         if validate_emp(emp_id, emp_name):
-    
-            session.create_dataframe([Row(**payload)]) \
-                .write \
-                .mode("append") \
-                .save_as_table("USE_CASE.CERTIFICATION.NEW_CERTIFICATION")
-    
-            session.sql("SELECT 1").collect()  # force execution
-    
-            st.success("✅ Certification added successfully")
-            st.session_state.last_emp_id = emp_id
-            st.session_state.autofill_emp_name = emp_name
+            st.session_state.review_payload = payload
+            st.session_state.review_mode = True
             st.rerun()
+
+    
+    if st.session_state.review_mode and st.session_state.review_payload:
+
+        st.markdown("### 🔍 Review Before Saving")
+    
+        review_df = pd.DataFrame(
+            st.session_state.review_payload.items(),
+            columns=["Field", "Value"]
+        )
+    
+        st.dataframe(
+            review_df,
+            use_container_width=True,
+            hide_index=True
+        )
+        c1, c2 = st.columns(2)
+
+        with c1:
+            if st.button("✅ Confirm Save", type="primary", use_container_width=True):
+
+                # 1. Save to DB
+                session.create_dataframe([Row(**st.session_state.review_payload)]) \
+                    .write \
+                    .mode("append") \
+                    .save_as_table("USE_CASE.CERTIFICATION.NEW_CERTIFICATION")
+            
+                # 2. Acknowledgement
+                st.success("🎉 Certification saved successfully")
+            
+                # 3. HARD RESET of ADD-page state
+                st.session_state.review_mode = False
+                st.session_state.review_payload = None
+                st.session_state.last_autofill_emp_id = None
+                st.session_state.autofill_profile = {}
+            
+                # Optional: clear EMP ID if you want a fresh form
+                st.session_state.last_emp_id = ""
+            
+                # 4. Rerun so UI fully refreshes
+                st.rerun()
+
+        
+        with c2:
+            if st.button("❌ Cancel", use_container_width=True):
+                st.session_state.review_mode = False
+                st.session_state.review_payload = None
+                st.session_state.last_autofill_emp_id = None
+                st.rerun()
+
+
+    
+            # session.sql("SELECT 1").collect()  # force execution
+    
+            # st.success("✅ Certification added successfully")
+            # st.session_state.last_emp_id = emp_id
+            # st.session_state.autofill_emp_name = emp_name
+            # st.rerun()
