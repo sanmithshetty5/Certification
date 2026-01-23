@@ -67,6 +67,8 @@ for key in [
     "save_completed"
 ]:
     st.session_state.setdefault(key, None)
+    st.session_state.setdefault("autofill_profile", None)
+
 
 if not st.session_state.page_mode:
     st.session_state.page_mode = "ENTRY"
@@ -74,6 +76,22 @@ if not st.session_state.page_mode:
 # -----------------------------------------
 # Helper Functions
 # -----------------------------------------
+def get_latest_employee_profile(emp_id):
+    if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
+        return None
+
+    df = session.sql(f"""
+        SELECT *
+        FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+        WHERE "EMP ID" = '{emp_id}'
+        ORDER BY 
+            TRY_TO_DATE("Actual Date of completion", 'DD-MM-YYYY') DESC,
+            TRY_TO_DATE("Planned Certification date", 'DD-MM-YYYY') DESC
+        LIMIT 1
+    """).to_pandas()
+
+    return df.iloc[0].to_dict() if not df.empty else None
+
 def get_existing_certifications(emp_id):
     if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
         return []
@@ -193,14 +211,50 @@ if st.session_state.page_mode == "ENTRY":
 
 
     if add_clicked:
-        st.session_state.last_emp_id = emp_id_search.strip() if emp_id_search else ""
-        st.session_state.autofill_emp_name = autofill_employee_name(st.session_state.last_emp_id)
+        emp_id_val = emp_id_search.strip() if emp_id_search else ""
+        st.session_state.last_emp_id = emp_id_val
+    
+        profile = get_latest_employee_profile(emp_id_val)
+
+        st.session_state.autofill_profile = profile
         st.session_state.page_mode = "ADD"
         st.rerun()
+
 
 # =========================================================
 # ADD MODE
 # =========================================================
+profile = st.session_state.autofill_profile or {}
+emp_name = st.text_input(
+    "Employee Name",
+    value=profile.get("EMP Name", "")
+)
+badge1 = b1.selectbox("Badge 1", badge_opts, index=badge_opts.index(profile.get("Badge 1 Status", "In-Progress")))
+badge2 = b2.selectbox("Badge 2", badge_opts, index=badge_opts.index(profile.get("Badge 2 Status", "In-Progress")))
+badge3 = b3.selectbox("Badge 3", badge_opts, index=badge_opts.index(profile.get("Badge 3 Status", "In-Progress")))
+badge4 = b4.selectbox("Badge 4", badge_opts, index=badge_opts.index(profile.get("Badge 4 Status", "In-Progress")))
+badge5 = b5.selectbox("Badge 5", badge_opts, index=badge_opts.index(profile.get("Badge 5 Status", "In-Progress")))
+account = st.text_input(
+    "Account",
+    value=profile.get("Account", "") or ""
+)
+
+account_spoc = st.text_input(
+    "Account SPOC",
+    value=profile.get("Account SPOC", "") or ""
+)
+existing_vertical = profile.get("Vertical / SL")
+
+vertical_sel = st.multiselect(
+    "Vertical / SL",
+    vertical_opts,
+    default=[existing_vertical] if existing_vertical in vertical_opts else [],
+    max_selections=1,
+    accept_new_options=True
+)
+
+vertical = vertical_sel[0] if vertical_sel else None
+
 if st.session_state.page_mode == "ADD":
 
     if st.button("⬅ Back"):
