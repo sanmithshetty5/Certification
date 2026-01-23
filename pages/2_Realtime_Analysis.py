@@ -1340,7 +1340,7 @@ def export_charts_as_zip(data):
     return buffer
 
 # Wrap main content
-st.markdown(f'<div class="main-content {"shifted" if st.session_state.sidebar_collapsed else ""}">', unsafe_allow_html=True)
+st.markdown(f'<div class="main-content {"shifted" if not sidebar_collapsed else ""}">', unsafe_allow_html=True)
 
 # -----------------------------------------
 # UI STRUCTURE
