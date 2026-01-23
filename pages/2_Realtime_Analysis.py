@@ -400,7 +400,7 @@ with toggle_col1:
         st.session_state.sidebar_state = 'collapsed' if st.session_state.sidebar_state == 'expanded' else 'expanded'
         st.rerun()
 
-Add CSS for the toggle button positioning
+# Add CSS for the toggle button positioning
 
 st.markdown(f"""
 <style>
