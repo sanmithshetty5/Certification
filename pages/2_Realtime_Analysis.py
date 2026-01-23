@@ -816,7 +816,6 @@ import matplotlib.pyplot as plt
 import io
 import zipfile
 import plotly.express as px
-from streamlit.components.v1 import html
 
 # -----------------------------------------
 # PAGE CONFIG
@@ -825,7 +824,7 @@ st.set_page_config(
     page_title="Certification Analytics",
     page_icon="🚀",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 # -----------------------------------------
@@ -837,27 +836,14 @@ ACCENT_COLOR = "#3b82f6"
 BACKGROUND_COLOR = "#f8fafc"
 TEXT_COLOR = "#1e293b"
 SIDEBAR_BG = "#2C3E50"
-SIDEBAR_HOVER = "#34495E"
-
-# Initialize session state
-if 'sidebar_open' not in st.session_state:
-    st.session_state.sidebar_open = True
 
 st.markdown(f"""
 <style>
-    /* HIDE NATIVE STREAMLIT INTERFACE */
-    [data-testid="stSidebar"] {{display: none !important;}}
+    /* HIDE STREAMLIT BRANDING */
     [data-testid="stSidebarNav"] {{display: none;}}
     [data-testid="stHeader"] {{display: none;}} 
     [data-testid="stToolbar"] {{display: none;}}
-    section[data-testid="stSidebar"] {{display: none !important;}}
     
-    /* Remove default margins */
-    .block-container {{
-        padding-left: 2rem !important;
-        padding-right: 2rem !important;
-    }}
-
     /* TOP NAVBAR */
     .top-nav {{
         position: fixed;
@@ -895,76 +881,102 @@ st.markdown(f"""
         height: 75px; 
     }}
 
-    /* CUSTOM LEFT SIDEBAR */
-    .custom-sidebar {{
-        position: fixed;
-        left: 0;
-        top: 60px;
-        bottom: 0;
-        width: 280px;
-        background: linear-gradient(180deg, {SIDEBAR_BG} 0%, #1a252f 100%);
-        box-shadow: 2px 0 10px rgba(0,0,0,0.3);
-        z-index: 9999;
-        overflow-y: auto;
-        padding: 1.5rem 0 80px 0;
-        transition: transform 0.3s ease;
+    /* CUSTOM SIDEBAR STYLING */
+    section[data-testid="stSidebar"] {{
+        background: linear-gradient(180deg, {SIDEBAR_BG} 0%, #1a252f 100%) !important;
+        padding-top: 60px !important;
     }}
     
-    .custom-sidebar.collapsed {{
-        transform: translateX(-280px);
+    section[data-testid="stSidebar"] > div {{
+        background: transparent !important;
+        padding-top: 1rem;
     }}
 
-    .sidebar-toggle {{
+    /* Sidebar collapse button */
+    [data-testid="stSidebarCollapseButton"] {{
+        color: white !important;
+        background-color: transparent !important;
+    }}
+
+    /* Sidebar content styling */
+    section[data-testid="stSidebar"] * {{
+        color: #E2E8F0 !important;
+    }}
+    
+    section[data-testid="stSidebar"] .stMarkdown {{
+        color: #E2E8F0 !important;
+    }}
+
+    /* Section titles */
+    section[data-testid="stSidebar"] hr {{
+        border-color: #475569;
+        margin: 1.5rem 0;
+    }}
+
+    /* Multiselect styling */
+    section[data-testid="stSidebar"] .stMultiSelect label,
+    section[data-testid="stSidebar"] .stSelectbox label {{
+        color: #E2E8F0 !important;
+        font-size: 0.85rem !important;
+        font-weight: 500 !important;
+    }}
+
+    section[data-testid="stSidebar"] [data-baseweb="select"] {{
+        background-color: rgba(255,255,255,0.1) !important;
+    }}
+
+    /* Caption styling */
+    section[data-testid="stSidebar"] .stCaption {{
+        color: #94A3B8 !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        margin-top: 1rem !important;
+        margin-bottom: 0.5rem !important;
+    }}
+
+    /* User profile at bottom */
+    .sidebar-footer {{
         position: fixed;
+        bottom: 0;
         left: 0;
-        top: 120px;
+        width: 21rem;
+        padding: 1rem 1.5rem;
+        background-color: rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 9999;
+    }}
+    
+    .user-avatar {{
         width: 40px;
         height: 40px;
-        background-color: {SIDEBAR_BG};
-        border-radius: 0 8px 8px 0;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
-        z-index: 10000;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-        transition: all 0.3s ease;
+        color: white;
+        font-weight: 700;
+        font-size: 1.1rem;
     }}
     
-    .sidebar-toggle:hover {{
-        background-color: {SIDEBAR_HOVER};
-        width: 45px;
+    .user-name {{
+        color: #E2E8F0;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin: 0;
     }}
     
-    .sidebar-toggle.open {{
-        left: 280px;
-    }}
-
-    .sidebar-section {{
-        padding: 0 1.5rem;
-        margin-bottom: 1.5rem;
-    }}
-
-    .sidebar-title {{
+    .user-contract {{
         color: #94A3B8;
         font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 1rem;
-        padding-left: 0.5rem;
+        margin: 0;
     }}
 
-    /* Adjust main content */
-    [data-testid="stMain"] {{
-        transition: margin-left 0.3s ease;
-    }}
-    
-    [data-testid="stMain"].shifted {{
-        margin-left: 280px;
-    }}
-
-    /* TYPOGRAPHY */
+    /* MAIN CONTENT STYLING */
     .stApp {{
         background-color: {BACKGROUND_COLOR};
     }}
@@ -1075,60 +1087,19 @@ st.markdown(f"""
         color: #1e293b;
         border-radius: 6px;
     }}
-
-    /* User Profile */
-    .user-profile {{
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 1rem 1.5rem;
-        background-color: rgba(0,0,0,0.3);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }}
     
-    .user-avatar {{
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 700;
-        font-size: 1.1rem;
-    }}
-    
-    .user-info {{
-        flex: 1;
-    }}
-    
-    .user-name {{
-        color: #E2E8F0;
-        font-weight: 600;
-        font-size: 0.9rem;
-        margin: 0;
-    }}
-    
-    .user-contract {{
-        color: #94A3B8;
-        font-size: 0.75rem;
-        margin: 0;
-    }}
-
-    /* Sidebar filter styling */
-    .custom-sidebar .stMultiSelect label,
-    .custom-sidebar .stSelectbox label {{
+    /* Sidebar expander */
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary {{
+        background-color: rgba(255,255,255,0.1) !important;
         color: #E2E8F0 !important;
-        font-size: 0.85rem !important;
-        font-weight: 500 !important;
+        border-radius: 6px;
+    }}
+    
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary:hover {{
+        background-color: rgba(255,255,255,0.15) !important;
     }}
 </style>
 """, unsafe_allow_html=True)
-# Initialize session state for sidebar
 
 # Top Navigation Bar
 st.markdown("""
@@ -1179,96 +1150,16 @@ df.loc[~df["Enroll_Year"].str.isdigit(), "Enroll_Year"] = None
 df["Completed Flag"] = df["Actual Date of completion"].notna()
 
 # -----------------------------------------
-# SIDEBAR TOGGLE BUTTON
+# SIDEBAR
 # -----------------------------------------
-toggle_html = f"""
-<div class="sidebar-toggle {'open' if st.session_state.sidebar_open else ''}" id="sidebarToggle" onclick="toggleSidebar()">
-    <span style="color: white; font-size: 1.2rem;" id="toggleIcon">{'◀' if st.session_state.sidebar_open else '▶'}</span>
-</div>
-
-<script>
-let sidebarOpen = {'true' if st.session_state.sidebar_open else 'false'};
-
-function toggleSidebar() {{
-    sidebarOpen = !sidebarOpen;
+with st.sidebar:
+    # Logo
+    st.image("https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analytics.png", width=60)
+    st.markdown("## Analytics Console")
+    st.markdown("---")
     
-    const sidebar = document.getElementById('customSidebar');
-    const toggle = document.getElementById('sidebarToggle');
-    const icon = document.getElementById('toggleIcon');
-    const mainContent = window.parent.document.querySelector('[data-testid="stMain"]');
-    
-    if (sidebar) {{
-        if (sidebarOpen) {{
-            sidebar.classList.remove('collapsed');
-            toggle.classList.add('open');
-            icon.textContent = '◀';
-            if (mainContent) mainContent.classList.add('shifted');
-        }} else {{
-            sidebar.classList.add('collapsed');
-            toggle.classList.remove('open');
-            icon.textContent = '▶';
-            if (mainContent) mainContent.classList.remove('shifted');
-        }}
-    }}
-}}
-
-// Initialize on load
-window.addEventListener('load', function() {{
-    const mainContent = window.parent.document.querySelector('[data-testid="stMain"]');
-    if (mainContent && sidebarOpen) {{
-        mainContent.classList.add('shifted');
-    }}
-}});
-</script>
-"""
-
-html(toggle_html, height=0)
-
-# -----------------------------------------
-# CREATE SIDEBAR WITH FILTERS
-# -----------------------------------------
-sidebar_container = st.container()
-
-with sidebar_container:
-    st.markdown(f"""
-    <div class="custom-sidebar {'collapsed' if not st.session_state.sidebar_open else ''}" id="customSidebar">
-        <div class="sidebar-section">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <img src="https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analytics.png" width="60" style="filter: brightness(0) invert(1);">
-            </div>
-        </div>
-        
-        <div class="sidebar-section">
-            <div class="sidebar-title">⏱️ TIME PERIOD</div>
-            <div id="timeFilters"></div>
-        </div>
-        
-        <div class="sidebar-section">
-            <div class="sidebar-title">🔍 FILTERS</div>
-            <div id="mainFilters"></div>
-        </div>
-        
-        <div class="sidebar-section">
-            <div class="sidebar-title">🎖️ BADGE DETAILS</div>
-            <div id="badgeFilters"></div>
-        </div>
-        
-        <div class="user-profile">
-            <div class="user-avatar">J</div>
-            <div class="user-info">
-                <p class="user-name">SR JOSE FRANCISCO</p>
-                <p class="user-contract">Contrato n° 029491</p>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Create filters inside the sidebar HTML structure using Streamlit columns
-    # We'll use custom CSS to position these inside the sidebar
-    st.markdown('<div class="custom-sidebar" style="position: relative; pointer-events: none; height: 0; overflow: visible;">', unsafe_allow_html=True)
-    
-    # Time Filters
-    st.markdown('<div style="position: absolute; top: 120px; left: 24px; right: 24px; pointer-events: auto;">', unsafe_allow_html=True)
+    # Time Period
+    st.caption("⏱️ TIME PERIOD")
     col1, col2 = st.columns(2)
     with col1:
         available_years = sorted(df["Enroll_Year"].dropna().unique())
@@ -1280,27 +1171,41 @@ with sidebar_container:
             key=lambda x: month_order.index(x) if x in month_order else 99
         )
         selected_months = st.multiselect("Month", available_months, key="month_filter")
-    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown("---")
     
     # Main Filters
-    st.markdown('<div style="position: absolute; top: 280px; left: 24px; right: 24px; pointer-events: auto;">', unsafe_allow_html=True)
+    st.caption("🔍 FILTERS")
     cert_filter = st.multiselect("Certification", sorted(df["Certification"].dropna().unique()), key="cert_filter")
     snowpro_filter = st.multiselect("SnowPro Status", sorted(df["SnowPro Certified"].dropna().unique()), key="snowpro_filter")
     voucher_filter = st.multiselect("Voucher Status", sorted(df["Voucher Status"].dropna().unique()), key="voucher_filter")
-    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown("---")
     
-    # Badge Filters
-    st.markdown('<div style="position: absolute; top: 520px; left: 24px; right: 24px; pointer-events: auto;">', unsafe_allow_html=True)
-    badge_status_values = ["Completed", "In-Progress"]
-    b1 = st.multiselect("Badge 1", badge_status_values, key="b1")
-    b2 = st.multiselect("Badge 2", badge_status_values, key="b2")
-    b3 = st.multiselect("Badge 3", badge_status_values, key="b3")
-    b4 = st.multiselect("Badge 4", badge_status_values, key="b4")
-    b5 = st.multiselect("Badge 5", badge_status_values, key="b5")
-    certprep = st.multiselect("CertPrepOD", ["Completed", "Not Started"], key="certprep")
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Badge Details
+    st.caption("🎖️ BADGE DETAILS")
+    with st.expander("Badge Filters", expanded=False):
+        badge_status_values = ["Completed", "In-Progress"]
+        b1 = st.multiselect("Badge 1", badge_status_values, key="b1")
+        b2 = st.multiselect("Badge 2", badge_status_values, key="b2")
+        b3 = st.multiselect("Badge 3", badge_status_values, key="b3")
+        b4 = st.multiselect("Badge 4", badge_status_values, key="b4")
+        b5 = st.multiselect("Badge 5", badge_status_values, key="b5")
+        certprep = st.multiselect("CertPrepOD", ["Completed", "Not Started"], key="certprep")
+
+    # Add space for footer
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+
+# User Profile Footer
+st.markdown("""
+<div class="sidebar-footer">
+    <div class="user-avatar">J</div>
+    <div>
+        <p class="user-name">SR JOSE FRANCISCO</p>
+        <p class="user-contract">Contrato n° 029491</p>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # -----------------------------------------
 # FILTERING LOGIC
