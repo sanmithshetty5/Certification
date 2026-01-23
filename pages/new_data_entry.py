@@ -325,9 +325,6 @@ if st.session_state.page_mode == "ENTRY":
  
 
 if st.session_state.page_mode == "ADD":
-    if st.session_state.get("save_completed"):
-        st.success("🎉 Certification saved successfully")
-        st.session_state.save_completed = False
 
     profile = st.session_state.autofill_profile or {}
     
@@ -588,6 +585,10 @@ if st.session_state.page_mode == "ADD":
             
                 # Optional: clear EMP ID if you want a fresh form
                 st.session_state.last_emp_id = ""
+                if st.session_state.get("save_completed"):
+                    st.success("🎉 Certification saved successfully")
+                    st.session_state.save_completed = False
+
                 
                 # 4. Rerun so UI fully refreshes
                 st.rerun()                
