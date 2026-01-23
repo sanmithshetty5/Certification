@@ -124,10 +124,27 @@ st.markdown(f"""
     }}
 
     /* 4. DASHBOARD TYPOGRAPHY & CARDS */
-    /* Ensure the background color is light slate */
-    .stApp {{
-        background-color: {BACKGROUND_COLOR};
-    }}
+    /* 4. DASHBOARD TYPOGRAPHY & CARDS */
+.stApp {{
+    background-color: {BACKGROUND_COLOR};
+}}
+
+/* Target main content text BUT exclude Streamlit icons */
+[data-testid="stMain"] h1, 
+[data-testid="stMain"] h2, 
+[data-testid="stMain"] h3, 
+[data-testid="stMain"] p, 
+[data-testid="stMain"] label,
+[data-testid="stMain"] .stMarkdown {{
+    color: {TEXT_COLOR} !important;
+    font-family: 'Segoe UI', sans-serif !important;
+}}
+
+/* Apply font to spans/divs ONLY if they aren't icons */
+[data-testid="stMain"] span:not([data-testid="stIconMaterial"]), 
+[data-testid="stMain"] div:not([data-testid="stIconMaterial"]) {{
+    font-family: 'Segoe UI', sans-serif;
+}}
 
     /* Main Content Area Text: Dark Slate for readability */
     [data-testid="stMain"] h1, [data-testid="stMain"] h2, [data-testid="stMain"] h3, 
