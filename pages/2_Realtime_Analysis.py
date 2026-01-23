@@ -36,8 +36,7 @@ st.markdown(f"""
     /* 1. HIDE NATIVE STREAMLIT INTERFACE */
     [data-testid="sidebar-navs"] {{display: none;}}
     [data-testid="stSidebarNav"] {{display: none;}}
-    [data-testid="stSidebarCollapseButton"] {{display: none;}}
-    [data-testid="stHeader"] {{display: none;}} 
+    [data-testid="stHeader"] {{display: block !important; background: transparent !important;}} 
     [data-testid="stToolbar"] {{display: none;}} /* Hides the 'Deploy' and 'Made with Streamlit' footer */
 
     /* 2. TOP NAVBAR STYLING */
@@ -78,41 +77,121 @@ st.markdown(f"""
         height: 75px; 
     }}
 
-    /* 3. CUSTOM COLLAPSIBLE SIDEBAR */
-    section[data-testid="stSidebar"] {{
-        background-color: #111827 !important; /* Near black */
-        min-width: 80px !important;
-        max-width: 80px !important;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 10000;
-        overflow: hidden;
-        border-right: 1px solid #1f2937;
-    }}
+    /* ===============================
+   SIDEBAR — CLEAN & STABLE
+================================ */
 
-    section[data-testid="stSidebar"]:hover {{
-        min-width: 320px !important;
-        max-width: 320px !important;
-    }}
+/* Hide Streamlit default nav menu */
+[data-testid="sidebar-navs"],
+[data-testid="stSidebarNav"] {{
+    display: none !important;
+}}
 
-    /* Hide sidebar content by default, fade in on hover */
-    section[data-testid="stSidebar"] .stMultiSelect, 
-    section[data-testid="stSidebar"] .stSelectbox,
-    section[data-testid="stSidebar"] .stMarkdown,
-    section[data-testid="stSidebar"] .stExpander,
-    section[data-testid="stSidebar"] img {{
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-    }}
+/* Sidebar container */
+section[data-testid="stSidebar"] {{
+    background-color: #111827 !important;
+    min-width: 300px !important;
+    max-width: 300px !important;
+    width: 300px !important;
+    border-right: 1px solid #1f2937;
+    transition: none !important;
+    overflow: visible !important;
+}}
 
-    section[data-testid="stSidebar"]:hover .stMultiSelect,
-    section[data-testid="stSidebar"]:hover .stSelectbox,
-    section[data-testid="stSidebar"]:hover .stMarkdown,
-    section[data-testid="stSidebar"]:hover .stExpander,
-    section[data-testid="stSidebar"]:hover img {{
-        opacity: 1;
-        pointer-events: auto;
-    }}
+/* Ensure sidebar content is always visible */
+section[data-testid="stSidebar"] * {{
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}}
+
+/* Sidebar text color */
+section[data-testid="stSidebar"] *,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span {{
+    color: #ffffff !important;
+}}
+
+/* Sidebar expanders */
+section[data-testid="stSidebar"] div[data-testid="stExpander"] summary {{
+    color: #ffffff !important;
+    border-radius: 6px;
+}}
+
+section[data-testid="stSidebar"] div[data-testid="stExpander"] summary:hover {{
+    background-color: rgba(255,255,255,0.08);
+}}
+
+/* ===============================
+   NATIVE SIDEBAR TOGGLE BUTTON
+================================ */
+
+[data-testid="stSidebarCollapseButton"] {{
+    display: block !important;
+    position: fixed !important;
+    top: 12px !important;
+    left: 10px !important;
+    z-index: 10002 !important;
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+    border-radius: 6px !important;
+    padding: 4px 6px !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}}
+
+/* ===============================
+   MAIN CONTENT — NO SHIFT BUG
+================================ */
+
+div[data-testid="stAppViewContainer"] {{
+    margin-left: 0 !important;
+}}
+
+
+
+
+#     /* 3. CLEAN SIDEBAR (NO HOVER) */
+#     section[data-testid="stSidebar"] {{
+#         background-color: #111827 !important;
+#         min-width: 300px !important; /* Fixed width */
+#         max-width: 300px !important;
+#         transition: none !important; /* Remove animation */
+#         border-right: 1px solid #1f2937;
+#     }}
+
+#     # /* Ensure content is always visible (Removing the 0 opacity) */
+#     # section[data-testid="stSidebar"] .stMultiSelect, 
+#     # section[data-testid="stSidebar"] .stSelectbox,
+#     # section[data-testid="stSidebar"] .stMarkdown,
+#     # section[data-testid="stSidebar"] .stExpander,
+#     # section[data-testid="stSidebar"] img {{
+#     #     opacity: 1 !important;
+#     #     pointer-events: auto !important;
+#     # }}
+
+#     /* Ensure sidebar elements are always static and visible */
+#     section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div {{
+#         opacity: 1 !important;
+#         pointer-events: auto !important;
+#     }}
+
+# /* STYLE THE NATIVE TOGGLE BUTTON */
+#     [data-testid="stSidebarCollapseButton"] {{
+#         display: block !important;
+#         position: fixed !important;
+#         top: 12px !important;
+#         left: 10px !important;
+#         z-index: 10002 !important;
+#         background-color: #3b82f6 !important;
+#         color: white !important;
+#         border-radius: 5px !important;
+#     }}
+    
+#     /* Hide the standard Hamburger but keep the sidebar controls */
+#     [data-testid="stHeader"] { {
+#         display: block !important; 
+#         background: transparent !important;
+#     }}
 
    /* 4. CONSOLIDATED TYPOGRAPHY & ICON FIX */
     .stApp {{
@@ -270,6 +349,22 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
+# st.markdown("""
+# <div class="top-nav">
+#     <div class="nav-left">Certification Tracker</div>
+#     <div class="nav-links">
+#         <a href="/" target="_self">Welcome Page</a>
+#         <a href="/Data_Entry" target="_self">Data Entry</a>
+#         <a href="/Realtime_Analysis" target="_self">Realtime Analysis</a>
+#         <a href="/new_data_entry" target="_self">New Data Entry</a>
+#         <a href="/About_Page" target="_self">About</a>
+#     </div>
+# </div>
+
+# <div class="page-spacer"></div>
+# """, unsafe_allow_html=True)
+
+# 1. Renders the Top Nav
 st.markdown("""
 <div class="top-nav">
     <div class="nav-left">Certification Tracker</div>
@@ -277,12 +372,17 @@ st.markdown("""
         <a href="/" target="_self">Welcome Page</a>
         <a href="/Data_Entry" target="_self">Data Entry</a>
         <a href="/Realtime_Analysis" target="_self">Realtime Analysis</a>
-        <a href="/new_data_entry" target="_self">New Data Entry</a>
         <a href="/About_Page" target="_self">About</a>
     </div>
 </div>
-
 <div class="page-spacer"></div>
+
+<!-- UX Toggle Button (Guides User) -->
+<div style="padding-left:2rem; margin-bottom:1rem;">
+    <div class="fake-toggle">
+        ☰ Filters
+    </div>
+</div>
 """, unsafe_allow_html=True)
 
 # -----------------------------------------
