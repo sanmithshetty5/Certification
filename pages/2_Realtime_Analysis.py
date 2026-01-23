@@ -473,7 +473,7 @@ if not sidebar_collapsed:
             b3 = st.multiselect("Badge 3", badge_status_values, key="b3")
             b4 = st.multiselect("Badge 4", badge_status_values, key="b4")
             b5 = st.multiselect("Badge 5", badge_status_values, key="b5")
-            certprep = st.multiselect("CertPrepOD", ["Completed", "Not Started"], key="certprep")
+            certprep = st.multiselect("CertPrepOD", ["Completed", "In Progress"], key="certprep")
 
         # Add space for footer
         st.markdown("<br><br><br>", unsafe_allow_html=True)
