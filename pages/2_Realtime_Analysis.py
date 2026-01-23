@@ -467,7 +467,7 @@ if not sidebar_collapsed:
         # Badge Details
         st.caption("🎖️ BADGE DETAILS")
         with st.expander("Badge Filters", expanded=False):
-            badge_status_values = ["Completed", "In-Progress"]
+            badge_status_values = ["Completed", "In Progress"]
             b1 = st.multiselect("Badge 1", badge_status_values, key="b1")
             b2 = st.multiselect("Badge 2", badge_status_values, key="b2")
             b3 = st.multiselect("Badge 3", badge_status_values, key="b3")
