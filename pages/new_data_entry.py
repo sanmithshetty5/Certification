@@ -188,48 +188,44 @@ if st.session_state.page_mode == "ENTRY":
                 st.warning("No records found")
             else:
                 st.success("Employee records found")
-                
+                NULL_PLACEHOLDER = "—"
                 df_display = df.copy()
-                    
-                def is_completed(val):
-                    return str(val).strip().lower() == "completed"
-                checkbox_map = {
-                    "Badge 1 ✔": "Badge 1 Status",
-                    "Badge 2 ✔": "Badge 2 Status",
-                    "Badge 3 ✔": "Badge 3 Status",
-                    "Badge 4 ✔": "Badge 4 Status",
-                    "Badge 5 ✔": "Badge 5 Status",
-                    "SnowPro ✔": "SnowPro Certified",
-                    "CertPrep ✔": "CertPrepOD Course",
-                    "LevelUp ✔": "Level Up Courses",
-                    "Trial ✔": "# Trial Exams"
-                }
+                # Replace NaN / None / empty strings for display only
+                df_display = df_display.fillna(NULL_PLACEHOLDER)
                 
-                for new_col, src_col in checkbox_map.items():
-                    if src_col in df_display.columns:
-                        df_display[new_col] = df_display[src_col].apply(is_completed)
-                df_display = df_display.drop(
-                    columns=[c for c in checkbox_map.values() if c in df_display.columns]
+                df_display = df_display.replace(
+                    to_replace=r'^\s*$',
+                    value=NULL_PLACEHOLDER,
+                    regex=True
                 )
 
+
+                # Tick / cross for SnowPro Certified
+                df_display["SnowPro Status"] = df_display["SnowPro Certified"].map({
+                    "Completed": "✔ Completed",
+                    "Failed": "✖ Failed",
+                    "Incomplete": "⏳ Incomplete"
+                }).fillna("⏳ Incomplete")
                 
+                # Optional: Certification completion flag
+                df_display["Completed?"] = df_display["SnowPro Certified"] == "Completed"
+
                 st.dataframe(
                     df_display,
                     use_container_width=True,
                     hide_index=True,
                     column_config={
-                        "Badge 1 ✔": st.column_config.CheckboxColumn("B1"),
-                        "Badge 2 ✔": st.column_config.CheckboxColumn("B2"),
-                        "Badge 3 ✔": st.column_config.CheckboxColumn("B3"),
-                        "Badge 4 ✔": st.column_config.CheckboxColumn("B4"),
-                        "Badge 5 ✔": st.column_config.CheckboxColumn("B5"),
-                        "SnowPro ✔": st.column_config.CheckboxColumn("SnowPro"),
-                        "CertPrep ✔": st.column_config.CheckboxColumn("CertPrep"),
-                        "LevelUp ✔": st.column_config.CheckboxColumn("Level Up"),
-                        "Trial ✔": st.column_config.CheckboxColumn("Trial"),
+                        "SnowPro Status": st.column_config.TextColumn(
+                            "SnowPro Status",
+                            help="Certification result",
+                            width="medium"
+                        ),
+                        "Completed?": st.column_config.CheckboxColumn(
+                            "Completed",
+                            help="✔ = Completed, ✖ = Not completed"
+                        )
                     }
-                    )
-
+                )
 
     if add_clicked:
         emp_id_val = emp_id_search.strip() if emp_id_search else ""
