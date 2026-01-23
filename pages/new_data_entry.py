@@ -339,11 +339,34 @@ if st.session_state.page_mode == "ADD":
         st.markdown('<div class="section-header">🏅 Badges & Progress</div>', unsafe_allow_html=True)
         badge_opts = ("Completed","In-Progress")
         b1, b2, b3, b4, b5 = st.columns(5)
-        badge1 = b1.selectbox("Badge 1", badge_opts)
-        badge2 = b2.selectbox("Badge 2", badge_opts)
-        badge3 = b3.selectbox("Badge 3", badge_opts)
-        badge4 = b4.selectbox("Badge 4", badge_opts)
-        badge5 = b5.selectbox("Badge 5", badge_opts)
+        def badge_index(val):
+            return badge_opts.index(val) if val in badge_opts else badge_opts.index("In-Progress")
+
+        badge1 = b1.selectbox(
+            "Badge 1",
+            badge_opts,
+            index=badge_index(profile.get("Badge 1 Status"))
+        )
+        badge2 = b2.selectbox(
+            "Badge 2",
+            badge_opts,
+            index=badge_index(profile.get("Badge 2 Status"))
+        )
+        badge3 = b3.selectbox(
+            "Badge 3",
+            badge_opts,
+            index=badge_index(profile.get("Badge 3 Status"))
+        )
+        badge4 = b4.selectbox(
+            "Badge 4",
+            badge_opts,
+            index=badge_index(profile.get("Badge 4 Status"))
+        )
+        badge5 = b5.selectbox(
+            "Badge 5",
+            badge_opts,
+            index=badge_index(profile.get("Badge 5 Status"))
+        )
 
         p1, p2, p3 = st.columns(3)
         cert_prep = p1.selectbox("CertPrepOD", badge_opts)
