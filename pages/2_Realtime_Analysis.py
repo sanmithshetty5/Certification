@@ -1138,10 +1138,6 @@ st.markdown(f"""
 # Top Navigation Bar
 st.markdown("""
 toggle_col1, toggle_col2, toggle_col3 = st.columns([0.05, 0.9, 0.05])
-with toggle_col1:
-    if st.button("◀" if not sidebar_collapsed else "▶", key="sidebar_toggle"):
-        st.session_state.sidebar_state = 'collapsed' if st.session_state.sidebar_state == 'expanded' else 'expanded'
-        st.rerun()
 <div class="top-nav">
     <div class="nav-left">Certification Tracker</div>
     <div class="nav-links">
@@ -1191,11 +1187,11 @@ df["Completed Flag"] = df["Actual Date of completion"].notna()
 # -----------------------------------------
 # TOGGLE BUTTON (BEFORE SIDEBAR)
 # -----------------------------------------
-# toggle_col1, toggle_col2, toggle_col3 = st.columns([0.05, 0.9, 0.05])
-# with toggle_col1:
-#     if st.button("◀" if not sidebar_collapsed else "▶", key="sidebar_toggle"):
-#         st.session_state.sidebar_state = 'collapsed' if st.session_state.sidebar_state == 'expanded' else 'expanded'
-#         st.rerun()
+toggle_col1, toggle_col2, toggle_col3 = st.columns([0.05, 0.9, 0.05])
+with toggle_col1:
+    if st.button("◀" if not sidebar_collapsed else "▶", key="sidebar_toggle"):
+        st.session_state.sidebar_state = 'collapsed' if st.session_state.sidebar_state == 'expanded' else 'expanded'
+        st.rerun()
 
 # Add CSS for the toggle button positioning
 st.markdown(f"""
@@ -1229,6 +1225,7 @@ st.markdown(f"""
 # -----------------------------------------
 # SIDEBAR
 # -----------------------------------------
+
 if not sidebar_collapsed:
     with st.sidebar:
         # Logo
