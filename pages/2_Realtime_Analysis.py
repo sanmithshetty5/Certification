@@ -22,15 +22,6 @@ st.set_page_config(
 if 'sidebar_state' not in st.session_state:
     st.session_state.sidebar_state = 'expanded'
 
-
-if st.button("toggle", key="sidebar-toggle-hidden"):
-    st.session_state.sidebar_state = (
-        "collapsed"
-        if st.session_state.sidebar_state == "expanded"
-        else "expanded"
-    )
-    st.rerun()
-
 # -----------------------------------------
 # GLOBAL THEME & CONSTANTS
 # -----------------------------------------
@@ -90,7 +81,7 @@ st.markdown(f"""
     }}
     
     .page-spacer {{
-        height: 75px; 
+        height: 20px; 
     }}
 
     /* CUSTOM SIDEBAR STYLING */
@@ -368,12 +359,6 @@ st.markdown(f"""
 </div>
 
 <div class="page-spacer"></div>
-
-<script>
-function toggleSidebar() {
-    document.getElementById("sidebar-toggle-hidden").click();
-}
-</script>
 """, unsafe_allow_html=True)
 
 
@@ -414,13 +399,14 @@ df["Completed Flag"] = df["Actual Date of completion"].notna()
 # -----------------------------------------
 # TOGGLE BUTTON (BEFORE SIDEBAR)
 # -----------------------------------------
-# toggle_col1, toggle_col2, toggle_col3 = st.columns([0.05, 0.9, 0.05])
-# with toggle_col1:
-#     if st.button("◀" if not sidebar_collapsed else "▶", key="sidebar_toggle"):
-#         st.session_state.sidebar_state = 'collapsed' if st.session_state.sidebar_state == 'expanded' else 'expanded'
-#         st.rerun()
+toggle_col1, toggle_col2, toggle_col3 = st.columns([0.05, 0.9, 0.05])
+with toggle_col1:
+    if st.button("◀" if not sidebar_collapsed else "▶", key="sidebar_toggle"):
+        st.session_state.sidebar_state = 'collapsed' if st.session_state.sidebar_state == 'expanded' else 'expanded'
+        st.rerun()
 
-# Add CSS for the toggle button positioning
+Add CSS for the toggle button positioning
+
 st.markdown(f"""
 <style>
     /* Position the toggle button */
@@ -570,7 +556,7 @@ col_h1, col_h2 = st.columns([0.85, 0.15])
 with col_h1:
     st.markdown(f"""
     <div class="main-header">
-        <div class="header-title">Certification Intelligence</div>
+        <div class="header-title">Certification Dashboard</div>
         <div class="header-subtitle">Overview for <b>{months_label}</b> in <b>{years_label}</b></div>
     </div>
     """, unsafe_allow_html=True)
