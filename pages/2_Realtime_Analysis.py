@@ -147,52 +147,6 @@ div[data-testid="stAppViewContainer"] {{
     margin-left: 0 !important;
 }}
 
-
-
-
-#     /* 3. CLEAN SIDEBAR (NO HOVER) */
-#     section[data-testid="stSidebar"] {{
-#         background-color: #111827 !important;
-#         min-width: 300px !important; /* Fixed width */
-#         max-width: 300px !important;
-#         transition: none !important; /* Remove animation */
-#         border-right: 1px solid #1f2937;
-#     }}
-
-#     # /* Ensure content is always visible (Removing the 0 opacity) */
-#     # section[data-testid="stSidebar"] .stMultiSelect, 
-#     # section[data-testid="stSidebar"] .stSelectbox,
-#     # section[data-testid="stSidebar"] .stMarkdown,
-#     # section[data-testid="stSidebar"] .stExpander,
-#     # section[data-testid="stSidebar"] img {{
-#     #     opacity: 1 !important;
-#     #     pointer-events: auto !important;
-#     # }}
-
-#     /* Ensure sidebar elements are always static and visible */
-#     section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div {{
-#         opacity: 1 !important;
-#         pointer-events: auto !important;
-#     }}
-
-# /* STYLE THE NATIVE TOGGLE BUTTON */
-#     [data-testid="stSidebarCollapseButton"] {{
-#         display: block !important;
-#         position: fixed !important;
-#         top: 12px !important;
-#         left: 10px !important;
-#         z-index: 10002 !important;
-#         background-color: #3b82f6 !important;
-#         color: white !important;
-#         border-radius: 5px !important;
-#     }}
-    
-#     /* Hide the standard Hamburger but keep the sidebar controls */
-#     [data-testid="stHeader"] { {
-#         display: block !important; 
-#         background: transparent !important;
-#     }}
-
    /* 4. CONSOLIDATED TYPOGRAPHY & ICON FIX */
     .stApp {{
         background-color: {BACKGROUND_COLOR};
