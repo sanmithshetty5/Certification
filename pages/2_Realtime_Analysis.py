@@ -1269,16 +1269,6 @@ if not sidebar_collapsed:
         # Add space for footer
         st.markdown("<br><br><br>", unsafe_allow_html=True)
 
-    # User Profile Footer
-    st.markdown("""
-    <div class="sidebar-footer">
-        <div class="user-avatar">J</div>
-        <div>
-            <p class="user-name">SR JOSE FRANCISCO</p>
-            <p class="user-contract">Contrato n° 029491</p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
 else:
     # Set default values when sidebar is collapsed
     selected_years = []
