@@ -554,16 +554,14 @@ if st.session_state.page_mode == "ADD":
 
         st.markdown("### 🔍 Review Before Saving")
     
-        review_df = pd.DataFrame(
-            st.session_state.review_payload.items(),
-            columns=["Field", "Value"]
-        )
-    
+       review_df = pd.DataFrame([st.session_state.review_payload])
+
         st.dataframe(
             review_df,
             use_container_width=True,
             hide_index=True
         )
+
         c1, c2 = st.columns(2)
 
         with c1:
@@ -575,10 +573,10 @@ if st.session_state.page_mode == "ADD":
                     .mode("append") \
                     .save_as_table("USE_CASE.CERTIFICATION.NEW_CERTIFICATION")
             
-                # 2. Acknowledgement
-                st.success("🎉 Certification saved successfully")
-            
+                # 2. Acknowledgement            
                 # 3. HARD RESET of ADD-page state
+                st.session_state.save_completed = True
+
                 st.session_state.review_mode = False
                 st.session_state.review_payload = None
                 st.session_state.last_autofill_emp_id = None
@@ -588,7 +586,11 @@ if st.session_state.page_mode == "ADD":
                 st.session_state.last_emp_id = ""
             
                 # 4. Rerun so UI fully refreshes
-                st.rerun()
+                st.rerun()                
+                if st.session_state.get("save_completed"):
+                    st.success("🎉 Certification saved successfully")
+                    st.session_state.save_completed = False
+
 
         
         with c2:
