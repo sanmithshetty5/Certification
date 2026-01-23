@@ -34,8 +34,7 @@ HEATMAP_CMAP = "Blues"
 # -----------------------------------------
 # GLOBAL CSS – FORCE LIGHT MODE & MODERN UI
 # -----------------------------------------
-st.markdown(f"""
-<style>
+
 #     /* 1. HIDE DEFAULT STREAMLIT SIDEBAR BUTTONS */
 #     [data-testid="sidebar-navs"] {{display: none;}}
 #     [data-testid="stSidebarNav"] {{display: none;}}
