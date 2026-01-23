@@ -31,125 +31,6 @@ SB_BACKGROUND_COLOR="000000"
 CHART_COLOR = "#2563eb"      
 HEATMAP_CMAP = "Blues"
 
-# -----------------------------------------
-# GLOBAL CSS – FORCE LIGHT MODE & MODERN UI
-# -----------------------------------------
-
-#     /* 1. HIDE DEFAULT STREAMLIT SIDEBAR BUTTONS */
-#     [data-testid="sidebar-navs"] {{display: none;}}
-#     [data-testid="stSidebarNav"] {{display: none;}}
-#     [data-testid="stSidebarCollapseButton"] {{display: none;}}
-    
-#     /* 2. CUSTOM SIDEBAR CONTAINER STYLING */
-#     section[data-testid="stSidebar"] {{
-#         background-color: #111827 !important; /* Darker professional grey/black */
-#         min-width: 80px !important;
-#         max-width: 80px !important;
-#         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-#         overflow-x: hidden;
-#         z-index: 100;
-#         border-right: 1px solid #1f2937;
-#     }}
-
-#     /* 3. EXPAND SIDEBAR ON HOVER */
-#     section[data-testid="stSidebar"]:hover {{
-#         min-width: 320px !important;
-#         max-width: 320px !important;
-#         box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.5);
-#     }}
-
-#     /* 4. HIDE WIDGETS WHEN COLLAPSED, SHOW ON HOVER */
-#     section[data-testid="stSidebar"] .stMultiSelect, 
-#     section[data-testid="stSidebar"] .stSelectbox,
-#     section[data-testid="stSidebar"] .stMarkdown,
-#     section[data-testid="stSidebar"] .stExpander {{
-#         opacity: 0;
-#         transition: opacity 0.2s ease;
-#         pointer-events: none; /* Prevent clicking when hidden */
-#     }}
-
-#     section[data-testid="stSidebar"]:hover .stMultiSelect,
-#     section[data-testid="stSidebar"]:hover .stSelectbox,
-#     section[data-testid="stSidebar"]:hover .stMarkdown,
-#     section[data-testid="stSidebar"]:hover .stExpander {{
-#         opacity: 1;
-#         pointer-events: auto;
-#     }}
-
-#     /* 5. SIDEBAR ICON (Visible when collapsed) */
-#     .sidebar-icon {{
-#         text-align: center;
-#         padding: 20px 0;
-#         font-size: 24px;
-#         color: white;
-#     }}
-
-#     /* 6. STYLE THE WIDGETS INSIDE SIDEBAR */
-#     section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p {{
-#         color: #9ca3af !important; /* Light grey text */
-#     }}
-    
-#     /* Improve Sidebar Scrollbar */
-#     section[data-testid="stSidebar"] > div:first-child {{
-#         overflow-x: hidden;
-#     }}
-
-#     .top-nav {{
-#     position: fixed;
-#     top: 0;
-#     left: 0;
-#     right: 0;
-#     height: 64px;
-#     background-color: #0F172A;
-#     display: flex;
-#     align-items: center;
-#     justify-content: space-between;
-#     padding: 0 2rem;
-#     z-index: 10000;
-#     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-# }}
-# /* --- PUSH CONTENT BELOW NAVBAR --- */
-# .page-spacer {{
-#     height: 90px;
-# }}
-# .nav-left {{
-#     color: #FFFFFF;
-#     font-size: 1.3rem;
-#     font-weight: 700;
-# }}
-# .nav-links a {{
-#     color: #E5E7EB;
-#     margin-left: 1.5rem;
-#     text-decoration: none;
-#     font-weight: 600;
-#     font-size: 0.95rem;
-# }}
-# .nav-links a:hover {{
-#     color: #38BDF8;
-# }}
-# .page-spacer {{
-#     height: 80px;
-# }}
-    
-#     /* 1. FORCE LIGHT THEME BASE */
-#     .stApp {{
-#         background-color: {BACKGROUND_COLOR};
-#     }}
-    
-#     /* 2. TYPOGRAPHY & TEXT COLORS */
-#     h1, h2, h3, h4, h5, h6, p, div, span, label {{
-#         color: {SB_TEXT} !important;
-#         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-#     }}
-    
-#     /* Exception: White text on buttons or specific badges */
-#     button p, div[data-testid="stMetricValue"] {{
-#         color: inherit !important;
-#     }}
-
-# -----------------------------------------
-# FULL UPDATED GLOBAL CSS
-# -----------------------------------------
 st.markdown(f"""
 <style>
     /* 1. HIDE NATIVE STREAMLIT INTERFACE */
@@ -479,9 +360,6 @@ df["Completed Flag"] = df["Actual Date of completion"].notna()
 # CUSTOM COLLAPSIBLE SIDEBAR
 # -----------------------------------------
 with st.sidebar:
-    # This icon stays visible when the sidebar is 80px wide
-    st.markdown('<div class="sidebar-icon">📊</div>', unsafe_allow_html=True)
-    
     # Everything below this will "fade in" when hovering
     st.image("https://raw.githubusercontent.com/sanmithshetty5/Certification/main/pages/analytics.png", width=60)
     st.markdown("## Analytics Console")
