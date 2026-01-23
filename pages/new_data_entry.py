@@ -87,11 +87,11 @@ def get_latest_employee_profile(emp_id):
         FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
         WHERE "EMP ID" = '{emp_id}'
         ORDER BY 
+            CASE WHEN "Account" IS NOT NULL THEN 0 ELSE 1 END,
             TRY_TO_DATE("Actual Date of completion", 'DD-MM-YYYY') DESC,
             TRY_TO_DATE("Planned Certification date", 'DD-MM-YYYY') DESC
         LIMIT 1
     """).to_pandas()
-
     return df.iloc[0].to_dict() if not df.empty else None
 
 def get_existing_certifications(emp_id):
