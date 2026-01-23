@@ -304,12 +304,8 @@ if st.session_state.page_mode == "ADD":
     payload = {
         "EMP ID": emp_id,
         "EMP Name": emp_name,
-        "Certification": certification,
         "Enrolment Month": f"{enrol_month}-{enrol_year}",
-        "Planned Certification date": fmt_date(planned_date),
-        "Actual Date of completion": fmt_date(actual_date),
-        "SnowPro Certified": snowpro,
-        "Voucher Status": voucher_status,
+        "Certification": certification,
         "Badge 1 Status": badge1,
         "Badge 2 Status": badge2,
         "Badge 3 Status": badge3,
@@ -322,6 +318,10 @@ if st.session_state.page_mode == "ADD":
         "Account SPOC": normalize(account_spoc),
         "Vertical / SL": normalize(vertical),
         "Batch":normalize(batch),
+        "Planned Certification date": fmt_date(planned_date),
+        "Actual Date of completion": fmt_date(actual_date),
+         "Voucher Status": voucher_status,
+        "SnowPro Certified": snowpro,
         "Comment": normalize(comment)
     }
 
