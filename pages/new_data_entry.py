@@ -17,6 +17,69 @@ st.set_page_config(
 # -----------------------------------------
 st.markdown("""
 <style>
+/* --- REMOVE STREAMLIT TOP HEADER COMPLETELY --- */
+header[data-testid="stHeader"] {
+    display: none;
+}
+
+/* --- REMOVE DEFAULT TOP PADDING STREAMLIT ADDS --- */
+.block-container {
+    padding-top: 0rem !important;
+}
+
+/* ===== REMOVE STREAMLIT SIDEBAR COMPLETELY (THIS PAGE ONLY) ===== */
+
+/* Hide the entire sidebar container */
+section[data-testid="stSidebar"] {
+    display: none;
+}
+
+/* Remove the space reserved for the sidebar */
+div[data-testid="stAppViewContainer"] {
+    margin-left: 0;
+}
+
+/* Ensure main content uses full width */
+div[data-testid="stMainBlockContainer"] {
+    padding-left: 2rem;
+    max-width: 100%;
+}
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background-color: #0F172A;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    z-index: 10000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+/* --- PUSH CONTENT BELOW NAVBAR --- */
+.page-spacer {
+    height: 90px;
+}
+.nav-left {
+    color: #FFFFFF;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+.nav-links a {
+    color: #E5E7EB;
+    margin-left: 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.nav-links a:hover {
+    color: #38BDF8;
+}
+.page-spacer {
+    height: 80px;
+}
 .stApp {
     background-color: #F8FAFC;
     font-family: 'Inter', sans-serif;
@@ -38,6 +101,21 @@ st.markdown("""
 cnx = st.connection("snowflake")
 session = cnx.session()
 
+
+st.markdown("""
+<div class="top-nav">
+    <div class="nav-left">Certification Tracker</div>
+    <div class="nav-links">
+        <a href="/" target="_self">Welcome Page</a>
+        <a href="/Data_Entry" target="_self">Data Entry</a>
+        <a href="/Realtime_Analysis" target="_self">Realtime Analysis</a>
+        <a href="/new_data_entry" target="_self">New Data Entry</a>
+        <a href="/About_Page" target="_self">About</a>
+    </div>
+</div>
+
+<div class="page-spacer"></div>
+""", unsafe_allow_html=True)
 # -----------------------------------------
 # Constants
 # -----------------------------------------
