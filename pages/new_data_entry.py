@@ -148,7 +148,7 @@ for key in [
     "review_payload"
 ]:
     st.session_state.setdefault(key, None)
-st.session_state.setdefault("last_autofill_emp_id", None)
+st.session_state.setdefault("last_autofill_emp_id", "")
 st.session_state.setdefault("autofill_profile", None)
 st.session_state.setdefault("review_mode", False)
 st.session_state.setdefault("review_payload", None)
@@ -345,7 +345,7 @@ if st.session_state.page_mode == "ADD":
         with c1:
             emp_id = st.text_input(
                 "Employee ID",
-                value=st.session_state.last_emp_id,
+                value=st.session_state.last_emp_id or "",
                 disabled=st.session_state.review_mode
 
             )
