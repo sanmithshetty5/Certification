@@ -6,14 +6,6 @@ import zipfile
 import plotly.express as px
 
 
-if st.button("toggle", key="sidebar-toggle-hidden"):
-    st.session_state.sidebar_state = (
-        "collapsed"
-        if st.session_state.sidebar_state == "expanded"
-        else "expanded"
-    )
-    st.rerun()
-
 # -----------------------------------------
 # PAGE CONFIG
 # -----------------------------------------
@@ -29,6 +21,15 @@ st.set_page_config(
 # -----------------------------------------
 if 'sidebar_state' not in st.session_state:
     st.session_state.sidebar_state = 'expanded'
+
+
+if st.button("toggle", key="sidebar-toggle-hidden"):
+    st.session_state.sidebar_state = (
+        "collapsed"
+        if st.session_state.sidebar_state == "expanded"
+        else "expanded"
+    )
+    st.rerun()
 
 # -----------------------------------------
 # GLOBAL THEME & CONSTANTS
