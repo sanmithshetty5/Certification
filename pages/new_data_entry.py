@@ -22,7 +22,7 @@ st.markdown("""
     font-family: 'Inter', sans-serif;
 }
 .section-header {
-    color: #0F172A;
+    color: #000000;
     font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 1rem;
@@ -169,9 +169,19 @@ if st.session_state.page_mode == "ENTRY":
             else:
                 st.success("Employee records found")
                 st.dataframe(
-                    df[["Certification","Enrolment Month","SnowPro Certified"]],
-                    use_container_width=True
+                    df,
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        col: st.column_config.TextColumn(
+                            col,
+                            help=col.replace("_", " "),
+                            width="medium"
+                        )
+                        for col in df.columns
+                    }
                 )
+
 
     if add_clicked:
         st.session_state.last_emp_id = emp_id_search.strip() if emp_id_search else ""
