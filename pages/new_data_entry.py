@@ -18,6 +18,11 @@ st.set_page_config(
 # -----------------------------------------
 st.markdown("""
 <style>
+/* Restore primary button text color */
+.stButton > button[kind="primary"] {
+    color: white !important;
+}
+
 
 /* ===== FORCE ALL TEXT TO BLACK (EXCEPT BUTTONS) ===== */
 
