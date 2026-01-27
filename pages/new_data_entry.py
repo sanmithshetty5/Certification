@@ -38,10 +38,10 @@ p, span, div, label, h1, h2, h3, h4, h5, h6 {
     color: #000000 !important;
 }
 
-/* Input text inside fields */
+/* Input text inside fields 
 input, textarea {
     color: white !important;
-}
+} */
 
 /* Keep button text unchanged */
 .stButton > button[kind="primary"] {
