@@ -24,7 +24,7 @@ st.markdown("""
 /* General text elements */
 .stApp,
 .stMarkdown,
-# .stText,
+.stText,
 .stTextInput label,
 .stSelectbox label,
 # .stMultiSelect label,
