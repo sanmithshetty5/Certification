@@ -245,7 +245,7 @@ if st.session_state.page_mode == "ENTRY":
 
     st.subheader("🔍 Find Employee")
 
-    c1, c2, c3 = st.columns([2.5, 1.5, 3])
+    c1, c2, c3 = st.columns([3, 1.5, 4])
 
     with c1:
         emp_id_search = st.text_input("Employee ID", max_chars=10)
