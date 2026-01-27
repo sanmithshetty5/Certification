@@ -29,7 +29,7 @@ st.markdown("""
 # .stSelectbox label,
 # .stMultiSelect label,
 # .stCheckbox label,
-# .stRadio label,
+.stRadio label,
 # .stTextArea label,
 # .stDateInput label,
 # .stNumberInput label,
@@ -40,7 +40,7 @@ p, span, div, label, h1, h2, h3, h4, h5, h6 {
 
 /* Input text inside fields */
 input, textarea {
-    color: #white !important;
+    color: white !important;
 }
 
 /* Keep button text unchanged */
