@@ -23,13 +23,13 @@ st.markdown("""
 
 /* General text elements */
 .stApp,
-# .stMarkdown,
+.stMarkdown,
 .stText,
 # .stTextInput label,
 # .stSelectbox label,
 # .stMultiSelect label,
 # .stCheckbox label,
-.stRadio label,
+# .stRadio label,
 # .stTextArea label,
 # .stDateInput label,
 # .stNumberInput label,
