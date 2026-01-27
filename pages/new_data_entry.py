@@ -38,10 +38,11 @@ p, span, div, label, h1, h2, h3, h4, h5, h6 {
     color: #000000 !important;
 }
 
-/* Input text inside fields 
-input, textarea {
-    color: white !important;
-} */
+/* Dropdown inputs - force black text */
+.stSelectbox input,
+.stMultiSelect input {
+    color: #000000 !important;
+}
 
 /* Keep button text unchanged */
 .stButton > button[kind="primary"] {
