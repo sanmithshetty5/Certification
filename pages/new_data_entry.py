@@ -18,6 +18,36 @@ st.set_page_config(
 # -----------------------------------------
 st.markdown("""
 <style>
+
+/* ===== FORCE ALL TEXT TO BLACK (EXCEPT BUTTONS) ===== */
+
+/* General text elements */
+.stApp,
+.stMarkdown,
+.stText,
+.stTextInput label,
+.stSelectbox label,
+.stMultiSelect label,
+.stCheckbox label,
+.stRadio label,
+.stTextArea label,
+.stDateInput label,
+.stNumberInput label,
+.stDataFrame,
+p, span, div, label, h1, h2, h3, h4, h5, h6 {
+    color: #000000 !important;
+}
+
+/* Input text inside fields */
+input, textarea {
+    color: #000000 !important;
+}
+
+/* Keep button text unchanged */
+.stButton > button {
+    color: inherit !important;
+}
+
 /* --- REMOVE STREAMLIT TOP HEADER COMPLETELY --- */
 header[data-testid="stHeader"] {
     display: none;
