@@ -33,7 +33,7 @@ st.markdown("""
 .stTextArea label,
 .stDateInput label,
 .stNumberInput label,
-# .stDataFrame,
+.stDataFrame,
 p, span, div, label, h1, h2, h3, h4, h5, h6 {
     color: #000000 !important;
 }
