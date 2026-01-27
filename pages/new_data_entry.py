@@ -18,26 +18,21 @@ st.set_page_config(
 # -----------------------------------------
 st.markdown("""
 <style>
-/* Restore primary button text color */
-.stButton > button[kind="primary"] {
-    color: white !important;
-}
-
 
 /* ===== FORCE ALL TEXT TO BLACK (EXCEPT BUTTONS) ===== */
 
 /* General text elements */
 .stApp,
-.stMarkdown,
+# .stMarkdown,
 .stText,
-.stTextInput label,
-.stSelectbox label,
-.stMultiSelect label,
-.stCheckbox label,
-.stRadio label,
-.stTextArea label,
-.stDateInput label,
-.stNumberInput label,
+# .stTextInput label,
+# .stSelectbox label,
+# .stMultiSelect label,
+# .stCheckbox label,
+# .stRadio label,
+# .stTextArea label,
+# .stDateInput label,
+# .stNumberInput label,
 .stDataFrame,
 p, span, div, label, h1, h2, h3, h4, h5, h6 {
     color: #000000 !important;
@@ -49,8 +44,8 @@ input, textarea {
 }
 
 /* Keep button text unchanged */
-.stButton > button {
-    color: inherit !important;
+.stButton > button[kind="primary"] {
+    color: white !important;
 }
 
 /* --- REMOVE STREAMLIT TOP HEADER COMPLETELY --- */
