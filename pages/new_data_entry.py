@@ -26,7 +26,7 @@ st.markdown("""
 .stMarkdown,
 .stText,
 .stTextInput label,
-.stSelectbox label,
+/*.stSelectbox label,*/
 /* .stMultiSelect label, */
 .stCheckbox label,
 .stRadio label,
