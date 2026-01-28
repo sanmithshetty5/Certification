@@ -338,6 +338,108 @@ if st.session_state.page_mode == "ENTRY":
     with c3:
         add_clicked = st.button("➕ Add New Certification", use_container_width=True)
     
+    # if search_clicked:
+    #     if not emp_id_search or not emp_id_search.isdigit() or len(emp_id_search) != 10:
+    #         st.error("❌ Enter valid 10-digit Employee ID")
+    #     else:
+    #         df = session.sql(f"""
+    #             SELECT *
+    #             FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+    #             WHERE "EMP ID" = '{emp_id_search}'
+    #         """).to_pandas()
+    #         st.session_state.search_results = df
+    #         st.session_state.searched_emp_id = emp_id_search
+
+    #         if df.empty:
+    #             st.warning("No records found")
+    #         else:
+    #             st.success("Employee records found")
+    #             NULL_PLACEHOLDER = "—"
+    #             df_display = df.copy()
+    #             # Replace NaN / None / empty strings for display only
+    #             df_display = df_display.fillna(NULL_PLACEHOLDER)
+                
+    #             df_display = df_display.replace(
+    #                 to_replace=r'^\s*$',
+    #                 value=NULL_PLACEHOLDER,
+    #                 regex=True
+    #             )
+
+
+    #             # Tick / cross for SnowPro Certified
+    #             df_display["SnowPro Status"] = df_display["SnowPro Certified"].map({
+    #                 "Completed": "✔ Completed",
+    #                 "Failed": "✖ Failed",
+    #                 "Incomplete": "⏳ Incomplete"
+    #             }).fillna("⏳ Incomplete")
+                
+    #             # Optional: Certification completion flag
+    #             df_display["Completed?"] = df_display["SnowPro Certified"] == "Completed"
+
+    #             st.dataframe(
+    #                 df_display,
+    #                 use_container_width=True,
+    #                 hide_index=True,
+    #                 column_config={
+    #                     "SnowPro Status": st.column_config.TextColumn(
+    #                         "SnowPro Status",
+    #                         help="Certification result",
+    #                         width="medium"
+    #                     ),
+    #                     "Completed?": st.column_config.CheckboxColumn(
+    #                         "Completed",
+    #                         help="✔ = Completed, ✖ = Not completed"
+    #                     )
+    #                 }
+    #             )
+    
+    # st.markdown("### ✏️ Edit / Delete Record")
+    
+    # selected_cert = st.selectbox(
+    #     "Select Certification to Edit",
+    #     df["Certification"].tolist(),
+    #     key=f"edit_cert_{emp_id_search}"
+    # )
+    
+    # if selected_cert:
+    #     st.session_state.selected_cert = selected_cert
+    #     st.session_state.selected_row =  (df[df["Certification"] == selected_cert].iloc[0].to_dict())
+    
+    # c1, c2 = st.columns(2)
+    
+    # with c1:
+    #     if st.button("✏️ Edit Selected Record", type="primary"):
+    #         st.session_state.edit_payload = st.session_state.selected_row
+    #         st.switch_page("pages/update_data.py")
+    
+    # with c2:
+    #     if st.button("🗑️ Delete Selected Record"):
+    #         st.session_state.confirm_delete = {
+    #         "emp_id": st.session_state.selected_row["EMP ID"],
+    #         "cert": st.session_state.selected_cert
+    #     }
+    
+    #     if st.session_state.get("confirm_delete"):
+    #         st.warning("⚠️ Are you sure you want to delete this record?")
+    
+    #         d1, d2 = st.columns(2)
+    
+    #         with d1:
+    #             if st.button("✅ Yes, Delete"):
+    #                 session.sql(f"""
+    #                     DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+    #                     WHERE "EMP ID" = '{st.session_state.selected_row["EMP ID"]}'
+    #                       AND "Certification" = '{st.session_state.selected_cert}'
+    #                 """).collect()
+    
+    #                 st.success("Record deleted")
+    #                 st.session_state.confirm_delete = False
+    #                 st.rerun()
+    
+    #         with d2:
+    #             if st.button("❌ Cancel"):
+    #                 st.session_state.confirm_delete = False
+
     if search_clicked:
         if not emp_id_search or not emp_id_search.isdigit() or len(emp_id_search) != 10:
             st.error("❌ Enter valid 10-digit Employee ID")
@@ -347,108 +449,100 @@ if st.session_state.page_mode == "ENTRY":
                 FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
                 WHERE "EMP ID" = '{emp_id_search}'
             """).to_pandas()
+    
             st.session_state.search_results = df
             st.session_state.searched_emp_id = emp_id_search
+    
+    
+        if add_clicked:
+            emp_id_val = emp_id_search.strip() if emp_id_search else ""
+            st.session_state.last_emp_id = emp_id_val
+        
+            profile = get_latest_employee_profile(emp_id_val)
+    
+            st.session_state.autofill_profile = profile
+            st.session_state.page_mode = "ADD"
+            st.rerun()
 
-            if df.empty:
-                st.warning("No records found")
-            else:
-                st.success("Employee records found")
-                NULL_PLACEHOLDER = "—"
-                df_display = df.copy()
-                # Replace NaN / None / empty strings for display only
-                df_display = df_display.fillna(NULL_PLACEHOLDER)
-                
-                df_display = df_display.replace(
-                    to_replace=r'^\s*$',
-                    value=NULL_PLACEHOLDER,
-                    regex=True
+    # -----------------------------------------
+# RENDER SEARCH RESULTS (PERSISTENT)
+# -----------------------------------------
+    if st.session_state.search_results is not None:
+    
+        df = st.session_state.search_results
+    
+        if df.empty:
+            st.warning("No records found")
+        else:
+            st.success("Employee records found")
+    
+            NULL_PLACEHOLDER = "—"
+            df_display = df.fillna(NULL_PLACEHOLDER).replace(
+                to_replace=r'^\s*$',
+                value=NULL_PLACEHOLDER,
+                regex=True
+            )
+    
+            df_display["SnowPro Status"] = df_display["SnowPro Certified"].map({
+                "Completed": "✔ Completed",
+                "Failed": "✖ Failed",
+                "Incomplete": "⏳ Incomplete"
+            }).fillna("⏳ Incomplete")
+    
+            df_display["Completed?"] = df_display["SnowPro Certified"] == "Completed"
+    
+            st.dataframe(
+                df_display,
+                use_container_width=True,
+                hide_index=True
+            )
+    
+            st.markdown("### ✏️ Edit / Delete Record")
+    
+            selected_cert = st.selectbox(
+                "Select Certification to Edit",
+                df["Certification"].tolist(),
+                key="edit_cert_persist"
+            )
+    
+            if selected_cert:
+                st.session_state.selected_cert = selected_cert
+                st.session_state.selected_row = (
+                    df[df["Certification"] == selected_cert].iloc[0].to_dict()
                 )
-
-
-                # Tick / cross for SnowPro Certified
-                df_display["SnowPro Status"] = df_display["SnowPro Certified"].map({
-                    "Completed": "✔ Completed",
-                    "Failed": "✖ Failed",
-                    "Incomplete": "⏳ Incomplete"
-                }).fillna("⏳ Incomplete")
-                
-                # Optional: Certification completion flag
-                df_display["Completed?"] = df_display["SnowPro Certified"] == "Completed"
-
-                st.dataframe(
-                    df_display,
-                    use_container_width=True,
-                    hide_index=True,
-                    column_config={
-                        "SnowPro Status": st.column_config.TextColumn(
-                            "SnowPro Status",
-                            help="Certification result",
-                            width="medium"
-                        ),
-                        "Completed?": st.column_config.CheckboxColumn(
-                            "Completed",
-                            help="✔ = Completed, ✖ = Not completed"
-                        )
-                    }
-                )
     
-    st.markdown("### ✏️ Edit / Delete Record")
+            c1, c2 = st.columns(2)
     
-    selected_cert = st.selectbox(
-        "Select Certification to Edit",
-        df["Certification"].tolist(),
-        key=f"edit_cert_{emp_id_search}"
-    )
+            with c1:
+                if st.button("✏️ Edit Selected Record", type="primary"):
+                    st.session_state.edit_payload = st.session_state.selected_row
+                    st.switch_page("pages/update_data.py")
     
-    if selected_cert:
-        st.session_state.selected_cert = selected_cert
-        st.session_state.selected_row =  (df[df["Certification"] == selected_cert].iloc[0].to_dict())
+            with c2:
+                if st.button("🗑️ Delete Selected Record"):
+                    st.session_state.confirm_delete = True
     
-    c1, c2 = st.columns(2)
+            if st.session_state.confirm_delete:
+                st.warning("⚠️ Are you sure you want to delete this record?")
     
-    with c1:
-        if st.button("✏️ Edit Selected Record", type="primary"):
-            st.session_state.edit_payload = st.session_state.selected_row
-            st.switch_page("pages/update_data.py")
+                d1, d2 = st.columns(2)
     
-    with c2:
-        if st.button("🗑️ Delete Selected Record"):
-            st.session_state.confirm_delete = {
-            "emp_id": st.session_state.selected_row["EMP ID"],
-            "cert": st.session_state.selected_cert
-        }
+                with d1:
+                    if st.button("✅ Yes, Delete"):
+                        session.sql(f"""
+                            DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+                            WHERE "EMP ID" = '{st.session_state.selected_row["EMP ID"]}'
+                              AND "Certification" = '{st.session_state.selected_cert}'
+                        """).collect()
     
-        if st.session_state.get("confirm_delete"):
-            st.warning("⚠️ Are you sure you want to delete this record?")
+                        st.success("Record deleted")
+                        st.session_state.search_results = None
+                        st.session_state.confirm_delete = False
+                        st.rerun()
     
-            d1, d2 = st.columns(2)
-    
-            with d1:
-                if st.button("✅ Yes, Delete"):
-                    session.sql(f"""
-                        DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-                        WHERE "EMP ID" = '{st.session_state.selected_row["EMP ID"]}'
-                          AND "Certification" = '{st.session_state.selected_cert}'
-                    """).collect()
-    
-                    st.success("Record deleted")
-                    st.session_state.confirm_delete = False
-                    st.rerun()
-    
-            with d2:
-                if st.button("❌ Cancel"):
-                    st.session_state.confirm_delete = False
-
-    if add_clicked:
-        emp_id_val = emp_id_search.strip() if emp_id_search else ""
-        st.session_state.last_emp_id = emp_id_val
-    
-        profile = get_latest_employee_profile(emp_id_val)
-
-        st.session_state.autofill_profile = profile
-        st.session_state.page_mode = "ADD"
-        st.rerun()
+                with d2:
+                    if st.button("❌ Cancel"):
+                        st.session_state.confirm_delete = False
 
 
 # =========================================================
