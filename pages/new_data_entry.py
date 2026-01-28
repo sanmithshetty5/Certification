@@ -204,7 +204,7 @@ MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec
 # Session State
 # -----------------------------------------
 for key in [
-    "page_mode",
+    # "page_mode",
     "last_emp_id",
     "autofill_profile",
     "last_autofill_emp_id",
@@ -226,11 +226,17 @@ st.session_state.setdefault("confirm_delete", None)
 
 
 
+## -------------------------------
+# PAGE MODE INITIALIZATION
+# -------------------------------
+if "page_mode" not in st.session_state or st.session_state.page_mode is None:
+    st.session_state.page_mode = "ENTRY"
+
 # if not st.session_state.page_mode:
 #     st.session_state.page_mode = "ENTRY"
 
-if "page_mode" not in st.session_state:
-    st.session_state.page_mode = "ENTRY"
+# if "page_mode" not in st.session_state:
+#     st.session_state.page_mode = "ENTRY"
 
 
 # -----------------------------------------
@@ -341,6 +347,8 @@ if st.session_state.page_mode == "ENTRY":
                 FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
                 WHERE "EMP ID" = '{emp_id_search}'
             """).to_pandas()
+            st.session_state.search_results = df
+            st.session_state.searched_emp_id = emp_id_search
 
             if df.empty:
                 st.warning("No records found")
