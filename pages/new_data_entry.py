@@ -334,7 +334,6 @@ if st.session_state.page_mode == "ENTRY":
         if not emp_id_search or not emp_id_search.isdigit() or len(emp_id_search) != 10:
             st.error("❌ Enter valid 10-digit Employee ID")
         else:
-            st.session_state.search_emp_id = emp_id_search
             df = session.sql(f"""
                 SELECT *
                 FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
