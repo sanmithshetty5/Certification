@@ -26,10 +26,16 @@ with st.container(border=True):
     emp_id = st.text_input("Employee ID", data["EMP ID"], disabled=True)
     emp_name = st.text_input("Employee Name", data["EMP Name"])
 
-    certification = st.text_input(
-        "Certification",
-        data["Certification"],
-    )
+    def get_certification_options():
+        df = st.connection("snowflake").session().sql("""
+            SELECT DISTINCT "Certification"
+            FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+            WHERE "Certification" IS NOT NULL
+            ORDER BY "Certification"
+        """).to_pandas()
+    
+        return df["Certification"].tolist()
+
 
 # ---------------- Schedule & Status ----------------
 with st.container(border=True):
@@ -70,9 +76,26 @@ with st.container(border=True):
 with st.container(border=True):
     st.markdown("### 🏢 Department Info")
 
-    account = st.text_input("Account", data["Account"] or "")
+    def get_account_options():
+        df = st.connection("snowflake").session().sql("""
+            SELECT DISTINCT "Account"
+            FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+            WHERE "Account" IS NOT NULL
+            ORDER BY "Account"
+        """).to_pandas()
+    
+        return df["Account"].tolist()
+
     spoc = st.text_input("Account SPOC", data["Account SPOC"] or "")
-    vertical = st.text_input("Vertical / SL", data["Vertical / SL"] or "")
+    def get_vertical_sl():
+        df = st.connection("snowflake").session().sql("""
+            SELECT DISTINCT "Vertical / SL"
+            FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+            WHERE "Vertical / SL" IS NOT NULL
+            ORDER BY "Account"
+        """).to_pandas()
+    
+        return df["Vertical / SL"].tolist()
     batch = st.text_input("Batch", data["Batch"] or "")
     comment = st.text_area("Comment", data.get("Comment",""))
 
