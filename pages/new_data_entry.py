@@ -218,6 +218,10 @@ st.session_state.setdefault("last_autofill_emp_id", None)
 st.session_state.setdefault("autofill_profile", None)
 st.session_state.setdefault("review_mode", False)
 st.session_state.setdefault("review_payload", None)
+st.session_state.setdefault("selected_cert", None)
+st.session_state.setdefault("selected_row", None)
+st.session_state.setdefault("confirm_delete", None)
+
 
 
 # if not st.session_state.page_mode:
@@ -382,21 +386,27 @@ if st.session_state.page_mode == "ENTRY":
 
                 selected_cert = st.selectbox(
                     "Select Certification to Edit",
-                    df["Certification"].tolist()
+                    df["Certification"].tolist(),
+                    key=f"edit_cert_{emp_id_search}"
                 )
 
-                row = df[df["Certification"] == selected_cert].iloc[0].to_dict()
-                
+                if selected_cert:
+                    st.session_state.selected_cert = selected_cert
+                    st.session_state.selected_row =  (df[df["Certification"] == selected_cert].iloc[0].to_dict())
+
                 c1, c2 = st.columns(2)
                 
                 with c1:
                     if st.button("✏️ Edit Selected Record", type="primary"):
-                        st.session_state.edit_payload = row
+                        st.session_state.edit_payload = st.session_state.selected_row
                         st.switch_page("pages/update_data.py")
                 
                 with c2:
                     if st.button("🗑️ Delete Selected Record"):
-                        st.session_state.confirm_delete = True
+                        st.session_state.confirm_delete = {
+                        "emp_id": st.session_state.selected_row["EMP ID"],
+                        "cert": st.session_state.selected_cert
+                    }
                 
                     if st.session_state.get("confirm_delete"):
                         st.warning("⚠️ Are you sure you want to delete this record?")
@@ -407,8 +417,8 @@ if st.session_state.page_mode == "ENTRY":
                             if st.button("✅ Yes, Delete"):
                                 session.sql(f"""
                                     DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-                                    WHERE "EMP ID" = '{row["EMP ID"]}'
-                                      AND "Certification" = '{selected_cert}'
+                                    WHERE "EMP ID" = '{st.session_state.selected_row["EMP ID"]}'
+                                      AND "Certification" = '{st.session_state.selected_cert}'
                                 """).collect()
                 
                                 st.success("Record deleted")
