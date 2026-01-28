@@ -38,10 +38,17 @@ p, span, div, label, h1, h2, h3, h4, h5, h6 {
     color: #000000 !important;
 }
 
-/* Keep button text unchanged 
-.stButton > button[kind="primary"] {
-    color: white !important;
-} */
+
+/* ===== FORCE NAVBAR TEXT TO WHITE ===== */
+.top-nav,
+.top-nav * {
+    color: #FFFFFF !important;
+}
+
+/* Nav links hover */
+.top-nav .nav-links a:hover {
+    color: #38BDF8 !important;
+}
 
 /* --- REMOVE STREAMLIT TOP HEADER COMPLETELY --- */
 header[data-testid="stHeader"] {
