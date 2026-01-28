@@ -547,7 +547,6 @@ if st.session_state.page_mode == "ADD":
         trial_exam = p3.selectbox(
             "Trial Exams",
             cnc_opts,
-            disabled=st.session_state.review_mode,
             index=cnc_index(profile.get("Trial Exam")),disabled=st.session_state.review_mode
         )
 
