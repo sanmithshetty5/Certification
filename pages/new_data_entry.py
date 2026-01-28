@@ -140,7 +140,7 @@ header[data-testid="stHeader"] {
 }
 
 .block-container {
-    padding-top: 80rem !important;
+    padding-top: 0rem !important;
 }
 
 section[data-testid="stSidebar"] {
