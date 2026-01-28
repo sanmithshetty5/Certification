@@ -366,7 +366,7 @@ if st.session_state.page_mode == "ENTRY":
 # RENDER SEARCH RESULTS (PERSISTENT)
 # -----------------------------------------
     if st.session_state.search_results is not None:
-            # ✅ ADD CANCEL BUTTON HERE (TOP)
+           
         c_cancel = st.columns([1, 6])[0]
         with c_cancel:
             if st.button("❌ Cancel Search"):
@@ -662,7 +662,7 @@ if st.session_state.page_mode == "ADD":
         "Badge 5 Status": badge5,
         "CertPrepOD Course": cert_prep,
         "Level Up Courses": level_up,
-        "# Trial Exams": trial_exam,
+        "Trial Exam": trial_exam,
         "Account": normalize(account),
         "Account SPOC": normalize(account_spoc),
         "Vertical / SL": normalize(vertical),
