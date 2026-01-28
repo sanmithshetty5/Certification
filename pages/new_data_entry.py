@@ -19,69 +19,87 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* ===== FORCE ALL TEXT TO BLACK (EXCEPT BUTTONS) ===== */
+/* ================================
+   BASE APP STYLING
+================================ */
+.stApp {
+    background-color: #F8FAFC;
+    font-family: 'Inter', sans-serif;
+}
 
-/* General text elements */
-.stApp,
-.stMarkdown,
-.stText,
-.stTextInput label,
-/*.stSelectbox label,*/
-/* .stMultiSelect label, */
-.stCheckbox label,
-.stRadio label,
-.stTextArea label,
-.stDateInput label,
-.stNumberInput label,
-.stDataFrame,
-p, div, label, h1, h2, h3, h4, h5, h6 {
+/* ================================
+   GLOBAL TEXT (SAFE ELEMENTS ONLY)
+================================ */
+p, label, h1, h2, h3, h4, h5, h6 {
     color: #000000 !important;
 }
 
-/* ===== FIX BUTTON TEXT COLOR ===== */
-.stButton > button,
+/* Section headers */
+.section-header {
+    color: #000000 !important;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #E2E8F0;
+    padding-bottom: 0.4rem;
+}
+
+/* ================================
+   BUTTON FIX (THIS WAS BROKEN)
+================================ */
+.stButton > button {
+    color: #FFFFFF !important;
+}
+
 .stButton > button span {
     color: #FFFFFF !important;
 }
 
-/* ===== FORCE NAVBAR TEXT TO WHITE ===== */
-.top-nav,
-.top-nav * {
+/* Icons inside buttons */
+.stButton svg {
+    fill: #FFFFFF !important;
+}
+
+/* ================================
+   INPUTS & SELECTBOXES (VISIBLE TEXT)
+================================ */
+
+/* Closed selectbox text */
+div[data-baseweb="select"] > div {
     color: #FFFFFF !important;
 }
 
-/* Nav links hover */
-.top-nav .nav-links a:hover {
-    color: #38BDF8 !important;
+/* Dropdown menu container */
+ul[data-baseweb="menu"] {
+    background-color: #1F2937 !important;
 }
 
-/* --- REMOVE STREAMLIT TOP HEADER COMPLETELY --- */
-header[data-testid="stHeader"] {
-    display: none;
+/* Dropdown options */
+ul[data-baseweb="menu"] li {
+    color: #FFFFFF !important;
 }
 
-/* --- REMOVE DEFAULT TOP PADDING STREAMLIT ADDS --- */
-.block-container {
-    padding-top: 0rem !important;
+/* Hovered option */
+ul[data-baseweb="menu"] li:hover {
+    background-color: #374151 !important;
 }
 
-/* ===== REMOVE STREAMLIT SIDEBAR COMPLETELY (THIS PAGE ONLY) ===== */
-
-/* Hide the entire sidebar container */
-section[data-testid="stSidebar"] {
-    display: none;
+/* Selected option */
+ul[data-baseweb="menu"] li[aria-selected="true"] {
+    background-color: #4B5563 !important;
+    color: #FFFFFF !important;
 }
 
-/* Remove the space reserved for the sidebar */
-div[data-testid="stAppViewContainer"] {
-    margin-left: 0;
+/* ================================
+   TEXT INPUTS / DATE INPUTS
+================================ */
+input, textarea {
+    color: #FFFFFF !important;
 }
 
-/* Ensure main content uses full width */
-div[data-testid="stMainBlockContainer"] {
-    padding-left: 2rem;
-    max-width: 100%;
-}
+/* ================================
+   NAVBAR
+================================ */
 .top-nav {
     position: fixed;
     top: 0;
@@ -96,15 +114,12 @@ div[data-testid="stMainBlockContainer"] {
     z-index: 10000;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
-/* --- PUSH CONTENT BELOW NAVBAR --- */
-.page-spacer {
-    height: 90px;
+
+.top-nav,
+.top-nav * {
+    color: #FFFFFF !important;
 }
-.nav-left {
-    color: #FFFFFF;
-    font-size: 1.3rem;
-    font-weight: 700;
-}
+
 .nav-links a {
     color: #E5E7EB;
     margin-left: 1.5rem;
@@ -112,23 +127,37 @@ div[data-testid="stMainBlockContainer"] {
     font-weight: 600;
     font-size: 0.95rem;
 }
+
 .nav-links a:hover {
     color: #38BDF8;
 }
+
+/* ================================
+   LAYOUT FIXES
+================================ */
+header[data-testid="stHeader"] {
+    display: none;
+}
+
+.block-container {
+    padding-top: 0rem !important;
+}
+
+section[data-testid="stSidebar"] {
+    display: none;
+}
+
+div[data-testid="stAppViewContainer"] {
+    margin-left: 0;
+}
+
+div[data-testid="stMainBlockContainer"] {
+    padding-left: 2rem;
+    max-width: 100%;
+}
+
 .page-spacer {
     height: 80px;
-}
-.stApp {
-    background-color: #F8FAFC;
-    font-family: 'Inter', sans-serif;
-}
-.section-header {
-    color: #000000;
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #E2E8F0;
-    padding-bottom: 0.4rem;
 }
 </style>
 """, unsafe_allow_html=True)
