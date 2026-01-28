@@ -539,11 +539,11 @@ if st.session_state.page_mode == "ADD":
 
         p1, p2, p3 = st.columns(3)
        
-        cert_prep = p1.selectbox("CertPrepOD", badge_opts,disabled=st.session_state.review_mode,index=badge_index(profile.get("cert_prep")),disabled=st.session_state.review_mode)
+        cert_prep = p1.selectbox("CertPrepOD", badge_opts,index=badge_index(profile.get("cert_prep")),disabled=st.session_state.review_mode)
         cnc_opts =  ("Completed","Not Started")
         def cnc_index(val):
             return cnc_opts.index(val) if val in cnc_opts else cnc_opts.index("Not Started")
-        level_up = p2.selectbox("Level Up Courses", cnc_opts,disabled=st.session_state.review_mode,index=cnc_index(profile.get("level_up")),disabled=st.session_state.review_mode)
+        level_up = p2.selectbox("Level Up Courses", cnc_opts,index=cnc_index(profile.get("level_up")),disabled=st.session_state.review_mode)
         trial_exam = p3.selectbox(
             "Trial Exams",
             cnc_opts,
