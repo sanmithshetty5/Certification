@@ -240,7 +240,7 @@ def get_latest_employee_profile(emp_id):
             TRY_TO_DATE("Planned Certification date", 'DD-MM-YYYY') DESC
         LIMIT 1
     """).to_pandas()
-    return df.iloc[0].to_dict() if not df.empty else None
+    return df.iloc[0].to_dict() if not df.empty else ""
 
 def get_existing_certifications(emp_id):
     if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
