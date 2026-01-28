@@ -211,7 +211,9 @@ for key in [
     "pending_data",
     "duplicate_exists",
     "save_completed",
-    "review_payload"
+    "review_payload",
+    "search_results",     
+    "searched_emp_id" 
 ]:
     st.session_state.setdefault(key, None)
 st.session_state.setdefault("last_autofill_emp_id", None)
