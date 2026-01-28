@@ -25,10 +25,6 @@ with st.container(border=True):
 
     emp_id = st.text_input("Employee ID", data["EMP ID"], disabled=True)
     emp_name = st.text_input("Employee Name", data["EMP Name"])
-    certification = st.selectbox(
-    "Certification",
-    get_certification_options(),
-    index=get_certification_options().index(data["Certification"]))
 
     def get_certification_options():
         df = st.connection("snowflake").session().sql("""
@@ -39,6 +35,11 @@ with st.container(border=True):
         """).to_pandas()
     
         return df["Certification"].tolist()
+
+    certification = st.selectbox(
+    "Certification",
+    get_certification_options(),
+    index=get_certification_options().index(data["Certification"]))
 
 
 # ---------------- Schedule & Status ----------------
