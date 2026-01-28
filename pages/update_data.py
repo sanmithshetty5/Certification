@@ -25,6 +25,10 @@ with st.container(border=True):
 
     emp_id = st.text_input("Employee ID", data["EMP ID"], disabled=True)
     emp_name = st.text_input("Employee Name", data["EMP Name"])
+    certification = st.selectbox(
+    "Certification",
+    get_certification_options(),
+    index=get_certification_options().index(data["Certification"]))
 
     def get_certification_options():
         df = st.connection("snowflake").session().sql("""
@@ -85,6 +89,10 @@ with st.container(border=True):
         """).to_pandas()
     
         return df["Account"].tolist()
+    account = st.selectbox(
+    "Account",
+    get_account_options(),
+    index=get_account_options().index(data["Account"]))
 
     spoc = st.text_input("Account SPOC", data["Account SPOC"] or "")
     def get_vertical_sl():
@@ -96,6 +104,15 @@ with st.container(border=True):
         """).to_pandas()
     
         return df["Vertical / SL"].tolist()
+
+    vertical_options = get_vertical_sl()
+
+    vertical = st.selectbox(
+    "Vertical / SL",
+    vertical_options,
+    index=vertical_options.index(data["Vertical / SL"]) if data["Vertical / SL"] in vertical_options else 0
+)
+
     batch = st.text_input("Batch", data["Batch"] or "")
     comment = st.text_area("Comment", data.get("Comment",""))
 
@@ -104,7 +121,7 @@ with st.container(border=True):
 # ===============================
 updated_payload = {
     "EMP Name": emp_name,
-    'Certification': get_certification_options,
+    'Certification': certification,
     "Enrolment Month": f"{enrol_month}-{enrol_year}",
     "Planned Certification date": planned_date.strftime("%d-%m-%Y"),
     "Badge 1 Status": badge1,
@@ -112,9 +129,9 @@ updated_payload = {
     "Badge 3 Status": badge3,
     "Badge 4 Status": badge4,
     "Badge 5 Status": badge5,
-    "Account": get_account_options,
+    "Account": account,
     "Account SPOC": spoc,
-    "Vertical / SL": get_vertical_sl,
+    "Vertical / SL": vertical,
     "Batch": batch,
     "Comment": comment
 }
