@@ -228,7 +228,7 @@ if not st.session_state.page_mode:
 # -----------------------------------------
 def get_latest_employee_profile(emp_id):
     if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
-        return ""
+        return {}
 
     df = session.sql(f"""
         SELECT *
@@ -240,7 +240,7 @@ def get_latest_employee_profile(emp_id):
             TRY_TO_DATE("Planned Certification date", 'DD-MM-YYYY') DESC
         LIMIT 1
     """).to_pandas()
-    return df.iloc[0].to_dict() if not df.empty else ""
+    return df.iloc[0].to_dict() if not df.empty else {}
 
 def get_existing_certifications(emp_id):
     if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
@@ -394,7 +394,9 @@ if st.session_state.page_mode == "ENTRY":
 if st.session_state.page_mode == "ADD":
 
     profile = st.session_state.autofill_profile or {}
-    
+    if not isinstance(profile, dict):
+        profile = {}
+
     if st.button("⬅ Back"):
         st.session_state.page_mode = "ENTRY"
         st.session_state.last_autofill_emp_id = None
@@ -435,7 +437,7 @@ if st.session_state.page_mode == "ADD":
             # )
             emp_name = st.text_input(
                 "Employee Name",
-                value=profile.get("EMP Name", " "),
+                value=(profile.get("EMP Name") if isinstance(profile, dict) else ""),
                 disabled=st.session_state.review_mode
             )
 
