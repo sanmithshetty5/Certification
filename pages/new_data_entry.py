@@ -388,20 +388,32 @@ if st.session_state.page_mode == "ENTRY":
                 with c1:
                     if st.button("✏️ Edit Selected Record", type="primary"):
                         st.session_state.edit_payload = row
-                        st.switch_page("pages/update_data_page.py")
+                        st.switch_page("pages/update_data.py")
                 
                 with c2:
-                    if st.button("🗑️ Delete Selected Record"):
-                        if st.confirm("Are you sure you want to delete this record?"):
+                if st.button("🗑️ Delete Selected Record"):
+                    st.session_state.confirm_delete = True
+            
+                if st.session_state.get("confirm_delete"):
+                    st.warning("⚠️ Are you sure you want to delete this record?")
+            
+                    d1, d2 = st.columns(2)
+            
+                    with d1:
+                        if st.button("✅ Yes, Delete"):
                             session.sql(f"""
                                 DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
                                 WHERE "EMP ID" = '{row["EMP ID"]}'
                                   AND "Certification" = '{selected_cert}'
                             """).collect()
-                        
+            
                             st.success("Record deleted")
+                            st.session_state.confirm_delete = False
                             st.rerun()
-
+            
+                    with d2:
+                        if st.button("❌ Cancel"):
+                            st.session_state.confirm_delete = False
 
     if add_clicked:
         emp_id_val = emp_id_search.strip() if emp_id_search else ""
