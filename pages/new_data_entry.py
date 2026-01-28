@@ -38,10 +38,10 @@ p, span, div, label, h1, h2, h3, h4, h5, h6 {
     color: #000000 !important;
 }
 
-/* Keep button text unchanged */
+/* Keep button text unchanged 
 .stButton > button[kind="primary"] {
     color: white !important;
-}
+} */
 
 /* --- REMOVE STREAMLIT TOP HEADER COMPLETELY --- */
 header[data-testid="stHeader"] {
