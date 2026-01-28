@@ -220,8 +220,12 @@ st.session_state.setdefault("review_mode", False)
 st.session_state.setdefault("review_payload", None)
 
 
-if not st.session_state.page_mode:
+# if not st.session_state.page_mode:
+#     st.session_state.page_mode = "ENTRY"
+
+if "page_mode" not in st.session_state:
     st.session_state.page_mode = "ENTRY"
+
 
 # -----------------------------------------
 # Helper Functions
