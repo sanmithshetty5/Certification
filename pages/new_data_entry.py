@@ -274,7 +274,7 @@ def validate_emp(emp_id, emp_name):
     if not emp_id or not emp_id.isdigit() or len(emp_id) != 10:
         st.error("❌ Employee ID must be exactly 10 digits")
         return False
-    if not emp_name.strip():
+    if not emp_name or not emp_name.strip():
         st.error("❌ Employee Name is mandatory")
         return False
     return True
@@ -504,7 +504,7 @@ if st.session_state.page_mode == "ADD":
             # )
             emp_name = st.text_input(
                 "Employee Name",
-                value=(profile.get("EMP Name") if isinstance(profile, dict) else ""),
+                value=(profile.get("EMP Name")or ""),
                 disabled=st.session_state.review_mode
             )
 
