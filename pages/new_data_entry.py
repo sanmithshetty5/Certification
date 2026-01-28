@@ -337,7 +337,7 @@ if st.session_state.page_mode == "ENTRY":
 
     with c3:
         add_clicked = st.button("➕ Add New Certification", use_container_width=True)
-
+    
     if search_clicked:
         if not emp_id_search or not emp_id_search.isdigit() or len(emp_id_search) != 10:
             st.error("❌ Enter valid 10-digit Employee ID")
@@ -392,52 +392,53 @@ if st.session_state.page_mode == "ENTRY":
                         )
                     }
                 )
-                st.markdown("### ✏️ Edit / Delete Record")
-
-                selected_cert = st.selectbox(
-                    "Select Certification to Edit",
-                    df["Certification"].tolist(),
-                    key=f"edit_cert_{emp_id_search}"
-                )
-
-                if selected_cert:
-                    st.session_state.selected_cert = selected_cert
-                    st.session_state.selected_row =  (df[df["Certification"] == selected_cert].iloc[0].to_dict())
-
-                c1, c2 = st.columns(2)
-                
-                with c1:
-                    if st.button("✏️ Edit Selected Record", type="primary"):
-                        st.session_state.edit_payload = st.session_state.selected_row
-                        st.switch_page("pages/update_data.py")
-                
-                with c2:
-                    if st.button("🗑️ Delete Selected Record"):
-                        st.session_state.confirm_delete = {
-                        "emp_id": st.session_state.selected_row["EMP ID"],
-                        "cert": st.session_state.selected_cert
-                    }
-                
-                    if st.session_state.get("confirm_delete"):
-                        st.warning("⚠️ Are you sure you want to delete this record?")
-                
-                        d1, d2 = st.columns(2)
-                
-                        with d1:
-                            if st.button("✅ Yes, Delete"):
-                                session.sql(f"""
-                                    DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-                                    WHERE "EMP ID" = '{st.session_state.selected_row["EMP ID"]}'
-                                      AND "Certification" = '{st.session_state.selected_cert}'
-                                """).collect()
-                
-                                st.success("Record deleted")
-                                st.session_state.confirm_delete = False
-                                st.rerun()
-                
-                        with d2:
-                            if st.button("❌ Cancel"):
-                                st.session_state.confirm_delete = False
+    
+    st.markdown("### ✏️ Edit / Delete Record")
+    
+    selected_cert = st.selectbox(
+        "Select Certification to Edit",
+        df["Certification"].tolist(),
+        key=f"edit_cert_{emp_id_search}"
+    )
+    
+    if selected_cert:
+        st.session_state.selected_cert = selected_cert
+        st.session_state.selected_row =  (df[df["Certification"] == selected_cert].iloc[0].to_dict())
+    
+    c1, c2 = st.columns(2)
+    
+    with c1:
+        if st.button("✏️ Edit Selected Record", type="primary"):
+            st.session_state.edit_payload = st.session_state.selected_row
+            st.switch_page("pages/update_data.py")
+    
+    with c2:
+        if st.button("🗑️ Delete Selected Record"):
+            st.session_state.confirm_delete = {
+            "emp_id": st.session_state.selected_row["EMP ID"],
+            "cert": st.session_state.selected_cert
+        }
+    
+        if st.session_state.get("confirm_delete"):
+            st.warning("⚠️ Are you sure you want to delete this record?")
+    
+            d1, d2 = st.columns(2)
+    
+            with d1:
+                if st.button("✅ Yes, Delete"):
+                    session.sql(f"""
+                        DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+                        WHERE "EMP ID" = '{st.session_state.selected_row["EMP ID"]}'
+                          AND "Certification" = '{st.session_state.selected_cert}'
+                    """).collect()
+    
+                    st.success("Record deleted")
+                    st.session_state.confirm_delete = False
+                    st.rerun()
+    
+            with d2:
+                if st.button("❌ Cancel"):
+                    st.session_state.confirm_delete = False
 
     if add_clicked:
         emp_id_val = emp_id_search.strip() if emp_id_search else ""
