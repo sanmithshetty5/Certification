@@ -104,7 +104,7 @@ with st.container(border=True):
 # ===============================
 updated_payload = {
     "EMP Name": emp_name,
-    'Certification': certification,
+    'Certification': get_certification_options,
     "Enrolment Month": f"{enrol_month}-{enrol_year}",
     "Planned Certification date": planned_date.strftime("%d-%m-%Y"),
     "Badge 1 Status": badge1,
@@ -112,9 +112,9 @@ updated_payload = {
     "Badge 3 Status": badge3,
     "Badge 4 Status": badge4,
     "Badge 5 Status": badge5,
-    "Account": account,
+    "Account": get_account_options,
     "Account SPOC": spoc,
-    "Vertical / SL": vertical,
+    "Vertical / SL": get_vertical_sl,
     "Batch": batch,
     "Comment": comment
 }
