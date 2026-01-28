@@ -435,7 +435,7 @@ if st.session_state.page_mode == "ADD":
             # )
             emp_name = st.text_input(
                 "Employee Name",
-                value=profile.get("EMP Name", ""),
+                value=profile.get("EMP Name", " "),
                 disabled=st.session_state.review_mode
             )
 
