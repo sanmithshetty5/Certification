@@ -15,6 +15,7 @@ if "edit_payload" not in st.session_state:
 
 data = st.session_state.edit_payload
 original_data = data.copy()
+original_certification = data["Certification"]
 
 st.markdown("## ✏️ Update Certification")
 
@@ -28,7 +29,6 @@ with st.container(border=True):
     certification = st.text_input(
         "Certification",
         data["Certification"],
-        disabled=True
     )
 
 # ---------------- Schedule & Status ----------------
@@ -81,6 +81,7 @@ with st.container(border=True):
 # ===============================
 updated_payload = {
     "EMP Name": emp_name,
+    'Certification': certification,
     "Enrolment Month": f"{enrol_month}-{enrol_year}",
     "Planned Certification date": planned_date.strftime("%d-%m-%Y"),
     "Badge 1 Status": badge1,
@@ -118,7 +119,7 @@ with c1:
             UPDATE USE_CASE.CERTIFICATION.NEW_CERTIFICATION
             SET {set_clause}
             WHERE "EMP ID" = '{emp_id}'
-              AND "Certification" = '{certification}'
+              AND "Certification" = '{original_certification}'
         """).collect()
 
         st.success("✅ Record updated successfully")
