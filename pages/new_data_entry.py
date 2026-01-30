@@ -42,12 +42,6 @@ div.stButton > button:hover {
 }
 
 
-/* Primary Button Hover Effect */
-div.stButton > button[kind="primary"]:hover {
-    background-color: #1D4ED8 !important; /* Darker Blue */
-    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
-}
-
 /* 3. Button Focus/Active State (Clicking) */
 div.stButton > button:active {
     transform: translateY(0px);
