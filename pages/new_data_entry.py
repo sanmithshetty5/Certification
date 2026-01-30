@@ -47,31 +47,7 @@ div.stButton > button:active {
     transform: translateY(0px);
 }
 
-/* ================================
-   CUSTOM "ADD NEW" BUTTON (GREEN)
-   Targets the button in the 3rd Column (c3)
-================================ */
 
-/* Normal State */
-div[data-testid="column"]:nth-of-type(3) div.stButton > button {
-    background-color: #16A34A !important; /* Green */
-    border-color: #16A34A !important;
-    color: #FFFFFF !important;
-}
-
-/* Hover State */
-div[data-testid="column"]:nth-of-type(3) div.stButton > button:hover {
-    background-color: #15803D !important; /* Darker Green */
-    border-color: #15803D !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.4);
-}
-
-/* Active/Click State */
-div[data-testid="column"]:nth-of-type(3) div.stButton > button:active {
-    background-color: #14532D !important;
-    transform: translateY(0px);
-}
 /* ================================
    PRIMARY BUTTON - RED BACKGROUND / WHITE TEXT
 ================================ */
@@ -97,6 +73,31 @@ div.stButton > button[kind="primary"]:focus {
     background-color: #991B1B !important;
     color: #FFFFFF !important;            /* Keep Text White */
     border-color: #991B1B !important;
+}
+/* ================================
+   CUSTOM "ADD NEW" BUTTON (GREEN)
+   Targets the button in the 3rd Column (c3)
+================================ */
+
+/* Normal State */
+div[data-testid="column"]:nth-of-type(3) div.stButton > button {
+    background-color: #16A34A !important; /* Green */
+    border-color: #16A34A !important;
+    color: #FFFFFF !important;
+}
+
+/* Hover State */
+div[data-testid="column"]:nth-of-type(3) div.stButton > button:hover {
+    background-color: #15803D !important; /* Darker Green */
+    border-color: #15803D !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.4);
+}
+
+/* Active/Click State */
+div[data-testid="column"]:nth-of-type(3) div.stButton > button:active {
+    background-color: #14532D !important;
+    transform: translateY(0px);
 }
 /* ================================
    BASE APP STYLING
