@@ -47,27 +47,31 @@ div.stButton > button:active {
     transform: translateY(0px);
 }
 /* ================================
-   PRIMARY BUTTON - RED STYLING
+   PRIMARY BUTTON - RED BACKGROUND / WHITE TEXT
 ================================ */
 
-/* Normal State - Red */
+/* Normal State */
 div.stButton > button[kind="primary"] {
-    background-color: #DC2626 !important; /* Professional Red */
+    background-color: #DC2626 !important; /* Red Background */
     border-color: #DC2626 !important;
-    color: #FFFFFF !important;
+    color: #FFFFFF !important;            /* White Text */
 }
 
-/* Hover State - Darker Red */
+/* Hover State */
 div.stButton > button[kind="primary"]:hover {
-    background-color: #B91C1C !important; /* Darker Red on hover */
+    background-color: #B91C1C !important; /* Darker Red */
     border-color: #B91C1C !important;
+    color: #FFFFFF !important;            /* Keep Text White */
     box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.4);
 }
 
-/* Active/Click State */
-div.stButton > button[kind="primary"]:active {
+/* Focus / Active State */
+div.stButton > button[kind="primary"]:active,
+div.stButton > button[kind="primary"]:focus {
     background-color: #991B1B !important;
-    transform: translateY(0px);
+    color: #FFFFFF !important;            /* Keep Text White */
+    border-color: #991B1B !important;
+}
 }
 /* ================================
    BASE APP STYLING
