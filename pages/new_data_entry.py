@@ -18,7 +18,46 @@ st.set_page_config(
 # -----------------------------------------
 st.markdown("""
 <style>
+/* ================================
+   BUTTON STYLING
+================================ */
 
+/* 1. Standard Button (Secondary/Default) */
+div.stButton > button {
+    background-color: #0F172A !important; /* Dark Slate (Matches your Navbar) */
+    color: #FFFFFF !important;
+    border: 1px solid #334155 !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 1rem !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+/* Standard Button Hover Effect */
+div.stButton > button:hover {
+    background-color: #1E293B !important; /* Lighter Slate */
+    border-color: #64748B !important;
+    color: #FFFFFF !important;
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* 2. Primary Button (type="primary") - e.g., Search, Save */
+div.stButton > button[kind="primary"] {
+    background-color: #2563EB !important; /* Bright Blue */
+    border-color: #2563EB !important;
+    color: white !important;
+}
+
+/* Primary Button Hover Effect */
+div.stButton > button[kind="primary"]:hover {
+    background-color: #1D4ED8 !important; /* Darker Blue */
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+}
+
+/* 3. Button Focus/Active State (Clicking) */
+div.stButton > button:active {
+    transform: translateY(0px);
+}
 /* ================================
    BASE APP STYLING
 ================================ */
