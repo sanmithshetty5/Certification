@@ -47,6 +47,29 @@ div.stButton > button:active {
     transform: translateY(0px);
 }
 /* ================================
+   PRIMARY BUTTON - RED STYLING
+================================ */
+
+/* Normal State - Red */
+div.stButton > button[kind="primary"] {
+    background-color: #DC2626 !important; /* Professional Red */
+    border-color: #DC2626 !important;
+    color: #FFFFFF !important;
+}
+
+/* Hover State - Darker Red */
+div.stButton > button[kind="primary"]:hover {
+    background-color: #B91C1C !important; /* Darker Red on hover */
+    border-color: #B91C1C !important;
+    box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.4);
+}
+
+/* Active/Click State */
+div.stButton > button[kind="primary"]:active {
+    background-color: #991B1B !important;
+    transform: translateY(0px);
+}
+/* ================================
    BASE APP STYLING
 ================================ */
 .stApp {
