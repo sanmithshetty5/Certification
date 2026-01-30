@@ -247,19 +247,22 @@ st.markdown("""
 # -------------------------------
 # PAGE INFO / HOW TO USE SECTION
 # -------------------------------
-st.markdown("### ✍️ New Data Entry – Page Overview", unsafe_allow_html=True)
+st.markdown(
+    '<div class="page-info-title">✍️ New Data Entry – Page Overview</div>',
+    unsafe_allow_html=True
+)
 st.markdown("<br>", unsafe_allow_html=True)
 
 c1, c2 = st.columns(2, gap="medium")
 
 with c1:
     st.markdown("""
-    <div class="feature-card-v">
-        <div class="icon-box" style="background:#e0e7ff; color:#4338ca;">🆕</div>
-        <div class="card-title">Add Certification Records</div>
-        <div class="card-desc">
+    <div class="page-info-card">
+        <div class="page-info-icon" style="background:#e0e7ff; color:#4338ca;">🆕</div>
+        <div class="page-info-card-title">Add Certification Records</div>
+        <div class="page-info-card-desc">
             Create new certification entries for employees by selecting the 
-            certification track, level, and exam details.  
+            certification track, level, and exam details.
             Each record is validated before submission to prevent duplicates.
         </div>
     </div>
@@ -267,10 +270,10 @@ with c1:
 
 with c2:
     st.markdown("""
-    <div class="feature-card-v">
-        <div class="icon-box" style="background:#fce7f3; color:#be185d;">✅</div>
-        <div class="card-title">Track Completion Status</div>
-        <div class="card-desc">
+    <div class="page-info-card">
+        <div class="page-info-icon" style="background:#fce7f3; color:#be185d;">✅</div>
+        <div class="page-info-card-title">Track Completion Status</div>
+        <div class="page-info-card-desc">
             Update certification progress, completion flags, and exam results.
             This ensures real-time visibility into employee certification readiness.
         </div>
@@ -283,22 +286,22 @@ c3, c4 = st.columns(2, gap="medium")
 
 with c3:
     st.markdown("""
-    <div class="feature-card-v">
-        <div class="icon-box" style="background:#dcfce7; color:#15803d;">🛡️</div>
-        <div class="card-title">Data Accuracy & Validation</div>
-        <div class="card-desc">
+    <div class="page-info-card">
+        <div class="page-info-icon" style="background:#dcfce7; color:#15803d;">🛡️</div>
+        <div class="page-info-card-title">Data Accuracy & Validation</div>
+        <div class="page-info-card-desc">
             Mandatory fields, dropdown controls, and format checks ensure
-            high-quality data that can be safely used for analytics and reporting.
+            high-quality data for analytics and reporting.
         </div>
     </div>
     """, unsafe_allow_html=True)
 
 with c4:
     st.markdown("""
-    <div class="feature-card-v">
-        <div class="icon-box" style="background:#e0f2fe; color:#0369a1;">📤</div>
-        <div class="card-title">Submit & Store Securely</div>
-        <div class="card-desc">
+    <div class="page-info-card">
+        <div class="page-info-icon" style="background:#e0f2fe; color:#0369a1;">📤</div>
+        <div class="page-info-card-title">Submit & Store Securely</div>
+        <div class="page-info-card-desc">
             Once submitted, certification data is securely stored in Snowflake
             and instantly reflected across dashboards and analytics pages.
         </div>
