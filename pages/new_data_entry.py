@@ -41,12 +41,6 @@ div.stButton > button:hover {
     transform: translateY(-2px); /* Slight lift effect */
 }
 
-/* 2. Primary Button (type="primary") - e.g., Search, Save */
-div.stButton > button[kind="primary"] {
-    background-color: #2563EB !important; /* Bright Blue */
-    border-color: #2563EB !important;
-    color: white !important;
-}
 
 /* Primary Button Hover Effect */
 div.stButton > button[kind="primary"]:hover {
