@@ -76,18 +76,18 @@ div.stButton > button[kind="primary"]:focus {
 }
 /* ================================
    CUSTOM "ADD NEW" BUTTON (GREEN)
-   Targets the button in the 3rd Column (c3)
+   Target: Button immediately following the #green-btn-marker
 ================================ */
 
 /* Normal State */
-div[data-testid="column"]:nth-of-type(3) div.stButton > button {
+div:has(span#green-btn-marker) + div.stButton > button {
     background-color: #16A34A !important; /* Green */
     border-color: #16A34A !important;
     color: #FFFFFF !important;
 }
 
 /* Hover State */
-div[data-testid="column"]:nth-of-type(3) div.stButton > button:hover {
+div:has(span#green-btn-marker) + div.stButton > button:hover {
     background-color: #15803D !important; /* Darker Green */
     border-color: #15803D !important;
     color: #FFFFFF !important;
@@ -95,7 +95,7 @@ div[data-testid="column"]:nth-of-type(3) div.stButton > button:hover {
 }
 
 /* Active/Click State */
-div[data-testid="column"]:nth-of-type(3) div.stButton > button:active {
+div:has(span#green-btn-marker) + div.stButton > button:active {
     background-color: #14532D !important;
     transform: translateY(0px);
 }
@@ -474,8 +474,12 @@ if st.session_state.page_mode == "ENTRY":
         search_clicked = st.button("🔍 Search", type="primary", use_container_width=True)
 
     with c3:
+        # 1. Add this invisible marker line specifically for this button
+        st.markdown('<span id="green-btn-marker"></span>', unsafe_allow_html=True)
+        
+        # 2. Your existing button code
         add_clicked = st.button("➕ Add New Certification", use_container_width=True,  disabled=st.session_state.search_results is not None)
-
+        
     if search_clicked:
         if not emp_id_search or not emp_id_search.isdigit() or len(emp_id_search) != 10:
             st.error("❌ Enter valid 10-digit Employee ID")
