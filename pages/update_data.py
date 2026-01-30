@@ -191,18 +191,18 @@ with st.container(border=True):
     index=get_account_options().index(data["Account"]))
 
     spoc = st.text_input("Account SPOC", data["Account SPOC"] or "")
+    
     def get_vertical_sl():
         df = st.connection("snowflake").session().sql("""
             SELECT DISTINCT "Vertical / SL"
             FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
             WHERE "Vertical / SL" IS NOT NULL
-            ORDER BY "Account"
+            ORDER BY "Vertical / SL"
         """).to_pandas()
     
         return df["Vertical / SL"].tolist()
 
     vertical_options = get_vertical_sl()
-
     vertical = st.selectbox(
     "Vertical / SL",
     vertical_options,
