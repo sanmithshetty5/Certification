@@ -778,6 +778,9 @@ if st.session_state.page_mode == "ADD":
             )
             account = account_sel[0] if account_sel else None
 
+        
+            account_spoc = st.text_input("Account SPOC",value=profile.get("Account SPOC", "") or "",disabled=st.session_state.review_mode)
+
         with r2:
             vertical_opts = get_vertical_options()
             existing_vertical = profile.get("Vertical / SL")
@@ -792,8 +795,6 @@ if st.session_state.page_mode == "ADD":
             vertical = vertical_sel[0] if vertical_sel else None
             
             batch = st.text_input("Batch",value=profile.get("Batch", "") or "",disabled=st.session_state.review_mode)
-
-            account_spoc = st.text_input("Account SPOC",value=profile.get("Account SPOC", "") or "",disabled=st.session_state.review_mode)
            
 
         comment = st.text_area("Comment",disabled=st.session_state.review_mode)
