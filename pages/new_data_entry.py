@@ -547,52 +547,91 @@ if st.session_state.page_mode == "ENTRY":
                 hide_index=True
             )
     
+            # ... (Previous code for displaying dataframe) ...
+
             st.markdown("### ✏️ Edit / Delete Record")
-    
+
             selected_cert = st.selectbox(
                 "Select Certification to Edit",
                 df["Certification"].tolist(),
                 key="edit_cert_persist"
             )
-    
+
             if selected_cert:
                 st.session_state.selected_cert = selected_cert
                 st.session_state.selected_row = (
                     df[df["Certification"] == selected_cert].iloc[0].to_dict()
                 )
-    
-            c1, c2 = st.columns(2)
-    
+
+            # --- MODIFIED BUTTON SECTION ---
+            c1, c2 = st.columns([1, 1.5]) # Adjusted ratio for better spacing
+
             with c1:
-                if st.button("✏️ Edit Selected Record", type="primary"):
+                # Edit Button (Unchanged)
+                if st.button("✏️ Edit Selected Record", type="primary", use_container_width=True):
                     st.session_state.edit_payload = st.session_state.selected_row
                     st.switch_page("pages/update_data.py")
-    
+
             with c2:
-                if st.button("🗑️ Delete Selected Record"):
-                    st.session_state.confirm_delete = True
-    
+                # Create two sub-columns to put Checkbox and Button side-by-side
+                d_check, d_btn = st.columns([1.2, 1])
+                
+                with d_check:
+                    # The Checkbox
+                    delete_all_check = st.checkbox("Delete ALL records for this ID?")
+                
+                with d_btn:
+                    # The Trigger Button
+                    if st.button("🗑️ Delete", use_container_width=True):
+                        st.session_state.confirm_delete = True
+                        # IMPORTANT: Capture the checkbox state *when button is clicked*
+                        st.session_state.delete_all_mode = delete_all_check
+
+            # --- MODIFIED CONFIRMATION LOGIC ---
             if st.session_state.confirm_delete:
-                st.warning("⚠️ Are you sure you want to delete this record?")
-    
+                st.markdown("---")
+                # Check which mode we are in (Delete All vs Delete One)
+                is_delete_all = st.session_state.get("delete_all_mode", False)
+                
+                if is_delete_all:
+                    st.error(f"⚠️ DANGER: You are about to delete ALL certification records for Employee {st.session_state.selected_row['EMP ID']}. This cannot be undone.")
+                else:
+                    st.warning(f"⚠️ Are you sure you want to delete the '{st.session_state.selected_cert}' record?")
+
                 d1, d2 = st.columns(2)
-    
+
                 with d1:
                     if st.button("✅ Yes, Delete"):
-                        session.sql(f"""
-                            DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-                            WHERE "EMP ID" = '{st.session_state.selected_row["EMP ID"]}'
-                              AND "Certification" = '{st.session_state.selected_cert}'
-                        """).collect()
-    
-                        st.success("Record deleted")
+                        emp_id_target = st.session_state.selected_row['EMP ID']
+                        
+                        if is_delete_all:
+                            # 1. DELETE ALL QUERY
+                            session.sql(f"""
+                                DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+                                WHERE "EMP ID" = '{emp_id_target}'
+                            """).collect()
+                            st.success(f"All records for {emp_id_target} deleted.")
+                        else:
+                            # 2. DELETE SINGLE QUERY
+                            cert_target = st.session_state.selected_cert
+                            session.sql(f"""
+                                DELETE FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+                                WHERE "EMP ID" = '{emp_id_target}'
+                                  AND "Certification" = '{cert_target}'
+                            """).collect()
+                            st.success("Record deleted.")
+
+                        # Cleanup and Reset
                         st.session_state.search_results = None
                         st.session_state.confirm_delete = False
+                        st.session_state.delete_all_mode = False
                         st.rerun()
-    
+
                 with d2:
                     if st.button("❌ Cancel"):
                         st.session_state.confirm_delete = False
+                        st.session_state.delete_all_mode = False
+                        st.rerun()
 
 
 # =========================================================
