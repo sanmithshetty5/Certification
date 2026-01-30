@@ -894,13 +894,15 @@ with row3_2:
 ## ==============================================================================
 # CHART: ENROLLMENT TREND (FIXED VISIBILITY)
 # ==============================================================================
-st.markdown('<div class="dashboard-card"><div class="chart-title">Enrollment Trend Over Time</div>', unsafe_allow_html=True)
+st.markdown('<div class="dashboard-card"><div class="chart-title">Completion Trend Over Time</div>', unsafe_allow_html=True)
 
 # 1. Prepare Data
 if "Enroll_Month_Name" in filtered_df.columns and "Enroll_Year" in filtered_df.columns:
     
     # Create a copy to work on
     trend_df = filtered_df.copy()
+
+    trend_df = trend_df[trend_df["Completed Flag"] == True]
     
     # Drop missing values
     trend_df = trend_df.dropna(subset=["Enroll_Year", "Enroll_Month_Name"])
@@ -917,7 +919,7 @@ if "Enroll_Month_Name" in filtered_df.columns and "Enroll_Year" in filtered_df.c
         .groupby("Timeline")["EMP ID"]
         .nunique()
         .reset_index()
-        .rename(columns={"EMP ID": "Count"})
+        .rename(columns={"EMP ID": "Completed Certifications"})
         .sort_values("Timeline") # Sort Oldest -> Newest
     )
 
@@ -925,7 +927,7 @@ if "Enroll_Month_Name" in filtered_df.columns and "Enroll_Year" in filtered_df.c
     fig = px.line(
         time_series, 
         x='Timeline', 
-        y='Count',
+        y='Completed Certifications',
         markers=True, # Show dots at data points
     )
 
