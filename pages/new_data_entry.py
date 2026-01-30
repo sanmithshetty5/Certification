@@ -673,11 +673,22 @@ if st.session_state.page_mode == "ADD":
         r1, r2 = st.columns(2)
 
         with r1:
-            account = st.text_input(
-                "Account",
-                value=profile.get("Account", "") or "",disabled=st.session_state.review_mode
+            # account = st.text_input(
+            #     "Account",
+            #     value=profile.get("Account", "") or "",disabled=st.session_state.review_mode)
 
+            account_opts = get_account_options()
+            existing_account = profile.get("Account")
+            account_sel = st.multiselect(
+                "Account",
+                account_opts,
+                default=[existing_account] if existing_account in account_opts else [],
+                disabled=st.session_state.review_mode,
+                max_selections=1,
+                accept_new_options=True
             )
+            account = account_sel[0] if accountl_sel else None
+            batch = st.text_input("Batch",value=profile.get("Batch", "") or "",disabled=st.session_state.review_mode)
 
             account_spoc = st.text_input("Account SPOC",value=profile.get("Account SPOC", "") or "",disabled=st.session_state.review_mode)
 
