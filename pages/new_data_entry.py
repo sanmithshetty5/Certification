@@ -24,8 +24,8 @@ st.markdown("""
 
 /* 1. Standard Button (Secondary/Default) */
 div.stButton > button {
-    background-color: #0F172A !important; /* Dark Slate (Matches your Navbar) */
-    color: #FFFFFF !important;
+    background-color: #FFFFFF !important; /* Dark Slate (Matches your Navbar) */
+    color: #000000 !important;
     border: 1px solid #334155 !important;
     border-radius: 8px !important;
     padding: 0.5rem 1rem !important;
@@ -35,9 +35,9 @@ div.stButton > button {
 
 /* Standard Button Hover Effect */
 div.stButton > button:hover {
-    background-color: #1E293B !important; /* Lighter Slate */
+    background-color: #FFFFFF !important; /* Lighter Slate */
     border-color: #64748B !important;
-    color: #FFFFFF !important;
+    color: #000000 !important;
     transform: translateY(-2px); /* Slight lift effect */
 }
 
