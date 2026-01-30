@@ -51,6 +51,33 @@ p, label, h1, h2, h3, h4, h5, h6 {
     color: #FFFFFF !important;
 }
 
+/* =====================================
+   BACK BUTTON ONLY (⬅ Back)
+===================================== */
+
+/* Target button that contains text "Back" */
+.stButton button:has(span:contains("Back")) {
+    background-color: #000000 !important;
+    border: 1px solid #000000 !important;
+}
+
+/* Text inside Back button */
+.stButton button:has(span:contains("Back")) span {
+    color: #FFFFFF !important;
+    font-weight: 600;
+}
+
+/* Emoji/icon inside Back button */
+.stButton button:has(span:contains("Back")) svg {
+    fill: #FFFFFF !important;
+}
+
+/* Hover state */
+.stButton button:has(span:contains("Back")):hover {
+    background-color: #111111 !important;
+}
+
+
 .stButton > button span {
     color: #FFFFFF !important;
 }
