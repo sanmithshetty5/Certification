@@ -578,7 +578,7 @@ if st.session_state.page_mode == "ENTRY":
                 
                 with d_check:
                     # The Checkbox
-                    delete_all_check = st.checkbox("Delete ALL records for this ID?")
+                    delete_all_check = st.checkbox("Delete all records for this ID?")
                 
                 with d_btn:
                     # The Trigger Button
