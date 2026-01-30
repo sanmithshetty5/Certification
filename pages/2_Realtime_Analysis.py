@@ -388,7 +388,7 @@ df["Enrolment Month"] = df["Enrolment Month"].astype(str).str.strip()
 df["Enroll_Month_Name"] = df["Enrolment Month"].apply(lambda x: x.split("-")[0].strip()[:3].title())
 df["Enroll_Year"] = df["Enrolment Month"].apply(lambda x: x.split("-")[-1].strip())
 df.loc[~df["Enroll_Year"].str.isdigit(), "Enroll_Year"] = None
-df["Completed Flag"] = df[df["SnowPro Certified"]=='Completed']
+df["Completed Flag"] = df["SnowPro Certified"]=='Completed'
 
 # -----------------------------------------
 # TOGGLE BUTTON (BEFORE SIDEBAR)
