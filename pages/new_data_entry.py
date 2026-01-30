@@ -183,6 +183,38 @@ st.markdown("""
 
 <div class="page-spacer"></div>
 """, unsafe_allow_html=True)
+
+st.markdown("""
+<div style="
+    background:#FFFFFF;
+    border:1px solid #E2E8F0;
+    border-left:6px solid #2563EB;
+    padding:1.2rem 1.4rem;
+    border-radius:8px;
+    margin-bottom:1.5rem;
+">
+    <h4 style="margin:0 0 0.5rem 0;">📌 Certification Data Entry</h4>
+    <p style="margin:0.3rem 0;">
+        This page is used to <b>search employees</b>, <b>add new certifications</b>, and 
+        <b>update or delete existing certification records</b>.
+    </p>
+    <p style="margin:0.3rem 0;">
+        Managers can track an employee’s <b>certification progress</b>, 
+        <b>completion status</b>, <b>exam results</b>, and <b>department details</b> in one place.
+    </p>
+    <p style="margin:0.3rem 0;">
+        <b>How to use:</b><br>
+        • Enter a 10-digit Employee ID and click <b>Search</b> to view existing records<br>
+        • Click <b>Add New Certification</b> to assign a new certification<br>
+        • Use <b>Edit</b> or <b>Delete</b> options to update existing entries
+    </p>
+    <p style="margin:0.3rem 0; font-size:0.9rem; color:#475569;">
+        ⚠️ Please ensure all details are accurate before saving, as this data is used for 
+        certification tracking and reporting.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
 # -----------------------------------------
 # Constants
 # -----------------------------------------
