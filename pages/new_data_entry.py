@@ -76,18 +76,18 @@ div.stButton > button[kind="primary"]:focus {
 }
 /* ================================
    CUSTOM "ADD NEW" BUTTON (GREEN)
-   Target: Button immediately following the #green-btn-marker
+   Logic: Find the Column containing #green-btn-marker, then style its button
 ================================ */
 
 /* Normal State */
-div:has(span#green-btn-marker) + div.stButton > button {
+div[data-testid="column"]:has(div#green-btn-marker) button {
     background-color: #16A34A !important; /* Green */
     border-color: #16A34A !important;
     color: #FFFFFF !important;
 }
 
 /* Hover State */
-div:has(span#green-btn-marker) + div.stButton > button:hover {
+div[data-testid="column"]:has(div#green-btn-marker) button:hover {
     background-color: #15803D !important; /* Darker Green */
     border-color: #15803D !important;
     color: #FFFFFF !important;
@@ -95,7 +95,7 @@ div:has(span#green-btn-marker) + div.stButton > button:hover {
 }
 
 /* Active/Click State */
-div:has(span#green-btn-marker) + div.stButton > button:active {
+div[data-testid="column"]:has(div#green-btn-marker) button:active {
     background-color: #14532D !important;
     transform: translateY(0px);
 }
