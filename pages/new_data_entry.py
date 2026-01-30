@@ -72,7 +72,6 @@ div.stButton > button[kind="primary"]:focus {
     color: #FFFFFF !important;            /* Keep Text White */
     border-color: #991B1B !important;
 }
-}
 /* ================================
    BASE APP STYLING
 ================================ */
