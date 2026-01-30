@@ -159,6 +159,66 @@ div[data-testid="stMainBlockContainer"] {
 .page-spacer {
     height: 80px;
 }
+
+/* =========================================================
+   NEW DATA ENTRY – PAGE OVERVIEW CARDS
+   ========================================================= */
+
+/* Section heading spacing */
+.page-info-title {
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    letter-spacing: -0.02em;
+}
+
+/* Vertical feature card (same language as About page) */
+.page-info-card {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    height: 100%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.page-info-card:hover {
+    transform: translateY(-8px);
+    border-color: #6366f1;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 8px 10px -6px rgba(0, 0, 0, 0.02);
+}
+
+/* Icon container */
+.page-info-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.4rem;
+}
+
+/* Card title */
+.page-info-card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.6rem;
+}
+
+/* Card description */
+.page-info-card-desc {
+    font-size: 0.95rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -184,36 +244,66 @@ st.markdown("""
 <div class="page-spacer"></div>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<div style="
-    background:#FFFFFF;
-    border:1px solid #E2E8F0;
-    border-left:6px solid #2563EB;
-    padding:1.2rem 1.4rem;
-    border-radius:8px;
-    margin-bottom:1.5rem;
-">
-    <h4 style="margin:0 0 0.5rem 0;">📌 Certification Data Entry</h4>
-    <p style="margin:0.3rem 0;">
-        This page is used to <b>search employees</b>, <b>add new certifications</b>, and 
-        <b>update or delete existing certification records</b>.
-    </p>
-    <p style="margin:0.3rem 0;">
-        Managers can track an employee’s <b>certification progress</b>, 
-        <b>completion status</b>, <b>exam results</b>, and <b>department details</b> in one place.
-    </p>
-    <p style="margin:0.3rem 0;">
-        <b>How to use:</b><br>
-        • Enter a 10-digit Employee ID and click <b>Search</b> to view existing records<br>
-        • Click <b>Add New Certification</b> to assign a new certification<br>
-        • Use <b>Edit</b> or <b>Delete</b> options to update existing entries
-    </p>
-    <p style="margin:0.3rem 0; font-size:0.9rem; color:#475569;">
-        ⚠️ Please ensure all details are accurate before saving, as this data is used for 
-        certification tracking and reporting.
-    </p>
-</div>
-""", unsafe_allow_html=True)
+# -------------------------------
+# PAGE INFO / HOW TO USE SECTION
+# -------------------------------
+st.markdown("### ✍️ New Data Entry – Page Overview", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
+
+c1, c2 = st.columns(2, gap="medium")
+
+with c1:
+    st.markdown("""
+    <div class="feature-card-v">
+        <div class="icon-box" style="background:#e0e7ff; color:#4338ca;">🆕</div>
+        <div class="card-title">Add Certification Records</div>
+        <div class="card-desc">
+            Create new certification entries for employees by selecting the 
+            certification track, level, and exam details.  
+            Each record is validated before submission to prevent duplicates.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with c2:
+    st.markdown("""
+    <div class="feature-card-v">
+        <div class="icon-box" style="background:#fce7f3; color:#be185d;">✅</div>
+        <div class="card-title">Track Completion Status</div>
+        <div class="card-desc">
+            Update certification progress, completion flags, and exam results.
+            This ensures real-time visibility into employee certification readiness.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+c3, c4 = st.columns(2, gap="medium")
+
+with c3:
+    st.markdown("""
+    <div class="feature-card-v">
+        <div class="icon-box" style="background:#dcfce7; color:#15803d;">🛡️</div>
+        <div class="card-title">Data Accuracy & Validation</div>
+        <div class="card-desc">
+            Mandatory fields, dropdown controls, and format checks ensure
+            high-quality data that can be safely used for analytics and reporting.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with c4:
+    st.markdown("""
+    <div class="feature-card-v">
+        <div class="icon-box" style="background:#e0f2fe; color:#0369a1;">📤</div>
+        <div class="card-title">Submit & Store Securely</div>
+        <div class="card-desc">
+            Once submitted, certification data is securely stored in Snowflake
+            and instantly reflected across dashboards and analytics pages.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # -----------------------------------------
 # Constants
