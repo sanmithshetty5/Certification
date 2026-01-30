@@ -415,6 +415,15 @@ def get_vertical_options():
     """).to_pandas()
     return sorted(df["Vertical / SL"].dropna().tolist())
 
+def get_account_options():
+    df = session.sql("""
+        SELECT DISTINCT "Vertical / SL"
+        FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
+        WHERE "Vertical / SL" IS NOT NULL
+        ORDER BY "Vertical / SL"
+    """).to_pandas()
+    return sorted(df["Vertical / SL"].dropna().tolist())
+
 def normalize(val):
     if val is None:
         return None
