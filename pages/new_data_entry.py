@@ -444,12 +444,12 @@ def get_vertical_options():
 
 def get_account_options():
     df = session.sql("""
-        SELECT DISTINCT "Vertical / SL"
+        SELECT DISTINCT "Account"
         FROM USE_CASE.CERTIFICATION.NEW_CERTIFICATION
-        WHERE "Vertical / SL" IS NOT NULL
-        ORDER BY "Vertical / SL"
+        WHERE "Account" IS NOT NULL
+        ORDER BY "Account"
     """).to_pandas()
-    return sorted(df["Vertical / SL"].dropna().tolist())
+    return sorted(df["Account"].dropna().tolist())
 
 def normalize(val):
     if val is None:
@@ -777,6 +777,20 @@ if st.session_state.page_mode == "ADD":
                 accept_new_options=True
             )
             account = account_sel[0] if account_sel else None
+
+        with r2:
+            vertical_opts = get_vertical_options()
+            existing_vertical = profile.get("Vertical / SL")
+            vertical_sel = st.multiselect(
+                "Vertical / SL",
+                vertical_opts,
+                default=[existing_vertical] if existing_vertical in vertical_opts else [],
+                disabled=st.session_state.review_mode,
+                max_selections=1,
+                accept_new_options=True
+            )
+            vertical = vertical_sel[0] if vertical_sel else None
+            
             batch = st.text_input("Batch",value=profile.get("Batch", "") or "",disabled=st.session_state.review_mode)
 
             account_spoc = st.text_input("Account SPOC",value=profile.get("Account SPOC", "") or "",disabled=st.session_state.review_mode)
