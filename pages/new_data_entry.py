@@ -50,31 +50,41 @@ p, label, h1, h2, h3, h4, h5, h6 {
 .stButton > button {
     color: #FFFFFF !important;
 }
-
 /* =====================================
-   BACK BUTTON ONLY (⬅ Back)
+   BACK BUTTON – BLACK BG, WHITE TEXT
+   ONLY SCALE ON HOVER
 ===================================== */
 
-/* Target button that contains text "Back" */
 .stButton button:has(span:contains("Back")) {
     background-color: #000000 !important;
-    border: 1px solid #000000 !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: transform 0.15s ease-in-out;
 }
 
-/* Text inside Back button */
+/* Text + emoji */
 .stButton button:has(span:contains("Back")) span {
-    color: #FFFFFF !important;
+    color: #ffffff !important;
     font-weight: 600;
 }
 
-/* Emoji/icon inside Back button */
-.stButton button:has(span:contains("Back")) svg {
-    fill: #FFFFFF !important;
+/* Hover – ONLY scale */
+.stButton button:has(span:contains("Back")):hover {
+    background-color: #000000 !important;
+    box-shadow: none !important;
+    transform: scale(1.06);
 }
 
-/* Hover state */
-.stButton button:has(span:contains("Back")):hover {
-    background-color: #111111 !important;
+/* Active / Click */
+.stButton button:has(span:contains("Back")):active {
+    transform: scale(1.03);
+}
+
+/* Focus – remove ghost outline */
+.stButton button:has(span:contains("Back")):focus {
+    background-color: #000000 !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 
