@@ -465,7 +465,9 @@ if st.session_state.page_mode == "ENTRY":
 
     st.subheader("🔍 Find Employee")
 
-    c1, c2, c3 = st.columns([3, 1.5, 4])
+    # UPDATE: Added vertical_alignment="bottom" to align buttons with input box
+    # Adjusted ratios slightly [2, 1, 2.5] to make the input box compact and buttons accessible
+    c1, c2, c3 = st.columns([2, 1, 2.5], vertical_alignment="bottom")
 
     with c1:
         emp_id_search = st.text_input("Employee ID", max_chars=10)
@@ -475,7 +477,7 @@ if st.session_state.page_mode == "ENTRY":
 
     with c3:
         # 1. Add this invisible marker line specifically for this button
-        st.markdown('<span id="green-btn-marker"></span>', unsafe_allow_html=True)
+        st.markdown('<div id="green-btn-marker"></div>', unsafe_allow_html=True)
         
         # 2. Your existing button code
         add_clicked = st.button("➕ Add New Certification", use_container_width=True,  disabled=st.session_state.search_results is not None)
@@ -505,8 +507,8 @@ if st.session_state.page_mode == "ENTRY":
         st.rerun()
 
     # -----------------------------------------
-# RENDER SEARCH RESULTS (PERSISTENT)
-# -----------------------------------------
+    # RENDER SEARCH RESULTS (PERSISTENT)
+    # -----------------------------------------
     if st.session_state.search_results is not None:
            
         c_cancel = st.columns([1, 6])[0]
