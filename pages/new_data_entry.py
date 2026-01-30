@@ -749,7 +749,7 @@ if st.session_state.page_mode == "ADD":
                 max_selections=1,
                 accept_new_options=True
             )
-            account = account_sel[0] if accountl_sel else None
+            account = account_sel[0] if account_sel else None
             batch = st.text_input("Batch",value=profile.get("Batch", "") or "",disabled=st.session_state.review_mode)
 
             account_spoc = st.text_input("Account SPOC",value=profile.get("Account SPOC", "") or "",disabled=st.session_state.review_mode)
