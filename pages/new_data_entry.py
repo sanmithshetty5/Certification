@@ -44,58 +44,6 @@ p, label, h1, h2, h3, h4, h5, h6 {
     padding-bottom: 0.4rem;
 }
 
-/* ================================
-   BUTTON FIX (THIS WAS BROKEN)
-================================ */
-.stButton > button {
-    color: #FFFFFF !important;
-}
-/* =====================================
-   BACK BUTTON – BLACK BG, WHITE TEXT
-   ONLY SCALE ON HOVER
-===================================== */
-
-.stButton button:has(span:contains("Back")) {
-    background-color: #000000 !important;
-    border: none !important;
-    box-shadow: none !important;
-    transition: transform 0.15s ease-in-out;
-}
-
-/* Text + emoji */
-.stButton button:has(span:contains("Back")) span {
-    color: #ffffff !important;
-    font-weight: 600;
-}
-
-/* Hover – ONLY scale */
-.stButton button:has(span:contains("Back")):hover {
-    background-color: #000000 !important;
-    box-shadow: none !important;
-    transform: scale(1.06);
-}
-
-/* Active / Click */
-.stButton button:has(span:contains("Back")):active {
-    transform: scale(1.03);
-}
-
-/* Focus – remove ghost outline */
-.stButton button:has(span:contains("Back")):focus {
-    background-color: #000000 !important;
-    box-shadow: none !important;
-    outline: none !important;
-}
-
-
-.stButton > button span {
-    color: #FFFFFF !important;
-}
-
-/* Icons inside buttons */
-.stButton svg {
-    fill: #FFFFFF !important;
-}
 
 /* ================================
    INPUTS & SELECTBOXES (VISIBLE TEXT)
