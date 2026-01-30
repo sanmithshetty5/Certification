@@ -641,20 +641,6 @@ with c3:
     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False, 'modeBarButtonsToRemove': ['lasso2d', 'select2d']})
     st.markdown("</div>", unsafe_allow_html=True)
 
-with c4:
-    st.markdown('<div class="dashboard-card"><div class="chart-title">Yearly Enrollment Trend</div>', unsafe_allow_html=True)
-    trend_data = filtered_df.dropna(subset=["Enroll_Year"]).groupby("Enroll_Year")["EMP ID"].nunique().reset_index()
-    trend_data.columns = ["Year", "Enrollments"]
-    trend_data = trend_data.sort_values("Year")
-    fig = px.area(trend_data, x="Year", y="Enrollments", markers=True, color_discrete_sequence=[PRIMARY_COLOR])
-    fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=10, l=0, r=0, b=0),
-        xaxis=dict(title=None, tickfont=dict(color="#1e293b", size=12), showgrid=False),
-        yaxis=dict(title=None, tickfont=dict(color="#1e293b", size=12), showgrid=True, gridcolor="#e2e8f0"),
-        font=dict(family="Segoe UI", color="#1e293b"), height=250, hovermode="x unified")
-    fig.update_traces(line=dict(width=3), marker=dict(size=8, line=dict(width=2, color="white")), hovertemplate = "<b>Year: %{x}</b><br>Enrollments: %{y}<extra></extra>")
-    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'scrollZoom': True, 'displaylogo': False, 'modeBarButtonsToRemove': ['lasso2d', 'select2d']})
-    st.markdown("</div>", unsafe_allow_html=True)
-
 st.markdown("<br>", unsafe_allow_html=True)
 
 # FULL WIDTH BADGE CHART
