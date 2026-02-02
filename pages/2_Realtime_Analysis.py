@@ -869,12 +869,7 @@ with row3_2:
         )
     else:
         st.error(f"Error: Column '{status_col}' not found. Please check your Excel column names.")
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
-
-
-arkdown("</div>", unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
 
 # # ==============================================================================
