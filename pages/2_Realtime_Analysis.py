@@ -772,57 +772,48 @@ row3_1, row3_2 = st.columns(2)
 # LEFT COLUMN: Vertical / SL Funnel (Existing Logic)
 # ==============================================================================
 with row3_1:
-    st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Funnel by Vertical</div>', unsafe_allow_html=True)
+    st.markdown('<div class="dashboard-card"><div class="chart-title">Vertical / SL Certification Summary</div>', unsafe_allow_html=True)
 
-    # 1. Prepare Data
-    vertical_data = (
-        filtered_df[filtered_df["Completed Flag"] == True]
-        .groupby("Vertical / SL")["EMP ID"]
-        .nunique()
-        .reset_index()
-        .rename(columns={"EMP ID": "Completed Employees"})
-        .sort_values("Completed Employees", ascending=True) 
-    )
+    status_col = "SnowPro Certified"
 
-    # 2. Dynamic Height (Ensures no scroll bars inside the chart)
-    v_height = max(400, len(vertical_data) * 35)
+    if status_col in filtered_df.columns:
+        # 1. Aggregate Data by Vertical
+        vertical_table = (
+            filtered_df
+            .groupby("Vertical / SL")
+            .agg(
+                Total_Employees=("EMP ID", "nunique"),
+                Certified=(status_col, lambda x: (x == "Completed").sum()),
+                In_Progress=(status_col, lambda x: (x == "In Progress").sum()),
+                Not_Started=(status_col, lambda x: (x == "Not Started").sum()),
+            )
+            .reset_index()
+            .sort_values(by="Certified", ascending=False)
+        )
 
-    # 3. Create Chart
-    fig_v = px.bar(
-        vertical_data,
-        x="Completed Employees",
-        y="Vertical / SL",
-        orientation='h', 
-        text="Completed Employees",
-        color="Completed Employees", 
-        color_continuous_scale="Blues"
-    )
+        # 2. Style the Table (Dark Mode)
+        styled_vertical = (
+            vertical_table.style
+            .set_properties(**{
+                'background-color': '#0e1117',  # Dark background
+                'color': '#ffffff',             # White text
+                'border-color': '#333333'       # Subtle borders
+            })
+            # Highlight "Certified" column in Green
+            .map(lambda x: 'color: #4ade80; font-weight: bold;', subset=['Certified'])
+        )
 
-    fig_v.update_layout(
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        margin=dict(t=10, l=0, r=0, b=0),
-        xaxis=dict(showgrid=False, visible=False), 
-        yaxis=dict(
-            title=None,
-            tickfont=dict(color="#1e293b", size=12, family="Segoe UI"),
-            dtick=1
-        ),
-        font=dict(family="Segoe UI", color="#1e293b"),
-        height=v_height, 
-        coloraxis_showscale=False 
-    )
+        # 3. Render Table
+        st.dataframe(
+            styled_vertical,
+            use_container_width=True,
+            height=450,
+            hide_index=True
+        )
+    else:
+        st.error(f"Column '{status_col}' not found.")
 
-    fig_v.update_traces(
-        textposition='outside', 
-        textfont=dict(color="#1e293b", size=12),
-        cliponaxis=False 
-    )
-
-    st.plotly_chart(fig_v, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False})
     st.markdown("</div>", unsafe_allow_html=True)
-
-
 # ==============================================================================
 # RIGHT COLUMN: Account Certification Overview (Heatmap)
 # ==============================================================================
