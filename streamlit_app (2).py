@@ -588,8 +588,9 @@ with row1_col2:
         <div class="icon-box" style="background: #fce7f3; color: #be185d;">&#128202;</div>
         <div class="card-title">Intelligent Analytics</div>
         <div class="card-desc">
-            Visualize completion rates and skill distribution. 
-            Identify seasonal trends in learning and export high-resolution charts for executive reporting.
+            Visualize certification trends through interactive graphs and dynamic real-time data monitoring. 
+            Apply custom filters to drill down into specific records and inspect raw data for deep-dive audits.
+            Generate and export high-resolution reports instantly to share critical compliance insights with stakeholders.
         </div>
     </div>
     """, unsafe_allow_html=True)
