@@ -629,19 +629,19 @@ with row2_col2:
 # -------------------------------
 st.markdown("<br>", unsafe_allow_html=True)
 
-# [1, 2, 1] ratio creates a wide center column for the export utility
-c_pad1, c_center, c_pad2 = st.columns([1, 2, 1])
+# # [1, 2, 1] ratio creates a wide center column for the export utility
+# c_pad1, c_center, c_pad2 = st.columns([1, 2, 1])
 
-with c_center:
-    st.markdown("""
-    <div class="feature-card-h">
-        <div class="icon-box" style="background: #e0f2fe; color: #0369a1;">&#128229;</div>
-        <div>
-            <div class="card-title" style="margin-bottom:0.25rem;">Instant Export Utility</div>
-            <div class="card-desc">Download complete datasets and visual reports with one click for offline analysis.</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+# with c_center:
+#     st.markdown("""
+#     <div class="feature-card-h">
+#         <div class="icon-box" style="background: #e0f2fe; color: #0369a1;">&#128229;</div>
+#         <div>
+#             <div class="card-title" style="margin-bottom:0.25rem;">Instant Export Utility</div>
+#             <div class="card-desc">Download complete datasets and visual reports with one click for offline analysis.</div>
+#         </div>
+#     </div>
+#     """, unsafe_allow_html=True)
 
 # -------------------------------
 # PARTNERS SECTION
