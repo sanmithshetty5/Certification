@@ -345,10 +345,8 @@ st.markdown(f"""
     <div class="nav-left">Certification Tracker</div>
     <div class="nav-links">
         <a href="/" target="_self">Welcome Page</a>
-        <a href="/Data_Entry" target="_self">Data Entry</a>
+        <a href="/new_data_entry" target="_self">Data Entry</a>
         <a href="/Realtime_Analysis" target="_self">Realtime Analysis</a>
-        <a href="/new_data_entry" target="_self">New Data Entry</a>
-        <a href="/About_Page" target="_self">About</a>
     </div>
 </div>
 
@@ -515,28 +513,39 @@ months_label = ", ".join(selected_months) if selected_months else "All Months"
 # -----------------------------------------
 # EXPORT LOGIC
 # -----------------------------------------
+df["Voucher Status"] = df["Voucher Status"].fillna("Not Available")
+
 def export_charts_as_zip(data):
     buffer = io.BytesIO()
+    skipped = []
+
     with zipfile.ZipFile(buffer, "w") as z:
         charts = {
-            "cert_dist.png": data["Certification"].value_counts(),
-            "snowpro_stat.png": data["SnowPro Certified"].value_counts(),
-            "voucher_stat.png": data["Voucher Status"].value_counts()
+            "Certification Distribution": data["Certification"].value_counts(),
+            "SnowPro Status": data["SnowPro Certified"].value_counts(),
+            "Voucher Status": data["Voucher Status"].value_counts()
         }
-        for name, series in charts.items():
+
+        for title, series in charts.items():
+            if series.empty:
+                skipped.append(title)
+                continue
+
             fig, ax = plt.subplots(figsize=(7, 5))
             series.plot(kind="bar", ax=ax, color=PRIMARY_COLOR)
-            ax.set_title(name, color="black")
-            plt.xticks(rotation=45, ha="right", color="black")
-            plt.yticks(color="black")
+            ax.set_title(title)
+            plt.xticks(rotation=45, ha="right")
             ax.spines['top'].set_visible(False)
             ax.spines['right'].set_visible(False)
+
             img = io.BytesIO()
             fig.savefig(img, format="png", bbox_inches="tight", dpi=100)
             plt.close(fig)
-            z.writestr(name, img.getvalue())
+
+            z.writestr(f"{title.replace(' ', '_').lower()}.png", img.getvalue())
+
     buffer.seek(0)
-    return buffer
+    return buffer, skipped
 
 # Wrap main content
 st.markdown(f'<div class="main-content {"shifted" if not sidebar_collapsed else ""}">', unsafe_allow_html=True)
@@ -558,11 +567,22 @@ with col_h1:
 with col_h2:
     st.markdown("<br>", unsafe_allow_html=True)
     if not filtered_df.empty:
-        st.download_button(
-            "Export Report",
-            data=export_charts_as_zip(filtered_df),
-            file_name="analytics.zip"
-        )
+        zip_data, skipped_charts = export_charts_as_zip(filtered_df)
+    
+        if zip_data.getbuffer().nbytes == 0:
+            st.info("ℹ️ No charts available to export for the selected filters.")
+        else:
+            st.download_button(
+                "Export Report",
+                data=zip_data,
+                file_name="analytics.zip"
+            )
+            if skipped_charts:
+                st.info(
+                    "ℹ️ Some sections were skipped due to insufficient data: "
+                    + ", ".join(skipped_charts)
+                )
+
         if st.button("🔄 Refresh Data"):
             st.cache_data.clear()
             st.rerun()
