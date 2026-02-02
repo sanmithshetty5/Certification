@@ -693,7 +693,9 @@ if st.session_state.page_mode == "ENTRY":
     with c4:
         st.markdown("""
         <div class="page-info-card">
-            <div class="page-info-icon" style="background:#e0f2fe; color:#0369a1;"></div>
+            <div class="page-info-icon" style="background:#e0f2fe;">
+                <img src="https://cdn-icons-png.flaticon.com/512/1160/1160758.png" width="30" height="30">
+            </div>
             <div class="page-info-card-title">Modify & Update Records</div>
             <div class="page-info-card-desc">
                 Search by a valid Employee ID to instantly retrieve existing certification profiles and progress logs. 
