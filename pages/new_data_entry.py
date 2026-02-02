@@ -634,7 +634,73 @@ if st.session_state.page_mode == "ENTRY":
                         st.session_state.confirm_delete = False
                         st.session_state.delete_all_mode = False
                         st.rerun()
-
+    # PAGE OVERVIEW – HOW THIS PAGE WORKS (BOTTOM)
+    # =========================================================
+    
+    st.markdown("<hr>", unsafe_allow_html=True)
+    
+    st.markdown(
+        '<div class="page-info-title">ℹ️ How this page works</div>',
+        unsafe_allow_html=True
+    )
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    c1, c2 = st.columns(2, gap="large")
+    
+    with c1:
+        st.markdown("""
+        <div class="page-info-card">
+            <div class="page-info-icon" style="background:#e0e7ff; color:#4338ca;">🔍</div>
+            <div class="page-info-card-title">Find or Add Employee</div>
+            <div class="page-info-card-desc">
+                Search using a valid 10-digit Employee ID. Existing certification
+                records will be shown instantly, or you can add a new certification.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with c2:
+        st.markdown("""
+        <div class="page-info-card">
+            <div class="page-info-icon" style="background:#dcfce7; color:#15803d;">📝</div>
+            <div class="page-info-card-title">Enter Certification Details</div>
+            <div class="page-info-card-desc">
+                Fill certification schedule, badges, department info, and progress.
+                Smart autofill reduces repetitive data entry.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    c3, c4 = st.columns(2, gap="large")
+    
+    with c3:
+        st.markdown("""
+        <div class="page-info-card">
+            <div class="page-info-icon" style="background:#fef3c7; color:#92400e;">🛡️</div>
+            <div class="page-info-card-title">Validation & Review</div>
+            <div class="page-info-card-desc">
+                Mandatory fields and duplicate checks ensure clean data.
+                Review all details before saving to Snowflake.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with c4:
+        st.markdown("""
+        <div class="page-info-card">
+            <div class="page-info-icon" style="background:#e0f2fe; color:#0369a1;">☁️</div>
+            <div class="page-info-card-title">Secure Cloud Storage</div>
+            <div class="page-info-card-desc">
+                All records are securely stored in Snowflake and instantly available
+                for analytics and reporting across the organization.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    
 
 # =========================================================
 # ADD MODE
@@ -947,68 +1013,3 @@ if st.session_state.page_mode == "ADD":
             # st.session_state.autofill_emp_name = emp_name
             # st.rerun()
     # =========================================================
-# PAGE OVERVIEW – HOW THIS PAGE WORKS (BOTTOM)
-# =========================================================
-
-st.markdown("<hr>", unsafe_allow_html=True)
-
-st.markdown(
-    '<div class="page-info-title">ℹ️ How this page works</div>',
-    unsafe_allow_html=True
-)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-c1, c2 = st.columns(2, gap="large")
-
-with c1:
-    st.markdown("""
-    <div class="page-info-card">
-        <div class="page-info-icon" style="background:#e0e7ff; color:#4338ca;">🔍</div>
-        <div class="page-info-card-title">Find or Add Employee</div>
-        <div class="page-info-card-desc">
-            Search using a valid 10-digit Employee ID. Existing certification
-            records will be shown instantly, or you can add a new certification.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with c2:
-    st.markdown("""
-    <div class="page-info-card">
-        <div class="page-info-icon" style="background:#dcfce7; color:#15803d;">📝</div>
-        <div class="page-info-card-title">Enter Certification Details</div>
-        <div class="page-info-card-desc">
-            Fill certification schedule, badges, department info, and progress.
-            Smart autofill reduces repetitive data entry.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-c3, c4 = st.columns(2, gap="large")
-
-with c3:
-    st.markdown("""
-    <div class="page-info-card">
-        <div class="page-info-icon" style="background:#fef3c7; color:#92400e;">🛡️</div>
-        <div class="page-info-card-title">Validation & Review</div>
-        <div class="page-info-card-desc">
-            Mandatory fields and duplicate checks ensure clean data.
-            Review all details before saving to Snowflake.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with c4:
-    st.markdown("""
-    <div class="page-info-card">
-        <div class="page-info-icon" style="background:#e0f2fe; color:#0369a1;">☁️</div>
-        <div class="page-info-card-title">Secure Cloud Storage</div>
-        <div class="page-info-card-desc">
-            All records are securely stored in Snowflake and instantly available
-            for analytics and reporting across the organization.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
