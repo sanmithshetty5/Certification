@@ -345,7 +345,7 @@ st.markdown(f"""
     <div class="nav-left">Certification Tracker</div>
     <div class="nav-links">
         <a href="/" target="_self">Welcome Page</a>
-        <a href="/new_data_entry" target="_self">Data Entry</a>
+        <a href="/new_data_entry" target="_self">Credential Tracker</a>
         <a href="/Realtime_Analysis" target="_self">Realtime Analysis</a>
     </div>
 </div>
