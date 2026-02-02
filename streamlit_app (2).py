@@ -541,8 +541,8 @@ st.markdown("""
     <div class="nav-links">
         <a href="/" target="_self">Welcome Page</a>
         <a href="/Data_Entry" target="_self">Data Entry</a>
+        <a href="/new_data_entry" target="_self">Crential Tracker</a>
         <a href="/Realtime_Analysis" target="_self">Realtime Analysis</a>
-        <a href="/new_data_entry" target="_self">New Data Entry</a>
     </div>
 </div>
 
@@ -576,8 +576,9 @@ with row1_col1:
         <div class="icon-box" style="background: #e0e7ff; color: #4338ca;">&#128221;</div>
         <div class="card-title">Streamlined Tracking</div>
         <div class="card-desc">
-            Effortlessly log employee details, certification tracks, and exam statuses. 
-            Smart validation ensures data integrity before it ever hits the database.
+            Search employee IDs to instantly manage profiles and certification records. 
+            Add new credentials, update existing details, or delete records with ease. 
+            Ensure data integrity through smart validation before saving to the database.
         </div>
     </div>
     """, unsafe_allow_html=True)
