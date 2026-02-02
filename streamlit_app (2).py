@@ -543,7 +543,6 @@ st.markdown("""
         <a href="/Data_Entry" target="_self">Data Entry</a>
         <a href="/Realtime_Analysis" target="_self">Realtime Analysis</a>
         <a href="/new_data_entry" target="_self">New Data Entry</a>
-        <a href="/About_Page" target="_self">About</a>
     </div>
 </div>
 
