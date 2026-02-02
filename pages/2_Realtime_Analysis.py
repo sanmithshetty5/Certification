@@ -606,8 +606,8 @@ def metric_box(col, label, value):
         """, unsafe_allow_html=True)
 
 metric_box(m1, "Total Records", len(filtered_df))
-metric_box(m2, "Unique Learners", filtered_df["EMP ID"].nunique().sum())
-metric_box(m3, "Certified Users", int(filtered_df["Completed Flag"].nunique()))
+metric_box(m2, "Unique Learners", filtered_df["EMP ID"].nunique())
+metric_box(m3, "Certified Users", filtered_df["Completed Flag"].nunique().sum())
 metric_box(m4, "Total Certificatios Completed", int(filtered_df["Completed Flag"].sum()))
 
 with m5:
