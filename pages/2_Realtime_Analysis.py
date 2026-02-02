@@ -607,7 +607,7 @@ def metric_box(col, label, value):
 
 metric_box(m1, "Total Records", len(filtered_df))
 metric_box(m2, "Unique Learners", filtered_df["EMP ID"].nunique())
-metric_box(m3, "Certified Users", filtered_df["Completed Flag"].unique().sum())
+metric_box(m3, "Certified Users",filtered_df[filtered_df["SnowPro Certified"] == "Completed"]["EMP ID"].nunique())
 metric_box(m4, "Total Certificatios Completed", int(filtered_df["Completed Flag"].sum()))
 
 with m5:
