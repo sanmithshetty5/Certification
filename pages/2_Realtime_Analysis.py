@@ -783,9 +783,9 @@ with row3_1:
             filtered_df
             .groupby("Vertical / SL")
             .agg(
-                Total_Employees=("EMP ID", "nunique"),
+                Total_Unique_Employees=("EMP ID", "nunique"),
+                Total_Number_of_Certification=("SnowPro Certified","sum"),
                 Certified=(status_col, lambda x: (x == "Completed").sum()),
-                Not_Started=(status_col, lambda x: (x == "Incomplete").sum()),
             )
             .reset_index()
             .sort_values(by="Certified", ascending=False)
