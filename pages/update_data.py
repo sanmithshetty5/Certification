@@ -185,11 +185,17 @@ with st.container(border=True):
         """).to_pandas()
     
         return df["Account"].tolist()
-    account = st.selectbox(
-    "Account",
-    get_account_options(),
-    index=get_account_options().index(data["Account"]))
+    account_opts = get_account_options()
+    account_sel = st.multiselect(
+                "Account",
+                account_opts,
+                default=[existing_account] if existing_account in account_opts else [],
+                max_selections=1,
+                accept_new_options=True
+            )
+    account = account_sel[0] if account_sel else None
 
+    
     spoc = st.text_input("Account SPOC", data["Account SPOC"] or "")
     
     def get_vertical_sl():
