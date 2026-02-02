@@ -380,7 +380,6 @@ if df.empty:
 # -----------------------------------------
 # DATA PREP
 # -----------------------------------------
-df["Voucher Status"] = df["Voucher Status"].fillna("Not Available")
 df["Enrolment Month"] = df["Enrolment Month"].astype(str)
 df = df[df["Enrolment Month"] != "nan"]
 df["Enrolment Month"] = df["Enrolment Month"].astype(str).str.strip()
@@ -651,15 +650,50 @@ with c2:
 c3, c4 = st.columns(2)
 
 with c3:
-    st.markdown('<div class="dashboard-card"><div class="chart-title">Voucher Utilization</div>', unsafe_allow_html=True)
-    voucher_data = filtered_df["Voucher Status"].value_counts().reset_index()
-    voucher_data.columns = ["Status", "Count"]
-    distinct_colors = ["#2563eb", "#10b981", "#f59e0b", "#64748b", "#ef4444"]
-    fig = px.pie(voucher_data, names="Status", values="Count", color_discrete_sequence=distinct_colors)
-    fig.update_traces(textposition='inside', textinfo='percent+label', insidetextorientation='horizontal', hovertemplate = "<b>%{label}</b><br>Count: %{value}<br>Share: %{percent}", marker=dict(line=dict(color='#ffffff', width=2)))
-    fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=20, l=0, r=0, b=20), font=dict(family="Segoe UI", color="#1e293b", size=13), showlegend=False, height=250)
-    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False, 'modeBarButtonsToRemove': ['lasso2d', 'select2d']})
-    st.markdown("</div>", unsafe_allow_html=True)
+    with c3:
+        st.markdown('<div class="dashboard-card"><div class="chart-title">Voucher Utilization</div>', unsafe_allow_html=True)
+    
+        # Remove NULLs explicitly
+        voucher_series = filtered_df["Voucher Status"].dropna()
+    
+        # Case 1: No usable data
+        if voucher_series.empty:
+            st.info("ℹ️ Voucher status data is not available for the selected filters.")
+        
+        # Case 2: Data exists → show chart
+        else:
+            voucher_data = voucher_series.value_counts().reset_index()
+            voucher_data.columns = ["Status", "Count"]
+    
+            distinct_colors = ["#2563eb", "#10b981", "#f59e0b", "#64748b", "#ef4444"]
+    
+            fig = px.pie(
+                voucher_data,
+                names="Status",
+                values="Count",
+                color_discrete_sequence=distinct_colors
+            )
+    
+            fig.update_traces(
+                textposition='inside',
+                textinfo='percent+label',
+                hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Share: %{percent}",
+                marker=dict(line=dict(color='#ffffff', width=2))
+            )
+    
+            fig.update_layout(
+                plot_bgcolor="rgba(0,0,0,0)",
+                paper_bgcolor="rgba(0,0,0,0)",
+                margin=dict(t=20, l=0, r=0, b=20),
+                font=dict(family="Segoe UI", color="#1e293b", size=13),
+                showlegend=False,
+                height=250
+            )
+    
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False})
+    
+        st.markdown("</div>", unsafe_allow_html=True)
+
 
 st.markdown("<br>", unsafe_allow_html=True)
 
