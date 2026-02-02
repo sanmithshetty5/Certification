@@ -784,8 +784,7 @@ with row3_1:
             .agg(
                 Total_Employees=("EMP ID", "nunique"),
                 Certified=(status_col, lambda x: (x == "Completed").sum()),
-                In_Progress=(status_col, lambda x: (x == "In Progress").sum()),
-                Not_Started=(status_col, lambda x: (x == "Not Started").sum()),
+                Not_Started=(status_col, lambda x: (x == "Incomplete").sum()),
             )
             .reset_index()
             .sort_values(by="Certified", ascending=False)
@@ -832,8 +831,7 @@ with row3_2:
             .agg(
                 Total_Employees=("EMP ID", "nunique"),
                 Certified=(status_col, lambda x: (x == "Completed").sum()),
-                In_Progress=(status_col, lambda x: (x == "In Progress").sum()),
-                Not_Started=(status_col, lambda x: (x == "Not Started").sum()),
+                In_Progress=(status_col, lambda x: (x == "Incomplete").sum()),
             )
             .reset_index()
             .sort_values(by="Certified", ascending=False)
