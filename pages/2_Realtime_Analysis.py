@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import io
 import zipfile
 import plotly.express as px
+import seaborn as sns
+import matplotlib.dates as mdates
 
 
 # -----------------------------------------
@@ -992,10 +994,6 @@ if completion_date_col in filtered_df.columns:
             .rename(columns={"EMP ID": "Count", completion_date_col: "Date"})
         )
 
-        # 2. Setup Seaborn/Matplotlib Figure
-        import matplotlib.pyplot as plt
-        import seaborn as sns
-        import matplotlib.dates as mdates
 
         # Dark Background Setup
         plt.style.use('dark_background') # Base dark theme
