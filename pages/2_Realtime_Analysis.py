@@ -786,6 +786,7 @@ with row3_1:
                 Total_Unique_Employees=("EMP ID", "nunique"),
                 Total_Number_of_Certification=("SnowPro Certified","count"),
                 Certified=(status_col, lambda x: (x == "Completed").sum()),
+                Failed=(status_col, lambda x: (x == "Failed").sum())
             )
             .reset_index()
             .sort_values(by="Certified", ascending=False)
@@ -830,9 +831,10 @@ with row3_2:
             filtered_df
             .groupby("Account")
             .agg(
-                Total_Employees=("EMP ID", "nunique"),
+                Total_Unique_Employees=("EMP ID", "nunique"),
+                Total_Number_of_Certification=("SnowPro Certified","count"),
                 Certified=(status_col, lambda x: (x == "Completed").sum()),
-                In_Progress=(status_col, lambda x: (x == "Incomplete").sum()),
+                Failed=(status_col, lambda x: (x == "Failed").sum()),
             )
             .reset_index()
             .sort_values(by="Certified", ascending=False)
