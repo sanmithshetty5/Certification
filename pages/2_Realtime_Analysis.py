@@ -784,7 +784,7 @@ with row3_1:
             .groupby("Vertical / SL")
             .agg(
                 Total_Unique_Employees=("EMP ID", "nunique"),
-                Total_Number_of_Certification=("SnowPro Certified","sum"),
+                Total_Number_of_Certification=("SnowPro Certified","count"),
                 Certified=(status_col, lambda x: (x == "Completed").sum()),
             )
             .reset_index()
