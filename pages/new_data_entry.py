@@ -693,7 +693,7 @@ if st.session_state.page_mode == "ENTRY":
     with c4:
         st.markdown("""
         <div class="page-info-card">
-            <div class="page-info-icon" style="background:#fff7ed;">
+            <div class="page-info-icon" style="background:#fef3c7;">
                 <img src="https://cdn-icons-png.flaticon.com/512/1160/1160758.png" width="30" height="30">
             </div>
             <div class="page-info-card-title">Modify & Update Records</div>
