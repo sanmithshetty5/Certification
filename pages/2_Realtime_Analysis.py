@@ -967,7 +967,7 @@ with row3_2:
 st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Completion Trend</div>', unsafe_allow_html=True)
 
 # --- CONFIGURATION: Enter your exact column name here ---
-completion_date_col = "Actual Date of Completion" 
+completion_date_col = "Actual Date of completion" 
 # If your column is named differently (e.g., "Completion Date", "Date Certified"), change the line above.
 
 # 1. Prepare Data
