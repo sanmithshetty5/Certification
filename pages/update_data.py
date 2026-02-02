@@ -128,33 +128,33 @@ with st.container(border=True):
         """).to_pandas()
         
         return df["Certification"].tolist() if not df.empty else []
-        ALL_CERTIFICATIONS = [
-        "Advanced Analyst",
-        "Advanced Architect",
-        "Advanced Data Engineer",
-        "Advanced Data Scientist",
-        "Core",
-        "Associate",
-        "Speciality Gen AI",
-        "Speciality Native App",
-        "Speciality Snowpark"
-        ]
-        
-        existing_certs = get_emp_certifications(emp_id)
-        current_cert = data["Certification"]
-        
-        # Allow:
-        # - the current certification
-        # - certifications NOT already assigned
-        certification_options = [
-        cert for cert in ALL_CERTIFICATIONS
-        if cert == current_cert or cert not in existing_certs
-        ]
-        certification = st.selectbox(
-        "Certification",
-        certification_options,
-        index=certification_options.index(current_cert)
-        )
+    ALL_CERTIFICATIONS = [
+    "Advanced Analyst",
+    "Advanced Architect",
+    "Advanced Data Engineer",
+    "Advanced Data Scientist",
+    "Core",
+    "Associate",
+    "Speciality Gen AI",
+    "Speciality Native App",
+    "Speciality Snowpark"
+    ]
+    
+    existing_certs = get_emp_certifications(emp_id)
+    current_cert = data["Certification"]
+    
+    # Allow:
+    # - the current certification
+    # - certifications NOT already assigned
+    certification_options = [
+    cert for cert in ALL_CERTIFICATIONS
+    if cert == current_cert or cert not in existing_certs
+    ]
+    certification = st.selectbox(
+    "Certification",
+    certification_options,
+    index=certification_options.index(current_cert)
+    )
 
 
 # ---------------- Schedule & Status ----------------
