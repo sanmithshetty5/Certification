@@ -872,184 +872,166 @@ with row3_2:
 
 
 
-## ==============================================================================
-# CHART: ENROLLMENT TREND (FIXED VISIBILITY)
-# ==============================================================================
-# st.markdown('<div class="dashboard-card"><div class="chart-title">Completion Trend Over Time</div>', unsafe_allow_html=True)
+arkdown("</div>", unsafe_allow_html=True)
+
+
+# # ==============================================================================
+# # CHART: COMPLETION TREND (Stock Market Style)
+# # ==============================================================================
+# st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Completion Trend</div>', unsafe_allow_html=True)
+
+# # --- CONFIGURATION: Enter your exact column name here ---
+# completion_date_col = "Actual Date of completion" 
+# # If your column is named differently (e.g., "Completion Date", "Date Certified"), change the line above.
 
 # # 1. Prepare Data
-# if "Enroll_Month_Name" in filtered_df.columns and "Enroll_Year" in filtered_df.columns:
+# if completion_date_col in filtered_df.columns:
     
-#     # Create a copy to work on
+#     # Create a copy and handle dates
 #     trend_df = filtered_df.copy()
-
-#     trend_df = trend_df[trend_df["Completed Flag"] == True]
     
-#     # Drop missing values
-#     trend_df = trend_df.dropna(subset=["Enroll_Year", "Enroll_Month_Name"])
+#     # Convert to DateTime (errors='coerce' handles invalid formats gracefully)
+#     trend_df[completion_date_col] = pd.to_datetime(trend_df[completion_date_col], errors='coerce')
     
-#     # Create a Date String (e.g., "2024-Jan")
-#     trend_df["DateStr"] = trend_df["Enroll_Year"].astype(str) + "-" + trend_df["Enroll_Month_Name"]
+#     # Drop rows where the completion date is missing (i.e., not certified yet)
+#     trend_df = trend_df.dropna(subset=[completion_date_col])
     
-#     # Convert to DateTime Object
-#     trend_df["Timeline"] = pd.to_datetime(trend_df["DateStr"], format='%Y-%b', errors='coerce')
+#     if not trend_df.empty:
+#         # Group by Month to create a smooth "Stock Market" curve
+#         # We use pd.Grouper(freq='ME') to group by Month End
+#         time_series = (
+#             trend_df
+#             .groupby(pd.Grouper(key=completion_date_col, freq='ME'))["EMP ID"]
+#             .nunique()
+#             .reset_index()
+#             .rename(columns={"EMP ID": "Count", completion_date_col: "Timeline"})
+#         )
+        
+#         # 2. Create Line Chart
+#         fig = px.line(
+#             time_series, 
+#             x='Timeline', 
+#             y='Count',
+#             markers=True, 
+#         )
+
+#         # 3. Apply High-Contrast "Dark Mode" Styling
+#         fig.update_layout(
+#             # Force Dark Background
+#             plot_bgcolor="#0e1117",  
+#             paper_bgcolor="#0e1117", 
+            
+#             margin=dict(t=30, l=10, r=10, b=0),
+            
+#             # X-Axis Styling
+#             xaxis=dict(
+#                 title=None,
+#                 showgrid=True,
+#                 gridcolor="#333333",      
+#                 tickformat="%b %Y",       # Format: "Jan 2024"
+#                 tickfont=dict(color="white", size=12, family="Segoe UI"),
+#                 rangeslider=dict(visible=True, bgcolor="#1e293b", thickness=0.1), # Zoom Slider
+#                 type="date"
+#             ),
+            
+#             # Y-Axis Styling
+#             yaxis=dict(
+#                 title=None,
+#                 showgrid=True,
+#                 gridcolor="#333333",      
+#                 tickfont=dict(color="white", size=12, family="Segoe UI"),
+#                 zerolinecolor="#333333"
+#             ),
+            
+#             font=dict(family="Segoe UI", color="white"),
+#             height=450,
+#             hovermode="x unified"
+#         )
+
+#         # Line & Marker Styling (Neon Cyan)
+#         fig.update_traces(
+#             line=dict(color="#22d3ee", width=3), 
+#             marker=dict(size=8, color="#22d3ee", line=dict(width=2, color="#0e1117")),
+#             hovertemplate='%{y} Certifications<extra></extra>' 
+#         )
+
+#         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False})
     
-#     # Aggregate: Count unique employees per date
-#     time_series = (
-#         trend_df
-#         .groupby("Timeline")["EMP ID"]
-#         .nunique()
-#         .reset_index()
-#         .rename(columns={"EMP ID": "Completed Certifications"})
-#         .sort_values("Timeline") # Sort Oldest -> Newest
-#     )
-
-#     # 2. Create Line Chart
-#     fig = px.line(
-#         time_series, 
-#         x='Timeline', 
-#         y='Completed Certifications',
-#         markers=True, # Show dots at data points
-#     )
-
-#     # 3. Apply High-Contrast "Dark Mode" Styling
-#     fig.update_layout(
-#         # --- FIX: Force Dark Background Colors (Not Transparent) ---
-#         plot_bgcolor="#0e1117",  # Dark Grey/Black plot area
-#         paper_bgcolor="#0e1117", # Dark Grey/Black outer area
-        
-#         margin=dict(t=30, l=10, r=10, b=0),
-        
-#         # X-Axis Styling
-#         xaxis=dict(
-#             title=None,
-#             showgrid=True,
-#             gridcolor="#333333",      # Dark grey grid lines (subtle)
-#             tickformat="%b %Y",       # Formats date as "Jan 2024"
-#             tickfont=dict(color="white", size=12),
-#             rangeslider=dict(visible=True, bgcolor="#1e293b", thickness=0.1), # Visible slider
-#             type="date"
-#         ),
-        
-#         # Y-Axis Styling
-#         yaxis=dict(
-#             title=None,
-#             showgrid=True,
-#             gridcolor="#333333",      # Dark grey grid lines
-#             tickfont=dict(color="white", size=12),
-#             zerolinecolor="#333333"
-#         ),
-        
-#         # Font & Hover Styling
-#         font=dict(family="Segoe UI", color="white"),
-#         height=450,
-#         hovermode="x unified"
-#     )
-
-#     # Line & Marker Styling (Neon Cyan for Pop)
-#     fig.update_traces(
-#         line=dict(color="#22d3ee", width=3), # Bright Neon Cyan
-#         marker=dict(size=8, color="#22d3ee", line=dict(width=2, color="#0e1117")), # Cyan dot with black border
-#         hovertemplate='%{y} Employees<extra></extra>' # Clean hover text
-#     )
-
-#     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False})
+#     else:
+#         st.info("No completion dates found. Employees may not be certified yet.")
 
 # else:
-#     st.warning("Columns 'Enroll_Year' and 'Enroll_Month_Name' are required for this chart.")
+#     st.error(f"Column '{completion_date_col}' not found. Please check your Excel column name.")
 
 # st.markdown("</div>", unsafe_allow_html=True)
 
 
+
 # ==============================================================================
-# CHART: COMPLETION TREND (Stock Market Style)
+# CHART: COMPLETION TREND (Seaborn Aesthetic Style)
 # ==============================================================================
 st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Completion Trend</div>', unsafe_allow_html=True)
 
-# --- CONFIGURATION: Enter your exact column name here ---
-completion_date_col = "Actual Date of completion" 
-# If your column is named differently (e.g., "Completion Date", "Date Certified"), change the line above.
+# --- CONFIGURATION ---
+completion_date_col = "Actual Date of Completion" 
 
-# 1. Prepare Data
 if completion_date_col in filtered_df.columns:
-    
-    # Create a copy and handle dates
+    # 1. Prepare Data
     trend_df = filtered_df.copy()
-    
-    # Convert to DateTime (errors='coerce' handles invalid formats gracefully)
     trend_df[completion_date_col] = pd.to_datetime(trend_df[completion_date_col], errors='coerce')
-    
-    # Drop rows where the completion date is missing (i.e., not certified yet)
     trend_df = trend_df.dropna(subset=[completion_date_col])
-    
+
     if not trend_df.empty:
-        # Group by Month to create a smooth "Stock Market" curve
-        # We use pd.Grouper(freq='ME') to group by Month End
+        # Resample by Month ('ME') to get a smooth trend line
         time_series = (
             trend_df
-            .groupby(pd.Grouper(key=completion_date_col, freq='ME'))["EMP ID"]
+            .set_index(completion_date_col)
+            .resample('ME')["EMP ID"]
             .nunique()
             .reset_index()
-            .rename(columns={"EMP ID": "Count", completion_date_col: "Timeline"})
+            .rename(columns={"EMP ID": "Count", completion_date_col: "Date"})
         )
+
+        # 2. Setup Seaborn/Matplotlib Figure
+        import matplotlib.pyplot as plt
+        import seaborn as sns
+        import matplotlib.dates as mdates
+
+        # Dark Background Setup
+        plt.style.use('dark_background') # Base dark theme
+        fig, ax = plt.subplots(figsize=(12, 5))
         
-        # 2. Create Line Chart
-        fig = px.line(
-            time_series, 
-            x='Timeline', 
-            y='Count',
-            markers=True, 
+        # Exact Colors
+        bg_color = '#0e1117'    # Matches Streamlit Dark Mode
+        line_color = '#22d3ee'  # Neon Cyan
+        grid_color = '#333333'  # Subtle Grid
+
+        fig.patch.set_facecolor(bg_color)
+        ax.set_facecolor(bg_color)
+
+        # 3. Plot the Line
+        sns.lineplot(
+            data=time_series, 
+            x="Date", 
+            y="Count", 
+            color=line_color, 
+            linewidth=2.5, 
+            marker='o',          # Dots for data points
+            markersize=8,
+            ax=ax
         )
 
-        # 3. Apply High-Contrast "Dark Mode" Styling
-        fig.update_layout(
-            # Force Dark Background
-            plot_bgcolor="#0e1117",  
-            paper_bgcolor="#0e1117", 
-            
-            margin=dict(t=30, l=10, r=10, b=0),
-            
-            # X-Axis Styling
-            xaxis=dict(
-                title=None,
-                showgrid=True,
-                gridcolor="#333333",      
-                tickformat="%b %Y",       # Format: "Jan 2024"
-                tickfont=dict(color="white", size=12, family="Segoe UI"),
-                rangeslider=dict(visible=True, bgcolor="#1e293b", thickness=0.1), # Zoom Slider
-                type="date"
-            ),
-            
-            # Y-Axis Styling
-            yaxis=dict(
-                title=None,
-                showgrid=True,
-                gridcolor="#333333",      
-                tickfont=dict(color="white", size=12, family="Segoe UI"),
-                zerolinecolor="#333333"
-            ),
-            
-            font=dict(family="Segoe UI", color="white"),
-            height=450,
-            hovermode="x unified"
+        # Optional: Add a subtle "Glow" / Fill below the line (Stock market feel)
+        ax.fill_between(
+            time_series["Date"], 
+            time_series["Count"], 
+            color=line_color, 
+            alpha=0.1 # Very transparent fill
         )
 
-        # Line & Marker Styling (Neon Cyan)
-        fig.update_traces(
-            line=dict(color="#22d3ee", width=3), 
-            marker=dict(size=8, color="#22d3ee", line=dict(width=2, color="#0e1117")),
-            hovertemplate='%{y} Certifications<extra></extra>' 
-        )
-
-        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False})
-    
-    else:
-        st.info("No completion dates found. Employees may not be certified yet.")
-
-else:
-    st.error(f"Column '{completion_date_col}' not found. Please check your Excel column name.")
-
-st.markdown("</div>", unsafe_allow_html=True)
+        # 4. Styling Axes for High Visibility
+        # X-Axis Date Formatting (e.g., "Jan 2024")
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y
 # DATA GRID
 with st.expander("🔎 Inspect Raw Data"):
     st.dataframe(filtered_df, use_container_width=True, height=400)
