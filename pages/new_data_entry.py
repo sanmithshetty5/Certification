@@ -159,7 +159,8 @@ ul[data-baseweb="menu"] li[aria-selected="true"] {
    TEXT INPUTS / DATE INPUTS
 ================================ */
 input, textarea {
-    color: #FFFFFF !important;
+    background-color: #FFFFFF !important;
+    color: black !important;
 }
 
 /* ================================
