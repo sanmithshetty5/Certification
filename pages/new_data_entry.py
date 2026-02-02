@@ -161,6 +161,7 @@ ul[data-baseweb="menu"] li[aria-selected="true"] {
 input, textarea {
     background-color: #FFFFFF !important;
     color: black !important;
+    caret-color: #DC2626 !important; /* Currently set to your Primary Button Red */
 }
 
 /* ================================
