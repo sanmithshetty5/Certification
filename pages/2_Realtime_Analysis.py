@@ -6,6 +6,7 @@ import zipfile
 import plotly.express as px
 import seaborn as sns
 import matplotlib.dates as mdates
+import plotly.graph_objects as go
 
 
 # -----------------------------------------
@@ -965,106 +966,110 @@ st.markdown("</div>", unsafe_allow_html=True)
 
 
 # ==============================================================================
-# CHART: COMPLETION TREND (Seaborn Aesthetic Style)
+# FULL WIDTH: COMPLETION TREND (Interactive Stock Style)
 # ==============================================================================
-# ==============================================================================
-# CHART: COMPLETION TREND (Seaborn Aesthetic Style)
-# ==============================================================================
-st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Completion Trend</div>', unsafe_allow_html=True)
+st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Completion Trend (Live Timeline)</div>', unsafe_allow_html=True)
 
 # --- CONFIGURATION ---
-completion_date_col = "Actual Date of completion" 
+# Ensure this matches your exact Excel column name for the completion date
+date_col = "Actual Date of Completion" 
 
-if completion_date_col in filtered_df.columns:
+if date_col in filtered_df.columns:
     # 1. Prepare Data
     trend_df = filtered_df.copy()
-    trend_df[completion_date_col] = pd.to_datetime(trend_df[completion_date_col], errors='coerce')
-    trend_df = trend_df.dropna(subset=[completion_date_col])
+    trend_df[date_col] = pd.to_datetime(trend_df[date_col], errors='coerce')
+    trend_df = trend_df.dropna(subset=[date_col])
 
     if not trend_df.empty:
-        # Resample by Month ('ME') to get a smooth trend line
+        # Aggregate by Month (Stock charts usually aggregate to remove noise)
         time_series = (
             trend_df
-            .set_index(completion_date_col)
-            .resample('ME')["EMP ID"]
+            .set_index(date_col)
+            .resample('ME')["EMP ID"] # 'ME' is Month End. Use 'M' if on older pandas.
             .nunique()
             .reset_index()
-            .rename(columns={"EMP ID": "Count", completion_date_col: "Date"})
+            .rename(columns={"EMP ID": "Count", date_col: "Date"})
         )
 
+        # 2. Create the Financial Style Chart
+        fig = go.Figure()
 
-        # Dark Background Setup
-        plt.style.use('dark_background') # Base dark theme
-        fig, ax = plt.subplots(figsize=(12, 5))
-        
-        # Exact Colors
-        bg_color = '#0e1117'    # Matches Streamlit Dark Mode
-        line_color = '#22d3ee'  # Neon Cyan
-        grid_color = '#333333'  # Subtle Grid
+        # Add the Line Trace with Area Fill
+        fig.add_trace(go.Scatter(
+            x=time_series['Date'],
+            y=time_series['Count'],
+            mode='lines+markers',
+            name='Certifications',
+            line=dict(color=PRIMARY_COLOR, width=3), # Uses your dashboard's Blue
+            marker=dict(size=6, color="white", line=dict(width=2, color=PRIMARY_COLOR)),
+            fill='tozeroy', # Fills the area below the line (Stock style)
+            fillcolor='rgba(37, 99, 235, 0.1)', # Very transparent blue fill
+            hovertemplate = '<b>%{x|%b %Y}</b><br>Certified: %{y}<extra></extra>'
+        ))
 
-        fig.patch.set_facecolor(bg_color)
-        ax.set_facecolor(bg_color)
-
-        # 3. Plot the Line
-        sns.lineplot(
-            data=time_series, 
-            x="Date", 
-            y="Count", 
-            color=line_color, 
-            linewidth=2.5, 
-            marker='o',          # Dots for data points
-            markersize=8,
-            ax=ax
+        # 3. Interactive Layout (The "Stock Market" Features)
+        fig.update_layout(
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            margin=dict(t=10, l=0, r=0, b=0),
+            height=400,
+            
+            # Hover Behavior (Vertical Line)
+            hovermode="x unified",
+            
+            # X-Axis: Time Controls
+            xaxis=dict(
+                type="date",
+                showgrid=False,
+                tickfont=dict(color=TEXT_COLOR),
+                
+                # 1. The Range Slider (Mini chart at bottom to zoom)
+                rangeslider=dict(
+                    visible=True,
+                    bgcolor=BACKGROUND_COLOR,
+                    thickness=0.10
+                ),
+                
+                # 2. The Range Selector Buttons (1M, 6M, YTD, ALL)
+                rangeselector=dict(
+                    buttons=list([
+                        dict(count=1, label="1m", step="month", stepmode="backward"),
+                        dict(count=6, label="6m", step="month", stepmode="backward"),
+                        dict(count=1, label="YTD", step="year", stepmode="todate"),
+                        dict(step="all", label="All")
+                    ]),
+                    bgcolor=BACKGROUND_COLOR,
+                    activecolor="#e2e8f0",
+                    font=dict(color=TEXT_COLOR)
+                )
+            ),
+            
+            # Y-Axis
+            yaxis=dict(
+                title=None,
+                showgrid=True,
+                gridcolor="#e2e8f0", # Subtle grid
+                zeroline=False,
+                tickfont=dict(color=TEXT_COLOR)
+            ),
+            
+            font=dict(family="Segoe UI", color=TEXT_COLOR)
         )
 
-        # Optional: Add a subtle "Glow" / Fill below the line (Stock market feel)
-        ax.fill_between(
-            time_series["Date"], 
-            time_series["Count"], 
-            color=line_color, 
-            alpha=0.1 # Very transparent fill
-        )
-
-        # 4. Styling Axes for High Visibility
-        # X-Axis Date Formatting (e.g., "Jan 2024")
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
-        ax.xaxis.set_major_locator(mdates.MonthLocator(interval=3)) # Show label every 3 months to avoid crowding
-        
-        # Grid and Spines
-        ax.grid(color=grid_color, linestyle=':', linewidth=1) # Dotted grid
-        sns.despine(left=True, bottom=False) # Remove left/top/right borders
-
-        # Text Colors (Explicitly White)
-        ax.tick_params(axis='x', colors='white', labelsize=10, rotation=0)
-        ax.tick_params(axis='y', colors='white', labelsize=10)
-        
-        # Labels
-        ax.set_xlabel("", fontsize=0) # Hide X label "Date" for cleaner look
-        ax.set_ylabel("", fontsize=0) # Hide Y label "Count"
-
-        # Annotate the Peak (Highest Point) automatically
-        if not time_series.empty:
-            max_val = time_series["Count"].max()
-            max_date = time_series.loc[time_series["Count"].idxmax(), "Date"]
-            ax.annotate(
-                f'Peak: {max_val}', 
-                xy=(max_date, max_val), 
-                xytext=(0, 10), 
-                textcoords='offset points',
-                ha='center', 
-                color='white', 
-                fontweight='bold',
-                fontsize=9
-            )
-
-        st.pyplot(fig)
-
+        # 4. Render
+        st.plotly_chart(fig, use_container_width=True, config={
+            'displayModeBar': True, # Show toolbar
+            'scrollZoom': True,     # Enable mouse wheel zoom
+            'displaylogo': False,
+            'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+        })
     else:
-        st.info("No completion dates found yet.")
+        st.info("No completion dates found for the selected filters.")
 else:
-    st.error(f"Column '{completion_date_col}' not found.")
+    st.error(f"Column '{date_col}' not found in data.")
 
 st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True) # Spacer
 # DATA GRID
 with st.expander("🔎 Inspect Raw Data"):
     st.dataframe(filtered_df, use_container_width=True, height=400)
