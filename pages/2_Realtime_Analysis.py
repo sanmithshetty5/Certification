@@ -380,6 +380,7 @@ if df.empty:
 # -----------------------------------------
 # DATA PREP
 # -----------------------------------------
+df["Voucher Status"] = df["Voucher Status"].fillna("Not Available")
 df["Enrolment Month"] = df["Enrolment Month"].astype(str)
 df = df[df["Enrolment Month"] != "nan"]
 df["Enrolment Month"] = df["Enrolment Month"].astype(str).str.strip()
@@ -513,7 +514,6 @@ months_label = ", ".join(selected_months) if selected_months else "All Months"
 # -----------------------------------------
 # EXPORT LOGIC
 # -----------------------------------------
-df["Voucher Status"] = df["Voucher Status"].fillna("Not Available")
 
 def export_charts_as_zip(data):
     buffer = io.BytesIO()
@@ -729,76 +729,6 @@ my_config = {
 st.plotly_chart(fig, use_container_width=True, config=my_config)
 
 
-# -----------------------------------------
-# VERTICAL / SL – CERTIFICATION FUNNEL
-# -----------------------------------------
-# st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Completion Funnel by Vertical</div>', unsafe_allow_html=True)
-
-# # 1. Prepare Data
-# vertical_data = (
-#     filtered_df[filtered_df["Completed Flag"] == True]
-#     .groupby("Vertical / SL")["EMP ID"]
-#     .nunique()
-#     .reset_index()
-#     .rename(columns={"EMP ID": "Completed Employees"})
-#     .sort_values("Completed Employees", ascending=True) 
-# )
-
-# # 2. Calculate Dynamic Height 
-# # (35 pixels per bar + 100px buffer) ensures ALL values are shown
-# dynamic_height = max(400, len(vertical_data) * 35)
-
-# # 3. Create Interactive Horizontal Bar
-# fig = px.bar(
-#     vertical_data,
-#     x="Completed Employees",
-#     y="Vertical / SL",
-#     orientation='h', 
-#     text="Completed Employees",
-#     color="Completed Employees", 
-#     color_continuous_scale="Blues"
-# )
-
-# # 4. Apply Professional Styling
-# fig.update_layout(
-#     plot_bgcolor="rgba(0,0,0,0)",
-#     paper_bgcolor="rgba(0,0,0,0)",
-#     margin=dict(t=10, l=0, r=0, b=0),
-    
-#     # Hide X-Axis
-#     xaxis=dict(showgrid=False, visible=False), 
-    
-#     # Y-Axis (Force all labels to show)
-#     yaxis=dict(
-#         title=None,
-#         tickfont=dict(color="#1e293b", size=12, family="Segoe UI"),
-#         showgrid=False,
-#         dtick=1 # Forces Plotly to show every single vertical
-#     ),
-    
-#     font=dict(family="Segoe UI", color="#1e293b"),
-#     height=dynamic_height, # <--- FIX: Applies dynamic height
-#     coloraxis_showscale=False 
-# )
-
-# # 5. Fix Text Visibility
-# fig.update_traces(
-#     textposition='outside', # Places number to the right of the bar
-#     textfont=dict(color="#1e293b", size=12), # Forces DARK GREY text
-#     cliponaxis=False # Allows text to overflow slightly if needed so it's not cut off
-# )
-
-# # 6. Toolbar Configuration
-# my_config = {
-#     'displayModeBar': 'hover',
-#     'displaylogo': False,
-#     'modeBarButtonsToRemove': ['lasso2d', 'select2d']
-# }
-
-# st.plotly_chart(fig, use_container_width=True, config=my_config)
-
-# st.markdown("</div>", unsafe_allow_html=True)
-# st.markdown("<br>", unsafe_allow_html=True)
 
 
 # Create two columns for the bottom row
