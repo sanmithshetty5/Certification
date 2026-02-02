@@ -972,7 +972,7 @@ st.markdown('<div class="dashboard-card"><div class="chart-title">Certification 
 
 # --- CONFIGURATION ---
 # Ensure this matches your exact Excel column name for the completion date
-date_col = "Actual Date of Completion" 
+date_col = "Actual Date of completion" 
 
 if date_col in filtered_df.columns:
     # 1. Prepare Data
