@@ -972,6 +972,9 @@ arkdown("</div>", unsafe_allow_html=True)
 # ==============================================================================
 # CHART: COMPLETION TREND (Seaborn Aesthetic Style)
 # ==============================================================================
+# ==============================================================================
+# CHART: COMPLETION TREND (Seaborn Aesthetic Style)
+# ==============================================================================
 st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Completion Trend</div>', unsafe_allow_html=True)
 
 # --- CONFIGURATION ---
@@ -1029,7 +1032,44 @@ if completion_date_col in filtered_df.columns:
 
         # 4. Styling Axes for High Visibility
         # X-Axis Date Formatting (e.g., "Jan 2024")
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
+        ax.xaxis.set_major_locator(mdates.MonthLocator(interval=3)) # Show label every 3 months to avoid crowding
+        
+        # Grid and Spines
+        ax.grid(color=grid_color, linestyle=':', linewidth=1) # Dotted grid
+        sns.despine(left=True, bottom=False) # Remove left/top/right borders
+
+        # Text Colors (Explicitly White)
+        ax.tick_params(axis='x', colors='white', labelsize=10, rotation=0)
+        ax.tick_params(axis='y', colors='white', labelsize=10)
+        
+        # Labels
+        ax.set_xlabel("", fontsize=0) # Hide X label "Date" for cleaner look
+        ax.set_ylabel("", fontsize=0) # Hide Y label "Count"
+
+        # Annotate the Peak (Highest Point) automatically
+        if not time_series.empty:
+            max_val = time_series["Count"].max()
+            max_date = time_series.loc[time_series["Count"].idxmax(), "Date"]
+            ax.annotate(
+                f'Peak: {max_val}', 
+                xy=(max_date, max_val), 
+                xytext=(0, 10), 
+                textcoords='offset points',
+                ha='center', 
+                color='white', 
+                fontweight='bold',
+                fontsize=9
+            )
+
+        st.pyplot(fig)
+
+    else:
+        st.info("No completion dates found yet.")
+else:
+    st.error(f"Column '{completion_date_col}' not found.")
+
+st.markdown("</div>", unsafe_allow_html=True)
 # DATA GRID
 with st.expander("🔎 Inspect Raw Data"):
     st.dataframe(filtered_df, use_container_width=True, height=400)
