@@ -973,7 +973,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 st.markdown('<div class="dashboard-card"><div class="chart-title">Certification Completion Trend</div>', unsafe_allow_html=True)
 
 # --- CONFIGURATION ---
-completion_date_col = "Actual Date of Completion" 
+completion_date_col = "Actual Date of completion" 
 
 if completion_date_col in filtered_df.columns:
     # 1. Prepare Data
