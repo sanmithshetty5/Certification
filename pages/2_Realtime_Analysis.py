@@ -594,7 +594,7 @@ if filtered_df.empty:
     st.stop()
 
 # METRICS ROW
-m1, m2, m3, m4,m5 = st.columns(4)
+m1, m2, m3, m4,m5 = st.columns(5)
 
 def metric_box(col, label, value):
     with col:
