@@ -650,118 +650,115 @@ with c2:
 c3, c4 = st.columns(2)
 
 with c3:
-    with c3:
-        st.markdown('<div class="dashboard-card"><div class="chart-title">Voucher Utilization</div>', unsafe_allow_html=True)
+    st.markdown('<div class="dashboard-card"><div class="chart-title">Voucher Utilization</div>', unsafe_allow_html=True)
+
+    # Remove NULLs explicitly
+    voucher_series = filtered_df["Voucher Status"].dropna()
+
+    # Case 1: No usable data
+    if voucher_series.empty:
+        st.info("ℹ️ Voucher status data is not available for the selected filters.")
     
-        # Remove NULLs explicitly
-        voucher_series = filtered_df["Voucher Status"].dropna()
+    # Case 2: Data exists → show chart
+    else:
+        voucher_data = voucher_series.value_counts().reset_index()
+        voucher_data.columns = ["Status", "Count"]
+
+        distinct_colors = ["#2563eb", "#10b981", "#f59e0b", "#64748b", "#ef4444"]
+
+        fig = px.pie(
+            voucher_data,
+            names="Status",
+            values="Count",
+            color_discrete_sequence=distinct_colors
+        )
+
+        fig.update_traces(
+            textposition='inside',
+            textinfo='percent+label',
+            hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Share: %{percent}",
+            marker=dict(line=dict(color='#ffffff', width=2))
+        )
+
+        fig.update_layout(
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            margin=dict(t=20, l=0, r=0, b=20),
+            font=dict(family="Segoe UI", color="#1e293b", size=13),
+            showlegend=False,
+            height=250
+        )
+
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False})
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+with c4:    
+    # FULL WIDTH BADGE CHART
+    st.markdown('<div class="dashboard-card"><div class="chart-title">Badge Progression</div>', unsafe_allow_html=True)
     
-        # Case 1: No usable data
-        if voucher_series.empty:
-            st.info("ℹ️ Voucher status data is not available for the selected filters.")
-        
-        # Case 2: Data exists → show chart
-        else:
-            voucher_data = voucher_series.value_counts().reset_index()
-            voucher_data.columns = ["Status", "Count"]
+    # 1. Prepare Data
+    badge_counts = [
+        filtered_df[filtered_df[f"Badge {i} Status"] == "Completed"]["EMP ID"].nunique() 
+        for i in range(1, 6)
+    ]
     
-            distinct_colors = ["#2563eb", "#10b981", "#f59e0b", "#64748b", "#ef4444"]
+    badge_data = pd.DataFrame({
+        "Stage": ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"],
+        "Learners": badge_counts,
+        "ColorGroup": ["B1", "B2", "B3", "B4", "B5"] # Dummy column to force different colors
+    })
     
-            fig = px.pie(
-                voucher_data,
-                names="Status",
-                values="Count",
-                color_discrete_sequence=distinct_colors
-            )
+    # 2. Distinct Color Palette
+    distinct_sequence = ["#2563eb", "#06b6d4", "#8b5cf6", "#d946ef", "#f97316"] 
     
-            fig.update_traces(
-                textposition='inside',
-                textinfo='percent+label',
-                hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Share: %{percent}",
-                marker=dict(line=dict(color='#ffffff', width=2))
-            )
+    # 3. Create Interactive Column Chart
+    fig = px.bar(
+        badge_data, 
+        x='Stage', 
+        y='Learners', 
+        color='ColorGroup', # Colors each bar differently
+        color_discrete_sequence=distinct_sequence,
+        text='Learners' # Shows the count on top
+    )
     
-            fig.update_layout(
-                plot_bgcolor="rgba(0,0,0,0)",
-                paper_bgcolor="rgba(0,0,0,0)",
-                margin=dict(t=20, l=0, r=0, b=20),
-                font=dict(family="Segoe UI", color="#1e293b", size=13),
-                showlegend=False,
-                height=250
-            )
+    # 4. Apply Professional Styling
+    fig.update_layout(
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(t=20, l=0, r=0, b=0),
+        showlegend=False, 
+        height=350,       
     
-            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': 'hover', 'displaylogo': False})
+        # Axis Styling
+        xaxis=dict(
+            title=None,
+            tickfont=dict(color="#1e293b", size=13, family="Segoe UI"),
+            showgrid=False
+        ),
+        yaxis=dict(
+            tickfont=dict(color="#1e293b", size=12, family="Segoe UI"),
+            title=None,
+            showgrid=True,
+            gridcolor="#e2e8f0"
+        ),
+        font=dict(family="Segoe UI", color="#1e293b")
+    )
+    # Style the text on top of bars
+    fig.update_traces(
+        textposition="outside", 
+        textfont=dict(color="#1e293b", size=14)
+    )
     
-        st.markdown("</div>", unsafe_allow_html=True)
-
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-# FULL WIDTH BADGE CHART
-st.markdown('<div class="dashboard-card"><div class="chart-title">Badge Progression</div>', unsafe_allow_html=True)
-
-# 1. Prepare Data
-badge_counts = [
-    filtered_df[filtered_df[f"Badge {i} Status"] == "Completed"]["EMP ID"].nunique() 
-    for i in range(1, 6)
-]
-
-badge_data = pd.DataFrame({
-    "Stage": ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"],
-    "Learners": badge_counts,
-    "ColorGroup": ["B1", "B2", "B3", "B4", "B5"] # Dummy column to force different colors
-})
-
-# 2. Distinct Color Palette
-distinct_sequence = ["#2563eb", "#06b6d4", "#8b5cf6", "#d946ef", "#f97316"] 
-
-# 3. Create Interactive Column Chart
-fig = px.bar(
-    badge_data, 
-    x='Stage', 
-    y='Learners', 
-    color='ColorGroup', # Colors each bar differently
-    color_discrete_sequence=distinct_sequence,
-    text='Learners' # Shows the count on top
-)
-
-# 4. Apply Professional Styling
-fig.update_layout(
-    plot_bgcolor="rgba(0,0,0,0)",
-    paper_bgcolor="rgba(0,0,0,0)",
-    margin=dict(t=20, l=0, r=0, b=0),
-    showlegend=False, 
-    height=350,       
-
-    # Axis Styling
-    xaxis=dict(
-        title=None,
-        tickfont=dict(color="#1e293b", size=13, family="Segoe UI"),
-        showgrid=False
-    ),
-    yaxis=dict(
-        tickfont=dict(color="#1e293b", size=12, family="Segoe UI"),
-        title=None,
-        showgrid=True,
-        gridcolor="#e2e8f0"
-    ),
-    font=dict(family="Segoe UI", color="#1e293b")
-)
-# Style the text on top of bars
-fig.update_traces(
-    textposition="outside", 
-    textfont=dict(color="#1e293b", size=14)
-)
-
-# 5. Toolbar Configuration
-my_config = {
-    'displayModeBar': 'hover',
-    'displaylogo': False,
-    'modeBarButtonsToRemove': ['lasso2d', 'select2d']
-}
-
-st.plotly_chart(fig, use_container_width=True, config=my_config)
-
+    # 5. Toolbar Configuration
+    my_config = {
+        'displayModeBar': 'hover',
+        'displaylogo': False,
+        'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+    }
+    
+    st.plotly_chart(fig, use_container_width=True, config=my_config)
+    
 
 
 
