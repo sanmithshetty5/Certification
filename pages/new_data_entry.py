@@ -816,7 +816,7 @@ if st.session_state.page_mode == "ADD":
 
             voucher_status = st.selectbox(
                 "Voucher Status",
-                ("Voucher Received","Voucher Applied","Own Payment"),disabled=st.session_state.review_mode
+                ("Voucher Received","Own Payment"),disabled=st.session_state.review_mode
             )
 
     # ---------------- Badges ----------------
