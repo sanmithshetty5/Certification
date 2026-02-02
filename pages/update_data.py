@@ -186,16 +186,19 @@ with st.container(border=True):
     
         return df["Account"].tolist()
     account_opts = get_account_options()
-    account_sel = st.multiselect(
-                "Account",
-                account_opts,
-                default=[existing_account] if existing_account in account_opts else [],
-                max_selections=1,
-                accept_new_options=True
-            )
-    account = account_sel[0] if account_sel else None
-
+    existing_account = data.get("Account")
     
+    account_sel = st.multiselect(
+        "Account",
+        account_opts,
+        default=[existing_account] if existing_account in account_opts else [],
+        max_selections=1,
+        accept_new_options=True
+    )
+    
+    account = account_sel[0] if account_sel else None
+    
+        
     spoc = st.text_input("Account SPOC", data["Account SPOC"] or "")
     
     def get_vertical_sl():
@@ -209,11 +212,18 @@ with st.container(border=True):
         return df["Vertical / SL"].tolist()
 
     vertical_options = get_vertical_sl()
-    vertical = st.selectbox(
-    "Vertical / SL",
-    vertical_options,
-    index=vertical_options.index(data["Vertical / SL"]) if data["Vertical / SL"] in vertical_options else 0
-)
+    existing_vertical = data.get("Vertical / SL")
+    
+    vertical_sel = st.multiselect(
+        "Vertical / SL",
+        vertical_options,
+        default=[existing_vertical] if existing_vertical in vertical_options else [],
+        max_selections=1,
+        accept_new_options=True
+    )
+
+    vertical = vertical_sel[0] if vertical_sel else None
+
 
     batch = st.text_input("Batch", data["Batch"] or "")
     comment = st.text_area("Comment", data.get("Comment",""))
