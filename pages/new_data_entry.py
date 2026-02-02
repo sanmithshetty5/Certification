@@ -663,7 +663,9 @@ if st.session_state.page_mode == "ENTRY":
     with c2:
         st.markdown("""
         <div class="page-info-card">
-            <div class="page-info-icon" style="background:#dcfce7; color:#15803d;">📝</div>
+            <div class="page-info-icon" style="background:#dcfce7;">
+                <img src="https://cdn-icons-png.flaticon.com/512/11471/11471643.png" width="35" height="35">
+            </div>
             <div class="page-info-card-title">Enter Certification Details</div>
             <div class="page-info-card-desc">
                 Fill certification schedule, badges, department info, and progress.
@@ -691,11 +693,11 @@ if st.session_state.page_mode == "ENTRY":
     with c4:
         st.markdown("""
         <div class="page-info-card">
-            <div class="page-info-icon" style="background:#e0f2fe; color:#0369a1;">☁️</div>
-            <div class="page-info-card-title">Secure Cloud Storage</div>
+            <div class="page-info-icon" style="background:#e0f2fe; color:#0369a1;"></div>
+            <div class="page-info-card-title">Modify & Update Records</div>
             <div class="page-info-card-desc">
-                All records are securely stored in Snowflake and instantly available
-                for analytics and reporting across the organization.
+                Search by a valid Employee ID to instantly retrieve existing certification profiles and progress logs. 
+                Select a specific certification from the dropdown to modify status, dates, or badge details in real-time.
             </div>
         </div>
         """, unsafe_allow_html=True)
