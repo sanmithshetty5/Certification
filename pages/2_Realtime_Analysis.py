@@ -594,7 +594,7 @@ if filtered_df.empty:
     st.stop()
 
 # METRICS ROW
-m1, m2, m3, m4 = st.columns(4)
+m1, m2, m3, m4,m5 = st.columns(4)
 
 def metric_box(col, label, value):
     with col:
@@ -607,9 +607,10 @@ def metric_box(col, label, value):
 
 metric_box(m1, "Total Records", len(filtered_df))
 metric_box(m2, "Unique Learners", filtered_df["EMP ID"].nunique())
-metric_box(m3, "Certified Users", int(filtered_df["Completed Flag"].sum()))
+metric_box(m3, "Certified Users", int(filtered_df["Completed Flag"].nunique()))
+metric_box(m4, "Total Certificatios Completed", int(filtered_df["Completed Flag"].sum()))
 
-with m4:
+with m5:
     completion = round(filtered_df["Completed Flag"].mean() * 100, 1) if len(filtered_df) else 0
     st.markdown(f"""
     <div class="kpi-card" style="border-left-color: #10b981;">
